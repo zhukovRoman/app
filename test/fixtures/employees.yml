@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  FIO: MyString
+  tab_number: MyString
+  stavka: 9.99
+  post: MyString
+
+two:
+  FIO: MyString
+  tab_number: MyString
+  stavka: 9.99
+  post: MyString

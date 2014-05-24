@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  type: 
+  new_post: MyString
+  old_post: MyString
+  flow_date: 2014-05-24
+
+two:
+  type: 
+  new_post: MyString
+  old_post: MyString
+  flow_date: 2014-05-24
