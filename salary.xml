@@ -1,0 +1,9 @@
+<!-- 2. отчет по зарплате -->
+<!-- ежемесячно -->
+<data>
+    <month number="1" year="2014"/> <!-- зп и премии за январь 2014 года -->
+    <employees>
+        <employee id="5555555" salary="25000" bonus="15000" tax="3000" unit="1"/>
+        <employee id="5554483" salary="35000" bonus="25000" tax="6000" unit="46"/>
+    </employees>
+</data>

@@ -1,0 +1,21 @@
+<% if !@error.nil? %>
+    <div class="alert alert-danger alert-dismissable">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <strong>Ошибка!</strong> <%= @error %>
+    </div>
+<% end %>
+
+
+<%= form_tag("vacancies", method: "post", class:"form-horizontal") do %>
+    <%= submit_tag("Cохранить", class: "btn btn-success", style:"margin-bottom: 5px") %>
+    <% @departments.each do |dep| -%>
+        <div class="form-group">
+          <div class="col-md-1">
+            <%= text_field_tag(dep.id, dep.vacancy_count, name: "departments[#{dep.id}]", id:"vacnacy_#{dep.id}", class: "form-control" )  %>
+          </div>
+          <label for="inputEmail3" class="col-md-11 control-label" style="text-align: left"><%= dep.name %></label>
+
+        </div>
+    <% end -%>
+    <%= submit_tag("Cохранить", class: "btn btn-success") %>
+<% end %>

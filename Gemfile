@@ -44,3 +44,7 @@ gem 'capistrano-rails', '~> 1.1'
 gem 'mysql2'
 
 gem 'yaml_db'
+
+gem 'nokogiri'
+
+gem 'bootstrap-sass', '~> 3.1.1'

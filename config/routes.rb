@@ -1,6 +1,12 @@
 Rails.application.routes.draw do
-  get 'welcome/index'
+  get 'employee/vacancies'
+  post 'employee/vacancies'
 
+  get 'welcome/index'
+  get 'employee/personalflowXmlParse'
+  get 'employee/salaryXmlParse'
+  get 'employee/personalInit'
+  get 'employee/vacancies'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
