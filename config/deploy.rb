@@ -4,6 +4,7 @@ lock '3.2.1'
 set :application, 'ugs'
 set :repo_url, 'git@github.com:zhukovRoman/app.git'
 set :branch, 'master'
+set :ssh_options, { :forward_agent => true }
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
 
