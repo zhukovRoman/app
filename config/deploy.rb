@@ -4,12 +4,15 @@ lock '3.2.1'
 set :application, 'ugs'
 set :repo_url, 'git@github.com:zhukovRoman/app.git'
 set :branch, 'master'
-set :ssh_options, { :forward_agent => true }
+set :ssh_options, { :forward_agent => true, :port => 50022  }
+set :use_sudo, false
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
 
 # Default deploy_to directory is /var/www/my_app
 set :deploy_to, '/var/webapp/'
+
+#set ssh_options[:port] = 50022
 
 # Default value for :scm is :git
 # set :scm, :git

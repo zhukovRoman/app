@@ -1,0 +1,646 @@
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="http://code.highcharts.com/modules/exporting.js"></script>
+
+<div id="container1" style="min-width: 310px; height: 900px; margin: 0 auto"></div>
+<div id="container2" style="min-width: 310px; height: 600px; margin: 0 auto"></div>
+<div id="container3" style="min-width: 310px; height: 600px; margin: 0 auto"></div>
+<div id="container4" style="min-width: 310px; height: 600px; margin: 0 auto"></div>
+<div id="container5" style="min-width: 310px; height: 600px; margin: 0 auto"></div>
+
+<script type="application/javascript">
+    var podryadchick = [
+      'Горкапстрой',
+      'Зеленоградпроект',
+      'Инвестспецстрой',
+      'Интерстрой',
+      'МИСК',
+      'МКС (ГД ЦЕНТР)',
+      'Мортон',
+      'ООО «ТЕМП»',
+      'ООО ЕвроСтрой',
+      'Пионер',
+      'СМУ-10',
+      'Спецпроектреставрация',
+      'СтройГрупп',
+      'МФС-ПИК',
+      'УКРиС',
+      'УКС ОТиА',
+      'УРиРУО',
+      'СУ-65',
+      'Центр-Инвест',
+      'Новые Строительные Технологии',
+      'СУ-212',
+      'РегионПромСтрой',
+      'МФС',
+      'МКС (Жилкапстрой)',
+      '1015 УСМР',
+      'ГВСУ Центр',
+      '315 УНР',
+      'Альтстрой',
+      'Комплексстрой 231 СТ',
+      'СУ-555',
+      'УЭЗ',
+      'САТОРИ',
+      'Империо-Гранд',
+      'МКС (Альстрой)',
+      'Моспромпроект ГУП',
+      'МС-17',
+      'МКС (УКС-КБН)',
+      'МКС Энергетика и Инженерия',
+      'МНИИТЭП',
+      'Моспромпроект',
+      'МКС (УКС ОТиА)',
+      'МКС (Зинвест)',
+      'ДСК №1',
+      'МКС (УКС)',
+      'СУ-155',
+      'МКС (ТУКС-4)',
+      'МКС (ТУКС-7)',
+      'МКС (УКС-5)',
+      'Главмосстрой',
+      'МКС (Авеста-Строй)',
+      'Терра Аури',
+      'КП УГС',
+      'МКС (ТУКС-2)',
+      'МКС',
+      'Не неазначено'
+  ];
+    var managers = ['Шелковский Дмитрий',
+        'Стасенко Николай',
+        'Некрасов Юрий',
+        'Ластович Евгений',
+        'Белина Наталья',
+        'Чучин Александр',
+        'Морозов Денис',
+        'Степанов Александр'];
+    var okrugs = ["Неизвестно",
+        "ВАО",
+        "ЗАО",
+        "ЗелАО",
+        "САО",
+        "СВАО",
+        "СЗАО",
+        "ТинАО",
+        "ЦАО",
+        "ЮАО",
+        "ЮВАО",
+        "ЮЗАО"];
+    var years = [2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018];
+    var polyStyle = "";
+</script>
+
+
+
+<script type="application/javascript">
+    $(function () {
+        $('#container1').highcharts({
+            chart: {
+                type: 'bar'
+            },
+            title: {
+                text: 'Число объектов по Техзаказчикам'
+            },
+            xAxis: {
+                categories: podryadchick,
+                labels: {
+//                    rotation: -60,
+                    style: {
+                        fontSize: '10px',
+                        fontFamily: 'Verdana, sans-serif'
+                    }
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Число объектов'
+                },
+                stackLabels: {
+                    enabled: true,
+                    style: {
+                        fontWeight: 'bold',
+                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                    }
+                }
+            },
+            legend: {
+                align: 'right',
+                x: -70,
+                verticalAlign: 'top',
+                y: 20,
+                floating: true,
+                backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+                borderColor: '#CCC',
+                borderWidth: 1,
+                shadow: false
+            },
+            tooltip: {
+                formatter: function() {
+                    return '<b>'+ this.x +'</b><br/>'+
+                            this.series.name +': '+ this.y +'<br/>'+
+                            'Всего: '+ this.point.stackTotal;
+                }
+            },
+            plotOptions: {
+                series: {
+                    stacking: 'normal'
+                }
+            },
+            series: [{
+                name: "Сдан",
+                data: [
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    2,
+                    2,
+                    2,
+                    2,
+                    2,
+                    2,
+                    2,
+                    3,
+                    3,
+                    3,
+                    3,
+                    3,
+                    4,
+                    4,
+                    4,
+                    4,
+                    4,
+                    4,
+                    4,
+                    4,
+                    3,
+                    6,
+                    7,
+                    9,
+                    9,
+                    8,
+                    7,
+                    7,
+                    8,
+                    9,
+                    10,
+                    27,
+                    13,
+                    22,
+                    20,
+                    100
+                ]
+            },
+                {
+                    name: "Конкурс",
+                    data: [
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        2,
+                        2,
+                        2,
+                        2,
+                        2,
+                        2,
+                        2,
+                        3,
+                        3,
+                        3,
+                        3,
+                        3,
+                        4,
+                        4,
+                        4,
+                        4,
+                        4,
+                        4,
+                        4,
+                        4,
+                        3,
+                        6,
+                        7,
+                        4,
+                        9,
+                        8,
+                        7,
+                        7,
+                        8,
+                        9,
+                        10,
+                        27,
+                        5,
+                        10,
+                        10,
+                        30
+                    ]
+                },
+                {
+                    name: "Строительство",
+                    data: [
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                        2,
+                        2,
+                        2,
+                        2,
+                        2,
+                        2,
+                        2,
+                        3,
+                        3,
+                        3,
+                        3,
+                        3,
+                        4,
+                        4,
+                        4,
+                        4,
+                        4,
+                        4,
+                        4,
+                        4,
+                        3,
+                        6,
+                        7,
+                        9,
+                        9,
+                        8,
+                        7,
+                        2,
+                        3,
+                        5,
+                        10,
+                        7,
+                        3,
+                        2,
+                        10,
+                        50
+                    ]
+                }]
+        });
+    });
+</script>
+
+<script type="application/javascript">
+    $(function () {
+        $('#container2').highcharts({
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Число объектов по Управляющим'
+            },
+            xAxis: {
+                categories: managers,
+                labels: {
+                    rotation: -60,
+                    style: {
+                        fontSize: '13px',
+                        fontFamily: 'Verdana, sans-serif'
+                    }
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Число объектов'
+                },
+                stackLabels: {
+                    enabled: true,
+                    style: {
+                        fontWeight: 'bold',
+                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                    }
+                }
+            },
+            legend: {
+                align: 'right',
+                x: -70,
+                verticalAlign: 'top',
+                y: 20,
+                floating: true,
+                backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+                borderColor: '#CCC',
+                borderWidth: 1,
+                shadow: false
+            },
+            tooltip: {
+                formatter: function() {
+                    return '<b>'+ this.x +'</b><br/>'+
+                            this.series.name +': '+ this.y +'<br/>'+
+                            'Всего: '+ this.point.stackTotal;
+                }
+            },
+            plotOptions: {
+                column: {
+                    stacking: 'normal'
+                }
+            },
+            series: [{
+                name: "Сдан",
+                data: [
+                    11,
+                    18,
+                    48,
+                    59,
+                    77,
+                    87,
+                    93,
+                    119
+                ]
+            },
+                {
+                    name: "Конкурс",
+                    data: [
+                        11,
+                        18,
+                        48,
+                        59,
+                        77,
+                        87,
+                        93,
+                        119
+                    ]
+                },
+                {
+                    name: "Строительство",
+                    data: [
+                        11,
+                        18,
+                        48,
+                        59,
+                        77,
+                        87,
+                        93,
+                        119
+                    ]
+                }]
+        });
+    });
+</script>
+
+<script type="application/javascript">
+    $(function () {
+        $('#container3').highcharts({
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Число объектов по округам'
+            },
+            xAxis: {
+                categories: okrugs,
+                labels: {
+                    rotation: -60,
+                    style: {
+                        fontSize: '13px',
+                        fontFamily: 'Verdana, sans-serif'
+                    }
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Число объектов'
+                },
+                stackLabels: {
+                    enabled: true,
+                    style: {
+                        fontWeight: 'bold',
+                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                    }
+                }
+            },
+            legend: {
+                align: 'right',
+                x: -70,
+                verticalAlign: 'top',
+                y: 20,
+                floating: true,
+                backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+                borderColor: '#CCC',
+                borderWidth: 1,
+                shadow: false
+            },
+            tooltip: {
+                formatter: function() {
+                    return '<b>'+ this.x +'</b><br/>'+
+                            this.series.name +': '+ this.y +'<br/>'+
+                            'Всего: '+ this.point.stackTotal;
+                }
+            },
+            plotOptions: {
+                column: {
+                    stacking: 'normal'
+                }
+            },
+            series: [{
+                name: "Сдан",
+                data: [3,5,10,7,4,2,5,6,2,5,5,4]
+            },
+            {
+                name: "Конкурс",
+                data: [10,5,3,1,7,4,7,8,9,4,10,3]
+            },
+            {
+                name: "Строительство",
+                data: [3,6,3,4,7,8,9,5,1,4,5,7]
+            }]
+        });
+    });
+</script>
+
+<script type="application/javascript">
+    $(function () {
+        $('#container4').highcharts({
+            chart: {
+                type: 'area'
+            },
+            title: {
+                text: 'Ввод объектов по годам'
+            },
+            xAxis: {
+                categories: years
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Число объектов'
+                }
+            },
+            credits: {
+                enabled: false
+            },
+            series: [{
+                name: 'По АИП',
+                data: [1, 56, 74, 114, 113, 82,  22, 13]
+            }, {
+                name: 'Факт',
+                data: [1, 56, 78, 142, 119, 55, 14, 11]
+            }]
+        });
+    });
+</script>
+
+<script type="application/javascript">
+    $(function () {
+        $('#container5').highcharts({
+            title: {
+                text: 'Объемы инвестиций'
+            },
+            xAxis: {
+                categories: years
+            },
+            yAxis: [{ // Primary yAxis
+                labels: {
+                    format: '{value} млн руб',
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                },
+                title: {
+                    text: 'Объем инвестиций',
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                }
+            }, { // Secondary yAxis
+                title: {
+                    text: 'Средний объем инвестиций',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                labels: {
+                    format: '{value} млн руб',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                opposite: true
+            }],
+            labels: {
+                items: [{
+                    html: '',
+                    style: {
+                        left: '50px',
+                        top: '18px',
+                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+                    }
+                }]
+            },
+            series: [{
+                type: 'column',
+                name: 'Объем инвестиций',
+                data: [39,
+                    2144,
+                    9295,
+                    44017,
+                    18375,
+                    3106,
+                    6027,
+                    356]
+            },  {
+                type: 'spline',
+                name: 'Средний объем инвестиций на 1 объект',
+                data: [39.00,
+                    38,
+                    120,
+                    349,
+                    208,
+                    81,
+                    2009,
+                    89],
+                marker: {
+                    lineWidth: 2,
+                    lineColor: Highcharts.getOptions().colors[3],
+                    fillColor: 'white'
+                },
+                yAxis: 1
+            }]
+        });
+    });
+
+</script>
+
+<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+<script src="/moscow.js"></script>
+
+<div id="map" style="height: 500px"></div>
+<script type="application/javascript">
+
+    var map = L.map('map', {
+        center: [55.75,37.609],
+        zoom: 10,
+        dragging: true,
+        scrollWheelZoom: true
+    });
+    L.tileLayer('http://{s}.tiles.mapbox.com/v3/foursquare.meku766r/{z}/{x}/{y}.png', {
+        attribution: '',
+        maxZoom: 18
+    }).addTo(map);
+
+
+    NewMoscow.features.forEach(function(entry) {
+        L.polygon(entry.geometry.coordinates[0]).bindPopup(generatePopup(entry)).addTo(map);
+        console.log(entry);
+    });
+
+    function generatePopup (obj)
+    {
+        return "<b>"+obj.properties.NAME+"</b><br>"+
+                    "<i>Объектов</i>: 17";
+    }
+</script>
+
+
+
