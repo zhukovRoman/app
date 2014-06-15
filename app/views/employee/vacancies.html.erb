@@ -5,17 +5,18 @@
     </div>
 <% end %>
 
+<h2>Редактирование числа вакансий за <%= @standalone_month_names[Date.today.month] %></h2>
 
-<%= form_tag("vacancies", method: "post", class:"form-horizontal") do %>
-    <%= submit_tag("Cохранить", class: "btn btn-success", style:"margin-bottom: 5px") %>
+<%= form_tag("vacancies", method: "post", class:"form-horizontal form-vacancies") do %>
+    <%= submit_tag("Cохранить", class: "btn btn-success btn-sm", style:"margin-bottom: 5px") %>
     <% @departments.each do |dep| -%>
         <div class="form-group">
           <div class="col-md-1">
             <%= text_field_tag(dep.id, dep.vacancy_count, name: "departments[#{dep.id}]", id:"vacnacy_#{dep.id}", class: "form-control" )  %>
           </div>
-          <label for="inputEmail3" class="col-md-11 control-label" style="text-align: left"><%= dep.name %></label>
+          <label for="inputEmail3" class="col-md-11 control-label" style="text-align: left; padding-top: 4px;"><%= dep.name %></label>
 
         </div>
     <% end -%>
-    <%= submit_tag("Cохранить", class: "btn btn-success") %>
+    <%= submit_tag("Cохранить", class: "btn btn-success btn-sm") %>
 <% end %>

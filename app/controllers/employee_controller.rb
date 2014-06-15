@@ -3,6 +3,7 @@ class EmployeeController < ApplicationController
   before_filter :authenticate_user!, :except => [:personalflowXmlParse, :salaryXmlParse, :personalInit]
 
   def vacancies
+      @standalone_month_names = ["", "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"]
       if request.post? && params['departments'] != nil
         params['departments'].each do |k,v|
           dep = Department.find(k)
