@@ -69,15 +69,20 @@ class EmployeeController < ApplicationController
       xml = Nokogiri::XML(f)
       date = Date
       xml.xpath("//data/month").each do |m|
-        month = m.attribute('number').to_s
-        year = m.attribute('year').to_s
+        month = m.attribute('number').inner_text()
+        year = m.attribute('year').inner_text()
         date = Date.parse("#{year}-#{month}-05")
       end
       xml.xpath("//data/employees/employee").each do |node|
-        empoloyee = Employee.find_by tab_number: node.attribute('id').to_s
+        empoloyee = Employee.find_by tab_number: node.attribute('id').inner_text()
         if empoloyee!=nil
-          empoloyee.salaries.create(salary: node.attribute('salary').to_s.to_f, bonus: node.attribute('bonus').to_s.to_f,
-                                    tax: node.attribute('tax').to_s.to_f, salary_date: date)
+          empoloyee.salaries.create(salary: node.attribute('salary').inner_text(), bonus: node.attribute('bonus').inner_text(),
+                                    insurance: node.attribute('insurance').inner_text(),
+                                    NDFL: node.attribute('NDFL').inner_text(),
+                                    retention: node.attribute('retention').inner_text(),
+                                    salary_date: date)
+        else
+          puts "НЕ НАЙДЕН СОТРУДНИК С ТАБЕЛЬНЫМ НОМЕРОМ #{node.attribute('id').inner_text()} ДЛЯ НАЧИСЛЕНИЯ ЗП"
         end
       end
       f.close
@@ -91,55 +96,67 @@ class EmployeeController < ApplicationController
       render plain: "file not found!"
       return
     else
+      count_all = 0
+      count_new = 0
+      count_del = 0
       f = File.open(path)
       xml = Nokogiri::XML(f)
       xml.xpath("//employee").each do |node|
-        type = node.attribute('type').to_s
-        date = Date.parse(node.attribute('date').to_s)
+        count_all = count_all +1
+        type = node.attribute('type').inner_text()
+        date = Date.parse(node.attribute('date').inner_text())
         if type == "Увольнение"
-          empl = Employee.find_by tab_number: node.attribute('id').to_s
+          count_del = count_del +1
+          empl = Employee.find_by tab_number: node.attribute('id').inner_text()
           if empl!=nil
-            #persFlow = PersonalFlow.create(operation_type: type,
-            #                               old_post: empl.post,
-            #                               flow_date: date,
-            #                               employee: empl,
-            #                               old_department_id: empl.department.id)
-            puts "УВОЛИТЬ #{empl.attributes}"
-            #empl.destroy
-          end
-        end
-        if type == "Прием на работу"
-          dep = Department.find(node.parent.attribute('id').to_s.to_i)
-          if dep!=nil
-            empl = dep.employees.create(FIO: node.attribute('FIO').to_s, tab_number: node.attribute('id').to_s,
-                                        stavka: 1, post: node.attribute('post').to_s)
             persFlow = PersonalFlow.create(operation_type: type,
                                            old_post: empl.post,
                                            flow_date: date,
                                            employee: empl,
-                                           new_department_id: dep.id)
+                                           old_department_id: empl.department.id)
+            puts "УВОЛЕН СОТРУДНИК #{empl.attributes}"
+            #empl.destroy
+          else
+            puts "НЕ НАЙДЕН СОТРУДНИК С ТАБЕЛЬНЫМ НОМЕРОМ #{node.attribute('id').inner_text()} ДЛЯ УВОЛЬНЕНИЯ"
           end
-
-          puts "ПРИНЯТЬ НА РАБОТУ #{333}"
         end
-        if type == "Перевод"
-
-          new_id = node.parent.attribute('id').to_s.to_i
-          empl = Employee.find_by tab_number: node.attribute('id').to_s
-          persFlow = PersonalFlow.create(operation_type: type,
-                                         old_post: empl.post,
-                                         new_post: node.attribute('post').to_s,
-                                         flow_date: date,
-                                         employee: empl,
-                                         new_department_id: new_id,
-                                         old_department_id: empl.department.id)
-          empl.department_id = new_id
-          empl.save
-          puts "ПЕРВОД #{empl.attributes}"
+        if type == "Прием на работу"
+          count_new= count_new+1
+          dep = Department.find_by out_number: node.parent.attribute('id').inner_text()
+          if dep!=nil
+            empl = dep.employees.create(FIO: node.attribute('FIO').inner_text(), tab_number: node.attribute('id').inner_text(),
+                                        stavka: node.attribute('stavka').inner_text(), post: node.attribute('post').inner_text())
+            persFlow = PersonalFlow.create(operation_type: type,
+                                           new_post: empl.post,
+                                           flow_date: date,
+                                           employee: empl,
+                                           new_department_id: dep.id)
+            puts "ПРИНЯТЬ НА РАБОТУ #{empl.attributes}"
+          else
+            puts "НЕ НАЙДЕН ДЕПАРТАМЕНТ С ID = #{node.parent.attribute('id').inner_text()} В КОТОРЫЙ ПРИНЯТ СОТРУДНИК #{node.attribute('id').inner_text()}"
+          end
+        end
+        if type == "Перемещение"
+          new_id = node.parent.attribute('id').inner_text()
+          empl = Employee.find_by tab_number: node.attribute('id').inner_text()
+          if empl!=nil
+            persFlow = PersonalFlow.create(operation_type: type,
+                                           old_post: empl.post,
+                                           new_post: node.attribute('post').inner_text(),
+                                           flow_date: date,
+                                           employee: empl,
+                                           new_department_id: new_id,
+                                           old_department_id: empl.department.id)
+            empl.department_id = new_id
+            empl.save
+            puts "ПЕРВОД #{empl.attributes}"
+          else
+            puts "НЕ НАЙДЕН СОТРУДНИК С ТАБЕЛЬНЫМ НОМЕРОМ #{node.attribute('id').inner_text()} ДЛЯ ПЕРЕВОДА"
+          end
         end
       end
       f.close
-      render plain: "OK"
+      render plain: "OK all = #{count_all} del = #{count_del} new = #{count_new}"
     end
   end
 end
