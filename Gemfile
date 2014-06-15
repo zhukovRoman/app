@@ -49,5 +49,7 @@ gem 'nokogiri'
 
 gem 'bootstrap-sass', '~> 3.1.1'
 
+gem 'devise'
+
 #gem 'tiny_tds'
 #gem 'activerecord-sqlserver-adapter', '~> 4.0.0'

@@ -1,9 +1,8 @@
 class EmployeeController < ApplicationController
   @@partName = "ГП УГС - Кадры"
-
+  before_filter :authenticate_user!, :except => [:personalflowXmlParse, :salaryXmlParse, :personalInit]
 
   def vacancies
-
       if request.post? && params['departments'] != nil
         params['departments'].each do |k,v|
           dep = Department.find(k)
@@ -20,7 +19,6 @@ class EmployeeController < ApplicationController
         end
       end
       @departments = Department.where(parent_id:  nil)
-
   end
 
   def personalInit

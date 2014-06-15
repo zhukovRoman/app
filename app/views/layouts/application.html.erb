@@ -19,17 +19,38 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="/employee"><%= partName %></a>
+        <a class="navbar-brand" href="/"><%= partName %></a>
       </div>
 
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
-        </ul>
 
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <% if user_signed_in? %>
+              <!--<span>Здравствуйте, <%= current_user.email %></span>-->
+              <li> <%= link_to 'Выйти', destroy_user_session_path, :method => :delete %></li>
+          <% else %>
+              <li>  <%= link_to 'Войти', new_user_session_path %></li>
+          <% end %>
+        </ul>
       </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
   </nav>
+  <% if alert %>
+  <div class="alert alert-danger alert-dismissable">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <%= alert %>
+  </div>
+  <% end %>
+  <% if notice %>
+  <div class="alert alert-success alert-dismissable">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <%= notice %>
+  </div>
+  <% end %>
+
   <%= yield %>
 
 </div>
