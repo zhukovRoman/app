@@ -39,12 +39,13 @@ gem 'spring',        group: :development
 # gem 'debugger', group: [:development, :test]
 
 # Use Capistrano
-gem 'capistrano', '~> 3.2.0'
-group :development do
-  gem 'capistrano-rails', '~> 1.1'
-  gem 'capistrano-rvm'
-  gem 'capistrano-bundler', '~> 1.1.2'
-end
+gem 'capistrano', '~> 3.1.0'
+
+#group :development do
+#  gem 'capistrano-rails', '~> 1.1'
+#  gem 'capistrano-rvm'
+#  gem 'capistrano-bundler', '~> 1.1.2'
+#end
 
 gem 'mysql2'
 
