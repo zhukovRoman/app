@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140615183155) do
+ActiveRecord::Schema.define(version: 20140616094834) do
 
   create_table "departments", force: true do |t|
     t.string   "out_number"
@@ -76,5 +76,13 @@ ActiveRecord::Schema.define(version: 20140615183155) do
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+
+  create_table "vacancies", force: true do |t|
+    t.integer  "count"
+    t.integer  "department_id"
+    t.date     "for_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
 end

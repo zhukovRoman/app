@@ -5,18 +5,63 @@
     </div>
 <% end %>
 
-<h2>Редактирование числа вакансий за <%= @standalone_month_names[Date.today.month] %></h2>
-
+<h2>Редактирование числа вакансий за <%= @standalone_month_names[@month.to_i] %></h2>
+<div class="col-md-6">
+<a href="<%= url_for(:controller => "employee", :action => "vacancies",
+                     :month => (Date.current-1.month).month, :year => (Date.current-1.month).year) %>">
+  (прошлый месяц)</a>
+<a href="<%= url_for(:controller => "employee", :action => "vacancies",
+                     :month => (Date.current).month, :year => (Date.current).year) %>">
+  (текущий месяц)</a>
 <%= form_tag("vacancies", method: "post", class:"form-horizontal form-vacancies") do %>
+    <%= hidden_field_tag "year", @year%>
+    <%= hidden_field_tag  "month", @month %>
     <%= submit_tag("Cохранить", class: "btn btn-success btn-sm", style:"margin-bottom: 5px") %>
-    <% @departments.each do |dep| -%>
+    <% @vacancies.each do |vac| -%>
         <div class="form-group">
-          <div class="col-md-1">
-            <%= text_field_tag(dep.id, dep.vacancy_count, name: "departments[#{dep.id}]", id:"vacnacy_#{dep.id}", class: "form-control" )  %>
+          <div class="col-md-2">
+            <%= text_field_tag(vac.id, vac.count, name: "vacancies[#{vac.id}]", id:"vacnacy_#{vac.id}", class: "form-control" )  %>
           </div>
-          <label for="inputEmail3" class="col-md-11 control-label" style="text-align: left; padding-top: 4px;"><%= dep.name %></label>
+          <label for="inputEmail3" class="col-md-10 control-label" style="text-align: left; padding-top: 4px;"><%= vac.department.name %></label>
 
         </div>
     <% end -%>
     <%= submit_tag("Cохранить", class: "btn btn-success btn-sm") %>
 <% end %>
+</div>
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<div class="col-md-6" id="chart"></div>
+<script type="application/javascript">
+    $(function () {
+        $('#chart').highcharts({
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Число вакансий по месяцам'
+            },
+            xAxis: {
+                categories: JSON.parse('<%= @plotXAxis.to_json.html_safe %>')
+
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Число вакансий'
+                }
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [{
+                name: 'Вакансий',
+                data: <%= @plotData.as_json %>
+
+            }]
+        });
+    });
+
+</script>

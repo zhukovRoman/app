@@ -1,27 +1,61 @@
 class EmployeeController < ApplicationController
-  @@partName = "ГП УГС - Кадры"
+
   before_filter :authenticate_user!, :except => [:personalflowXmlParse, :salaryXmlParse, :personalInit]
+  before_action :change_partName
+
+  def change_partName
+    @@partName = "КП УГС - Кадры"
+  end
 
   def vacancies
+      @month = params[:month]
+      if (@month== nil)
+        @month = Date.current.month
+      end
+      @year = params[:year]
+      if (@year== nil)
+        @year = Date.current.year
+      end
       @standalone_month_names = ["", "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"]
-      if request.post? && params['departments'] != nil
-        params['departments'].each do |k,v|
-          dep = Department.find(k)
-          dep.vacancy_count = v
-          if !dep.valid?
+      if request.post? && params['vacancies'] != nil
+        params['vacancies'].each do |k,v|
+          puts "vacancies #{k} count #{v}"
+          vac = Vacancies.find(k)
+          vac.count = v
+          if !vac.valid?
             @error = ""
-            dep.errors.full_messages.each do |msg|
+            vac.errors.full_messages.each do |msg|
               @error += msg
             end
             break
           else
-            dep.save!
+            vac.save!
           end
         end
       end
-      @departments = Department.where(parent_id:  nil)
+      #@departments = Department.where(parent_id:  nil)
+      date = Date.parse(@year.to_s+"-"+@month.to_s+"-28")
+      Department.where(parent_id:  nil).each do |dep|
+        vac = dep.vacancies.where(for_date: date.at_beginning_of_month..date).take
+        if (vac == nil)
+          dep.vacancies.create(count: 0, for_date: date.at_beginning_of_month+14.day)
+        end
+      end
+      @vacancies = Vacancies.where(for_date: date.at_beginning_of_month..date)
+      # выборка данных для графика
+      @plotXAxis = Array.new
+      @plotData = Array.new
+      Vacancies.where(for_date: Date.current-1.year..Date.current).group("for_date").sum("count").each do |k, v|
+        @plotXAxis.push(@standalone_month_names[k.month])
+        @plotData.push(v)
+      end
   end
 
+
+
+  #################
+  #   Разбор XML  #
+  #################
   def personalInit
     path = "personal.xml"
     if !File.file?(path)

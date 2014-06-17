@@ -36,7 +36,7 @@ set :deploy_to, '/var/webapp/'
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
 
 # Default value for keep_releases is 5
- set :keep_releases, 2
+ set :keep_releases, 4
 
 namespace :deploy do
 

@@ -25,3 +25,5 @@ en:
     attributes:
         department:
           vacancy_count: "Число вакансий"
+        vacancies:
+          count: "Число вакансий"
