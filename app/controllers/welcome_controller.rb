@@ -4,7 +4,7 @@ class WelcomeController < ApplicationController
   def change_partName
     @@partName = "КП УГС"
   end
-  
+
   def index
     #@user = User.new(:email => 'zhrovl@gmail.com', :password => 'pass123', :password_confirmation => 'pass123')
     #@user.save!

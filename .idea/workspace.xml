@@ -2,21 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5f9abbab-e858-4c37-adea-ecaae39daf1e" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/p1.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/personal copy.xml" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db/development.sqlite3" afterPath="$PROJECT_DIR$/db/development.sqlite3" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Gemfile.lock" afterPath="$PROJECT_DIR$/Gemfile.lock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/app.iml" afterPath="$PROJECT_DIR$/.idea/app.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/layouts/application.html.erb" afterPath="$PROJECT_DIR$/app/views/layouts/application.html.erb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/models/department.rb" afterPath="$PROJECT_DIR$/app/models/department.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/deploy.rb" afterPath="$PROJECT_DIR$/config/deploy.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/employee_controller.rb" afterPath="$PROJECT_DIR$/app/controllers/employee_controller.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/locales/en.yml" afterPath="$PROJECT_DIR$/config/locales/en.yml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/objects_controller.rb" afterPath="$PROJECT_DIR$/app/controllers/objects_controller.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db/schema.rb" afterPath="$PROJECT_DIR$/db/schema.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/employee/vacancies.html.erb" afterPath="$PROJECT_DIR$/app/views/employee/vacancies.html.erb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/welcome_controller.rb" afterPath="$PROJECT_DIR$/app/controllers/welcome_controller.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="app.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -29,6 +17,7 @@
   </component>
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CoverageDataManager">
+    <SUITE FILE_PATH="coverage/app@Production__app.coverage" NAME="Production: app Coverage Results" MODIFIED="1403012252493" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="app" />
     <SUITE FILE_PATH="coverage/app@Development__app.coverage" NAME="Development: app Coverage Results" MODIFIED="1403005844794" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="app" />
   </component>
   <component name="CreatePatchCommitExecutor">
@@ -61,39 +50,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="vacancies.html.erb" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="vacancies.html.erb" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/views/employee/vacancies.html.erb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="6" column="0" selection-start="242" selection-end="242" vertical-scroll-proportion="-3.0833333" vertical-offset="16" max-vertical-offset="1080">
+            <state line="33" column="38" selection-start="1658" selection-end="1658" vertical-scroll-proportion="0.098468274" vertical-offset="450" max-vertical-offset="1080">
               <folding>
-                <marker date="1403010559000" expanded="true" signature="75:230" placeholder="..." />
-                <marker date="1403010559000" expanded="true" signature="350:1513" placeholder="..." />
-                <marker date="1403010559000" expanded="true" signature="526:548" placeholder="..." />
-                <marker date="1403010559000" expanded="true" signature="708:730" placeholder="..." />
-                <marker date="1403010559000" expanded="true" signature="1069:1413" placeholder="..." />
-                <marker date="1403010559000" expanded="true" signature="1102:1251" placeholder="..." />
-                <marker date="1403010559000" expanded="false" signature="1327:1362" placeholder="..." />
-                <marker date="1403010559000" expanded="true" signature="1657:2435" placeholder="..." />
-                <marker date="1403010559000" expanded="true" signature="1677:2423" placeholder="{...}" />
-                <marker date="1403010559000" expanded="true" signature="1710:2415" placeholder="{...}" />
-                <marker date="1403010559000" expanded="true" signature="1731:1777" placeholder="{&quot;type&quot;: 'column'...}" />
-                <marker date="1403010559000" expanded="true" signature="1798:1863" placeholder="{&quot;text&quot;: 'Число вакансий по месяцам'...}" />
-                <marker date="1403010559000" expanded="true" signature="1884:1978" placeholder="{...}" />
-                <marker date="1403010559000" expanded="true" signature="1999:2124" placeholder="{&quot;min&quot;: 0...}" />
-                <marker date="1403010559000" expanded="true" signature="2048:2110" placeholder="{&quot;text&quot;: 'Число вакансий'...}" />
-                <marker date="1403010559000" expanded="true" signature="2151:2284" placeholder="{...}" />
-                <marker date="1403010559000" expanded="true" signature="2177:2270" placeholder="{&quot;pointPadding&quot;: 0.2...}" />
-                <marker date="1403010559000" expanded="true" signature="2306:2405" placeholder="[...]" />
-                <marker date="1403010559000" expanded="true" signature="2307:2404" placeholder="{&quot;name&quot;: 'Вакансий'...}" />
+                <element signature="n#style#0;n#label#0;n#div#0;n#div#1;n#!!top" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="welcome_controller.rb" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="welcome_controller.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/controllers/welcome_controller.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="6" column="2" selection-start="138" selection-end="138" vertical-scroll-proportion="0.18218623" vertical-offset="0" max-vertical-offset="494">
+            <state line="6" column="0" selection-start="136" selection-end="136" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="270">
               <folding />
             </state>
           </provider>
@@ -218,10 +189,10 @@
         <option value="$PROJECT_DIR$/app/assets/javascripts/employee.js.coffee" />
         <option value="$PROJECT_DIR$/app/assets/javascripts/test.js" />
         <option value="$PROJECT_DIR$/app/views/layouts/application.html.erb" />
-        <option value="$PROJECT_DIR$/app/views/employee/vacancies.html.erb" />
         <option value="$PROJECT_DIR$/app/controllers/employee_controller.rb" />
         <option value="$PROJECT_DIR$/app/controllers/objects_controller.rb" />
         <option value="$PROJECT_DIR$/app/controllers/welcome_controller.rb" />
+        <option value="$PROJECT_DIR$/app/views/employee/vacancies.html.erb" />
       </list>
     </option>
   </component>
@@ -384,7 +355,7 @@
       <recent name="$PROJECT_DIR$/public" />
     </key>
   </component>
-  <component name="RunManager" selected="Rails.Development: app">
+  <component name="RunManager" selected="Rails.Production: app">
     <configuration default="true" type="RakeRunConfigurationType" factoryName="Rake">
       <module name="" />
       <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="-e $stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift)" />
@@ -574,7 +545,7 @@
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32891566" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20192307" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20120482" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32891566" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -582,7 +553,7 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39976552" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3433735" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3433735" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32891566" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -871,33 +842,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/views/employee/vacancies.html.erb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="0" selection-start="242" selection-end="242" vertical-scroll-proportion="-3.0833333" vertical-offset="16" max-vertical-offset="1080">
-          <folding>
-            <marker date="1403010559000" expanded="true" signature="75:230" placeholder="..." />
-            <marker date="1403010559000" expanded="true" signature="350:1513" placeholder="..." />
-            <marker date="1403010559000" expanded="true" signature="526:548" placeholder="..." />
-            <marker date="1403010559000" expanded="true" signature="708:730" placeholder="..." />
-            <marker date="1403010559000" expanded="true" signature="1069:1413" placeholder="..." />
-            <marker date="1403010559000" expanded="true" signature="1102:1251" placeholder="..." />
-            <marker date="1403010559000" expanded="false" signature="1327:1362" placeholder="..." />
-            <marker date="1403010559000" expanded="true" signature="1657:2435" placeholder="..." />
-            <marker date="1403010559000" expanded="true" signature="1677:2423" placeholder="{...}" />
-            <marker date="1403010559000" expanded="true" signature="1710:2415" placeholder="{...}" />
-            <marker date="1403010559000" expanded="true" signature="1731:1777" placeholder="{&quot;type&quot;: 'column'...}" />
-            <marker date="1403010559000" expanded="true" signature="1798:1863" placeholder="{&quot;text&quot;: 'Число вакансий по месяцам'...}" />
-            <marker date="1403010559000" expanded="true" signature="1884:1978" placeholder="{...}" />
-            <marker date="1403010559000" expanded="true" signature="1999:2124" placeholder="{&quot;min&quot;: 0...}" />
-            <marker date="1403010559000" expanded="true" signature="2048:2110" placeholder="{&quot;text&quot;: 'Число вакансий'...}" />
-            <marker date="1403010559000" expanded="true" signature="2151:2284" placeholder="{...}" />
-            <marker date="1403010559000" expanded="true" signature="2177:2270" placeholder="{&quot;pointPadding&quot;: 0.2...}" />
-            <marker date="1403010559000" expanded="true" signature="2306:2405" placeholder="[...]" />
-            <marker date="1403010559000" expanded="true" signature="2307:2404" placeholder="{&quot;name&quot;: 'Вакансий'...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/controllers/employee_controller.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state line="7" column="5" selection-start="156" selection-end="249" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3030">
@@ -914,8 +858,17 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/controllers/welcome_controller.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="2" selection-start="138" selection-end="138" vertical-scroll-proportion="0.18218623" vertical-offset="0" max-vertical-offset="494">
+        <state line="6" column="0" selection-start="136" selection-end="136" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="270">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/employee/vacancies.html.erb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="33" column="38" selection-start="1658" selection-end="1658" vertical-scroll-proportion="0.098468274" vertical-offset="450" max-vertical-offset="1080">
+          <folding>
+            <element signature="n#style#0;n#label#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
