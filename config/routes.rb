@@ -8,9 +8,15 @@ Rails.application.routes.draw do
   get 'welcome/index'
 
   get 'employee/personalflowXmlParse'
+  get 'employee/pfxmlp'
   get 'employee/salaryXmlParse'
   get 'employee/personalInit'
   get 'employee/vacancies'
+  get 'employee/index'
+  get 'employee/editmanagment'
+  get 'employee/calculate'
+
+
 
   get 'objects/index'
   # The priority is based upon order of creation: first created -> highest priority.

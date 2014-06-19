@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140616094834) do
+ActiveRecord::Schema.define(version: 20140619095402) do
 
   create_table "departments", force: true do |t|
     t.string   "out_number"
@@ -21,6 +21,43 @@ ActiveRecord::Schema.define(version: 20140616094834) do
     t.datetime "updated_at"
     t.integer  "chief_id"
     t.integer  "parent_id"
+    t.integer  "department_type", default: 0
+  end
+
+  create_table "employee_stats_departments", force: true do |t|
+    t.date     "month"
+    t.integer  "department_id"
+    t.float    "salary"
+    t.float    "bonus"
+    t.float    "tax"
+    t.float    "avg_salary"
+    t.integer  "employee_count"
+    t.integer  "vacancy_count"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "manager",        limit: 500
+  end
+
+  create_table "employee_stats_months", force: true do |t|
+    t.date     "month"
+    t.float    "salary"
+    t.float    "bonus"
+    t.float    "tax"
+    t.float    "avg_salary"
+    t.float    "salary_manage"
+    t.float    "bonus_manage"
+    t.float    "tax_manage"
+    t.float    "avg_salary_manage"
+    t.integer  "employee_count"
+    t.integer  "employee_adds"
+    t.integer  "employee_dismiss"
+    t.integer  "vacancy_count"
+    t.integer  "employee_manage_count"
+    t.integer  "employee_production_count"
+    t.float    "k_dismiss"
+    t.float    "k_complect"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "employees", force: true do |t|

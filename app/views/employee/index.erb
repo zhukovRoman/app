@@ -1,0 +1,326 @@
+<div class="col-sm-6">
+  <a href="/employee/vacancies" class="btn btn-default btn-lg btn-block">Число вакансий</a>
+</div>
+<div class="col-sm-6">
+  <a href="/employee/editmanagment" class="btn btn-default btn-lg btn-block">Выбор управляющих подразделений</a>
+</div>
+
+<div class="col-md-12">
+  <div id="salary_structure_chart" style="height: 600px"></div>
+  <div id="employee_situation_chart" style="height: 600px"></div>
+  <div id="employee_koef_chart" style="height: 600px"></div>
+  <div id="employee_type_personal" style="height: 600px"></div>
+  <div id="employee_manage_salary_structure_chart" style="height: 600px"></div>
+</div>
+
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $('#salary_structure_chart').highcharts({
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Структура заработной платы'
+            },
+            xAxis: {
+                categories: JSON.parse('<%= @plotXAxis.to_json.html_safe %>')
+            },
+            yAxis: [{
+                min: 0,
+                title: {
+                    text: 'Сумма'
+                },
+                stackLabels: {
+                    enabled: true,
+                    style: {
+                        fontWeight: 'bold',
+                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                    }
+                },
+                labels: {
+                    formatter: function() {
+                        return this.value / 1000 +'т';
+                    }
+                }
+            },{min:45000,
+                max:55000,
+                title:{text:'Средняя зарплата'},
+                opposite: true,
+                labels: {
+                    formatter: function() {
+                        return this.value / 1000 +'т';
+                    }
+                }
+            }],
+            legend: {
+                align: 'right',
+                x: -70,
+                verticalAlign: 'top',
+                y: 20,
+                floating: true,
+                backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+                borderColor: '#CCC',
+                borderWidth: 1,
+                shadow: false
+            },
+            tooltip: {
+
+                formatter: function() {
+                    return '<b>'+ this.x +'</b><br/>'+
+                            this.series.name +': '+ this.y +'<br/>'+
+                            'Total: '+ this.point.stackTotal;
+                }
+            },
+            plotOptions: {
+                column: {
+                    stacking: 'normal'
+                }
+            },
+            series: [
+                {
+                    name: 'Премии',
+                    data: <%= @plotDataBonus.as_json %>
+                }, {
+                    name: 'Налоги',
+                    data: <%= @plotDataTax.as_json %>
+                }, {
+                    name: 'ЗП',
+                    data: <%= @plotDataSalary.as_json %>
+                }
+                ,{
+                    name: 'Средняя зарплата',
+                    type: 'spline',
+                    yAxis: 1,
+                    data: <%= @plotDataAvgSalary.as_json %>,
+                    tooltip: {
+                        valueSuffix: ' т'
+                    }}                    ]
+        });
+    });
+</script>
+<script type="text/javascript">
+    $(function () {
+        $('#employee_situation_chart').highcharts({
+            title: {
+                text: 'Персонал'
+            },
+            xAxis: {
+                categories: JSON.parse('<%= @plotXAxis.to_json.html_safe %>')
+            },
+            yAxis: [{ // Primary yAxis
+                title: {
+                    text: 'Человек',
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                }
+            }, { // Secondary yAxis
+                min:200,
+                title: {
+                    text: 'Человек',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                labels: {
+                    format: '{value}'
+                },
+                opposite: true
+            }],
+            labels: {
+                items: []
+            },
+            series: [{
+                type: 'column',
+                name: 'Уволено',
+                data: <%= @plotDataEmployeeDismiss.as_json %>
+            }, {
+                type: 'column',
+                name: 'Принято',
+                data: <%= @plotDataEmployeeAdd.as_json %>
+            }, {
+                type: 'column',
+                name: 'Вакансий',
+                data: <%= @plotDataVacancyCount.as_json %>
+            }, {
+                type: 'spline',
+                name: 'Число сотрудников',
+                color: 'red',
+                data: <%= @plotDataEmployeeCount.as_json %>,
+                yAxis: 1,
+                marker: {
+                    lineWidth: 2,
+                    lineColor: 'red',
+                    fillColor: 'white'
+                }
+            }]
+        });
+    });
+
+
+</script>
+<script type="text/javascript">
+    $(function () {
+        $('#employee_koef_chart').highcharts({
+            title: {
+                text: 'Коэффиценты текучести кадров',
+                x: -20 //center
+            },
+            xAxis: {
+                categories: JSON.parse('<%= @plotXAxis.to_json.html_safe %>')
+            },
+            yAxis: {
+                title: {
+                    text: '%'
+                }
+            },
+            tooltip: {
+                valueSuffix: '%'
+            },
+            series: [{
+                name: 'Неукомплектованность кадров',
+                data: <%= @plotDatakNeuk.as_json%>
+            }, {
+                name: 'Коэффициент увольнений',
+                data: <%= @plotDatakTek.as_json%>
+            }]
+        });
+    });
+
+</script>
+<script type="text/javascript">
+    $(function () {
+        $('#employee_type_personal').highcharts({
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Отношение производственного персонала к управленческому'
+            },
+            xAxis: {
+                categories: JSON.parse('<%= @plotXAxis.to_json.html_safe %>')
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: '%'
+                }
+            },
+            tooltip: {
+                shared: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [{
+                name: 'Производественный',
+                data: <%= @plotDataProdCount.as_json %>
+
+            }, {
+                name: 'Управленческий',
+                data: <%= @plotDataManageCount.as_json %>
+
+            }]
+        });
+    });
+</script>
+<script type="text/javascript">
+    $(function () {
+        $('#employee_manage_salary_structure_chart').highcharts({
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Структура заработной платы АУП'
+            },
+            xAxis: {
+                categories: JSON.parse('<%= @plotXAxis.to_json.html_safe %>')
+            },
+            yAxis: [{
+                min: 0,
+                title: {
+                    text: 'Сумма'
+                },
+                stackLabels: {
+                    enabled: true,
+                    style: {
+                        fontWeight: 'bold',
+                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                    }
+                },
+                labels: {
+                    formatter: function() {
+                        return this.value / 1000 +'т';
+                    }
+                }
+            },{min:20000,
+                max:30000,
+                title:{text:'Средняя зарплата'},
+                opposite: true,
+                labels: {
+                    formatter: function() {
+                        return this.value / 1000 +'т';
+                    }
+                }
+            }
+                ,{
+                    title:{text:'Количество персонала'}
+                    //opposite: true,
+                }],
+            legend: {
+                align: 'right',
+                x: -70,
+                verticalAlign: 'top',
+                y: 20,
+                floating: true,
+                backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+                borderColor: '#CCC',
+                borderWidth: 1,
+                shadow: false
+            },
+            tooltip: {
+
+                shared: true
+            },
+            plotOptions: {
+                column: {
+                    stacking: 'normal'
+                }
+            },
+            series: [
+                {
+                    name: 'Премии',
+                    stack: 'ZP',
+                    data: <%= @plotDataManageBonus.as_json %>
+                }, {
+                    name: 'Налоги',
+                    stack: 'ZP',
+                    data: <%= @plotDataManageTax.as_json %>
+                }, {
+                    name: 'ЗП',
+                    stack: 'ZP',
+                    data: <%= @plotDataManageSalary.as_json %>
+                }
+                , {
+                    name: 'Количество АУП',
+                    stack: 'none',
+                    yAxis: 2,
+                    data: <%= @plotDataAUPCount.as_json %>
+                }
+                ,{
+                    name: 'Средняя зарплата',
+                    type: 'spline',
+                    yAxis: 1,
+                    data: <%= @plotDataManageAvg.as_json %>,
+                    tooltip: {
+                        valueSuffix: ' т'
+                    }}                    ]
+        });
+    });
+
+
+</script>

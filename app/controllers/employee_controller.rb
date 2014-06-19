@@ -7,6 +7,68 @@ class EmployeeController < ApplicationController
     @@partName = "КП УГС - Кадры"
   end
 
+  def rename_XML (path)
+    #File.rename(path, "_"+path)
+    #return "_"+path
+    return path
+  end
+
+  def index
+    @plotXAxis = Array.new
+    @plotDataSalary = Array.new
+    @plotDataBonus = Array.new
+    @plotDataTax = Array.new
+    @plotDataAvgSalary = Array.new
+
+    @plotDataEmployeeCount = Array.new
+    @plotDataEmployeeDismiss = Array.new
+    @plotDataEmployeeAdd = Array.new
+    @plotDataVacancyCount = Array.new
+
+    @plotDatakTek = Array.new
+    @plotDatakNeuk = Array.new
+
+    @plotDataManageCount = Array.new
+    @plotDataProdCount = Array.new
+
+    @plotDataManageSalary = Array.new
+    @plotDataManageTax = Array.new
+    @plotDataManageBonus = Array.new
+    @plotDataManageAvg = Array.new
+    @plotDataAUPCount = Array.new
+
+    EmployeeStatsMonths.where(month: Date.current-1.year..Date.current).each do |stat|
+      @plotXAxis.push(stat.month.strftime("%b"))
+      @plotDataSalary.push(stat.salary)
+      @plotDataBonus.push(stat.bonus)
+      @plotDataTax.push(stat.tax)
+      @plotDataAvgSalary.push(stat.avg_salary)
+
+      @plotDataEmployeeAdd.push(stat.employee_adds)
+      @plotDataEmployeeCount.push(stat.employee_count)
+      @plotDataEmployeeDismiss.push(stat.employee_dismiss)
+      @plotDataVacancyCount.push(stat.vacancy_count)
+
+      @plotDatakNeuk.push(stat.k_complect)
+      @plotDatakTek.push(stat.k_dismiss)
+
+      @plotDataManageCount.push(100*stat.employee_manage_count.to_f/stat.employee_count)
+      @plotDataProdCount.push(100*stat.employee_production_count.to_f/stat.employee_count)
+
+      @plotDataManageBonus.push(stat.bonus_manage)
+      @plotDataManageSalary.push(stat.salary_manage)
+      @plotDataManageTax.push(stat.tax_manage)
+      @plotDataManageAvg.push(25000)
+      @plotDataAUPCount.push(20)
+
+    end
+
+  end
+
+  def editmanagment
+
+  end
+
   def vacancies
       @month = params[:month]
       if (@month== nil)
@@ -51,6 +113,11 @@ class EmployeeController < ApplicationController
       end
   end
 
+  def calculate
+    stat = EmployeeStatsMonths.calculate_stat(Date.parse("2014-05-05"))
+    EmployeeStatsDepartments.calculate_stat(Date.parse("2014-05-05"))
+    render plain: "#{stat.attributes}"
+  end
 
 
   #################
@@ -62,7 +129,8 @@ class EmployeeController < ApplicationController
       render plain: "file not found!"
       return
     else
-      f = File.open(path)
+      #path = rename_XML(path)
+      f = File.open(rename_XML(path))
       xml = Nokogiri::XML(f)
       xml.xpath("//data/directorate").each do |node|
         directorate = Department.create(name: node.attribute('name').to_s , vacancy_count: 0,
@@ -94,12 +162,13 @@ class EmployeeController < ApplicationController
   end
 
   def salaryXmlParse
-    path = "salary.xml"
+    path = "salary_0x_2014.xml"
     if !File.file?(path)
       render plain: "file not found!"
       return
     else
-      f = File.open(path)
+      #path = rename_XML(path)
+      f = File.open(rename_XML(path))
       xml = Nokogiri::XML(f)
       date = Date
       xml.xpath("//data/month").each do |m|
@@ -125,72 +194,37 @@ class EmployeeController < ApplicationController
   end
 
   def personalflowXmlParse
-    path = "personalFlow.xml"
+    path = "personalflow_0X_2014.xml"
     if !File.file?(path)
       render plain: "file not found!"
       return
     else
-      count_all = 0
-      count_new = 0
-      count_del = 0
-      f = File.open(path)
+      #path = rename_XML(path)
+      f = File.open(rename_XML(path))
       xml = Nokogiri::XML(f)
-      xml.xpath("//employee").each do |node|
-        count_all = count_all +1
-        type = node.attribute('type').inner_text()
-        date = Date.parse(node.attribute('date').inner_text())
-        if type == "Увольнение"
-          count_del = count_del +1
-          empl = Employee.find_by tab_number: node.attribute('id').inner_text()
-          if empl!=nil
-            persFlow = PersonalFlow.create(operation_type: type,
-                                           old_post: empl.post,
-                                           flow_date: date,
-                                           employee: empl,
-                                           old_department_id: empl.department.id)
-            puts "УВОЛЕН СОТРУДНИК #{empl.attributes}"
-            #empl.destroy
-          else
-            puts "НЕ НАЙДЕН СОТРУДНИК С ТАБЕЛЬНЫМ НОМЕРОМ #{node.attribute('id').inner_text()} ДЛЯ УВОЛЬНЕНИЯ"
-          end
-        end
-        if type == "Прием на работу"
-          count_new= count_new+1
-          dep = Department.find_by out_number: node.parent.attribute('id').inner_text()
-          if dep!=nil
-            empl = dep.employees.create(FIO: node.attribute('FIO').inner_text(), tab_number: node.attribute('id').inner_text(),
-                                        stavka: node.attribute('stavka').inner_text(), post: node.attribute('post').inner_text())
-            persFlow = PersonalFlow.create(operation_type: type,
-                                           new_post: empl.post,
-                                           flow_date: date,
-                                           employee: empl,
-                                           new_department_id: dep.id)
-            puts "ПРИНЯТЬ НА РАБОТУ #{empl.attributes}"
-          else
-            puts "НЕ НАЙДЕН ДЕПАРТАМЕНТ С ID = #{node.parent.attribute('id').inner_text()} В КОТОРЫЙ ПРИНЯТ СОТРУДНИК #{node.attribute('id').inner_text()}"
-          end
-        end
-        if type == "Перемещение"
-          new_id = node.parent.attribute('id').inner_text()
-          empl = Employee.find_by tab_number: node.attribute('id').inner_text()
-          if empl!=nil
-            persFlow = PersonalFlow.create(operation_type: type,
-                                           old_post: empl.post,
-                                           new_post: node.attribute('post').inner_text(),
-                                           flow_date: date,
-                                           employee: empl,
-                                           new_department_id: new_id,
-                                           old_department_id: empl.department.id)
-            empl.department_id = new_id
-            empl.save
-            puts "ПЕРВОД #{empl.attributes}"
-          else
-            puts "НЕ НАЙДЕН СОТРУДНИК С ТАБЕЛЬНЫМ НОМЕРОМ #{node.attribute('id').inner_text()} ДЛЯ ПЕРЕВОДА"
-          end
-        end
+      xml.xpath("//employee[@type='#{Employee::FLOWADDTYPE}']").each do |node|
+          Employee.add_employee(node.attribute('FIO').inner_text(),
+                                 node.attribute('id').inner_text(),
+                                 node.attribute('post').inner_text(),
+                                 node.attribute('stavka').inner_text(),
+                                 node.parent.attribute('id').inner_text(),
+                                 node.attribute('date').inner_text())
       end
-      f.close
-      render plain: "OK all = #{count_all} del = #{count_del} new = #{count_new}"
+      xml.xpath("//employee[@type='#{Employee::FLOWDISMISSTYPE}']").each do |node|
+          Employee.dismiss_employee(node.attribute('id').inner_text(),
+                                    node.attribute('date').inner_text(),
+                                    node.attribute('post').inner_text(),
+                                    node.parent.attribute('id').inner_text())
+      end
+      xml.xpath("//employee[@type='#{Employee::FLOWTRANSFERTYPE}']").each do |node|
+          Employee.transfer_employee(node.attribute('id').inner_text(),
+                                     node.attribute('post').inner_text(),
+                                     node.attribute('stavka').inner_text(),
+                                     node.attribute('date').inner_text(),
+                                     node.parent.attribute('id').inner_text(),
+                                     node.attribute('post').inner_text())
+      end
     end
+    render plain: "ok"
   end
 end
