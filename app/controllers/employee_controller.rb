@@ -14,6 +14,7 @@ class EmployeeController < ApplicationController
   end
 
   def index
+    @standalone_month_names = ["", "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"]
     @plotXAxis = Array.new
     @plotDataSalary = Array.new
     @plotDataBonus = Array.new
@@ -38,28 +39,29 @@ class EmployeeController < ApplicationController
     @plotDataAUPCount = Array.new
 
     EmployeeStatsMonths.where(month: Date.current-1.year..Date.current).each do |stat|
-      @plotXAxis.push(stat.month.strftime("%b"))
+      #@plotXAxis.push(stat.month.strftime('%b'))
+      @plotXAxis.push(@standalone_month_names[stat.month.month])
       @plotDataSalary.push(stat.salary)
       @plotDataBonus.push(stat.bonus)
       @plotDataTax.push(stat.tax)
-      @plotDataAvgSalary.push(stat.avg_salary)
+      @plotDataAvgSalary.push(stat.avg_salary.round 1)
 
       @plotDataEmployeeAdd.push(stat.employee_adds)
       @plotDataEmployeeCount.push(stat.employee_count)
       @plotDataEmployeeDismiss.push(stat.employee_dismiss)
       @plotDataVacancyCount.push(stat.vacancy_count)
 
-      @plotDatakNeuk.push(stat.k_complect)
-      @plotDatakTek.push(stat.k_dismiss)
+      @plotDatakNeuk.push(stat.k_complect.round 4)
+      @plotDatakTek.push(stat.k_dismiss.round 4)
 
-      @plotDataManageCount.push(100*stat.employee_manage_count.to_f/stat.employee_count)
-      @plotDataProdCount.push(100*stat.employee_production_count.to_f/stat.employee_count)
+      @plotDataManageCount.push((100*stat.employee_manage_count.to_f/stat.employee_count).round 1)
+      @plotDataProdCount.push((100*stat.employee_production_count.to_f/stat.employee_count).round 1)
 
       @plotDataManageBonus.push(stat.bonus_manage)
       @plotDataManageSalary.push(stat.salary_manage)
       @plotDataManageTax.push(stat.tax_manage)
-      @plotDataManageAvg.push(25000)
-      @plotDataAUPCount.push(20)
+      @plotDataManageAvg.push(stat.avg_salary_manage.round 0)
+      @plotDataAUPCount.push(stat.AUP_count)
 
     end
 
@@ -114,9 +116,11 @@ class EmployeeController < ApplicationController
   end
 
   def calculate
-    stat = EmployeeStatsMonths.calculate_stat(Date.parse("2014-05-05"))
-    EmployeeStatsDepartments.calculate_stat(Date.parse("2014-05-05"))
-    render plain: "#{stat.attributes}"
+    ["01", "02", "03", "04", "05"].each do |m|
+      EmployeeStatsMonths.calculate_stat(Date.parse("2014-#{m}-05"))
+      EmployeeStatsDepartments.calculate_stat(Date.parse("2014-#{m}-05"))
+    end
+      render plain: "ок"
   end
 
 
@@ -162,12 +166,11 @@ class EmployeeController < ApplicationController
   end
 
   def salaryXmlParse
-    path = "salary_0x_2014.xml"
+    path = "salary_05_2014.xml"
     if !File.file?(path)
       render plain: "file not found!"
       return
     else
-      #path = rename_XML(path)
       f = File.open(rename_XML(path))
       xml = Nokogiri::XML(f)
       date = Date
@@ -175,6 +178,7 @@ class EmployeeController < ApplicationController
         month = m.attribute('number').inner_text()
         year = m.attribute('year').inner_text()
         date = Date.parse("#{year}-#{month}-05")
+        puts date
       end
       xml.xpath("//data/employees/employee").each do |node|
         empoloyee = Employee.find_by tab_number: node.attribute('id').inner_text()

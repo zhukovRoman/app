@@ -59,3 +59,5 @@ gem 'devise'
 
 #gem 'tiny_tds'
 #gem 'activerecord-sqlserver-adapter', '~> 4.0.0'
+
+#gem 'russian', '~> 0.6.0'

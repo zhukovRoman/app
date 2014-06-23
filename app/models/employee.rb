@@ -10,20 +10,25 @@ class Employee < ActiveRecord::Base
   POSTMANAGERSIMPLE = "Начальник"
   POSTGENDIRECTOR = "Генеральный директор"
   POSTZAMGENDIR = "Первый заместитель генерального директора"
+  POSTDIRSIMPLE = "директор"
 
-  QueryStringManagersAndAlternate = "post like '#{POSTMANAGER}' or post like '#{POSTMANAGERALTERNATE}%'" +
-                                    "or post like '#{POSTGENDIRECTOR}' or post like '#{POSTZAMGENDIR}%'"
+  #QueryStringManagersAndAlternate = "post like '#{POSTMANAGERSIMPLE}%' or post like '#{POSTMANAGERALTERNATE}%'" +
+  #                                  "or post like '#{POSTGENDIRECTOR}' or post like '#{POSTZAMGENDIR}%'"
+  QueryStringManagersAndAlternate = "(post like '#{POSTMANAGERSIMPLE}%' or post like '%#{POSTDIRSIMPLE}%')"
+
 
   FLOWDISMISSTYPE = "Увольнение"
   FLOWADDTYPE = "Прием на работу"
   FLOWTRANSFERTYPE = "Перемещение"
 
-  def self.calc_managers_count
+  def self.get_managers_count
       return get_managers.count
   end
 
   def self.get_managers
-    return Employee.where(QueryStringManagersAndAlternate)
+    return Employee.joins("JOIN departments ON departments.id = employees.department_id and "+
+                              "departments.parent_id ISNULL AND "+QueryStringManagersAndAlternate)
+    #return Employee.where(QueryStringManagersAndAlternate)
   end
 
   def self.get_managers_ids

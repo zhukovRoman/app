@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140619095402) do
+ActiveRecord::Schema.define(version: 20140622110003) do
 
   create_table "departments", force: true do |t|
     t.string   "out_number"
@@ -58,6 +58,8 @@ ActiveRecord::Schema.define(version: 20140619095402) do
     t.float    "k_complect"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.float    "manager_avg_salary"
+    t.integer  "AUP_count"
   end
 
   create_table "employees", force: true do |t|
