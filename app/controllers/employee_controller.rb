@@ -62,7 +62,29 @@ class EmployeeController < ApplicationController
       @plotDataManageTax.push(stat.tax_manage)
       @plotDataManageAvg.push(stat.avg_salary_manage.round 0)
       @plotDataAUPCount.push(stat.AUP_count)
+    end
 
+    #departments stats
+    @plotXAxisDep = Array.new
+    @plotDataDepEmployeeStats = Hash.new
+    @plotDataDepEmployeeStats['vacancy'] = (Array.new)
+    @plotDataDepEmployeeStats['employee_count'] = (Array.new)
+
+    EmployeeStatsDepartments.where(month: (Date.current-1.month).at_beginning_of_month..(Date.current-1.month).at_end_of_month).each do |s|
+      dep = Department.find(s.department_id)
+      @plotXAxisDep.push(dep.name)
+
+      info2 = Hash.new
+      info2['y']=s.employee_count
+      info2['manager']=s.manager
+      @plotDataDepEmployeeStats['employee_count'].push(info2)
+
+      info = Hash.new
+      info['y']=s.vacancy_count
+      info['manager']=s.manager
+      @plotDataDepEmployeeStats['vacancy'].push(info)
+
+      @drilldownData = EmployeeStatsDepartments.get_data_for_drilldown
     end
 
   end

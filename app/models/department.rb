@@ -38,8 +38,10 @@ class Department < ActiveRecord::Base
     empl =  self.employees.where("post LIKE ? or post like ?",
                                 "#{Employee::POSTMANAGERSIMPLE}%", "#{Employee::POSTGENDIRECTOR}%" ).take
     return empl!=nil ? empl.FIO : "-"
+  end
 
-
+  def shortName
+    return (name.length < 35) ? name : name[0,35]+"…"
   end
 
 

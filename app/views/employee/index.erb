@@ -11,12 +11,40 @@
   <div id="employee_koef_chart" style="height: 600px"></div>
   <div id="employee_type_personal" style="height: 600px"></div>
   <div id="employee_manage_salary_structure_chart" style="height: 600px"></div>
+  <div id="departmens_emplyees_situation" style="height: 600px"></div>
 </div>
 
 <script src="http://code.highcharts.com/highcharts.js"></script>
 <script type="text/javascript">
+    function formatterFunction () {return this.value.length < 40 ? this.value : this.value.substring(0,40)+"...";}
     $(function () {
-        $('#salary_structure_chart').highcharts({
+        function returnYearChart() {
+            $('#salary_structure_chart').highcharts(chartYear);
+            rebindXaxis();
+            return;
+        }
+        function rebindXaxis () {
+            $('.highcharts-axis-labels text, .highcharts-axis-labels span').click(function () {
+                chart = $('#salary_structure_chart').highcharts();
+                chart.xAxis[0].setCategories(monthsData[this.textContent].categories, false)
+                console.log(chart.xAxis[0].labels)
+                chart.series[0].setData(monthsData[this.textContent].data[0].data, false )
+                chart.series[1].setData(monthsData[this.textContent].data[1].data, false )
+                chart.series[2].setData(monthsData[this.textContent].data[2].data, false )
+                chart.series[3].setData(monthsData[this.textContent].data[3].data, false )
+                chart.xAxis[0].options.labels.rotation = -65;
+                chart.xAxis[0].options.labels.formatter = formatterFunction;
+                chart.renderer.button('Назад',
+                        200,
+                        10,
+                        returnYearChart).add();
+                chart.redraw();
+//                chart.xAxis[0].options.labels.
+                //console.log(monthsData[this.textContent].data[0].data)
+                console.log(chart)
+            });
+        }
+        var chartYear = {
             chart: {
                 type: 'column'
             },
@@ -24,6 +52,11 @@
                 text: 'Структура заработной платы'
             },
             xAxis: {
+                labels: {
+                    formatter: formatterFunction
+                    //formatter: function() { return this.value.length < 35 ? this.value : this.value.substring(0,35);}
+
+                },
                 categories: JSON.parse('<%= @plotXAxis.to_json.html_safe %>')
             },
             yAxis: [{
@@ -85,7 +118,7 @@
                         valueSuffix: ' руб'
                     }
                 }, {
-                    name: 'ЗП',
+                    name: 'Зарплата',
                     data: <%= @plotDataSalary.as_json %>,
                     tooltip: {
                         valueSuffix: ' руб'
@@ -101,7 +134,11 @@
                     }
                 }
             ]
-        });
+        };
+        var monthsData = JSON.parse('<%= @drilldownData.to_json.html_safe %>')
+        $('#salary_structure_chart').highcharts(chartYear);
+        rebindXaxis();
+
     });
 </script>
 <script type="text/javascript">
@@ -353,4 +390,81 @@
     });
 
 
+</script>
+<script type="text/javascript">
+
+    $(function () {
+        $('#departmens_emplyees_situation').highcharts({
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Число сотрудников и вакансий по подразделениям'
+            },
+            xAxis: {
+                categories: JSON.parse('<%= @plotXAxisDep.to_json.html_safe %>'),
+                labels: {
+                    rotation: -65,
+                    formatter: formatterFunction
+                    //formatter: function() { return this.value.length < 35 ? this.value : this.value.substring(0,35);}
+
+                }
+
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: ''
+                }
+            },
+            tooltip: {
+                formatter: function() {
+                    var result = '<b>' + this.x + '</b>';
+                    $.each(this.points, function(i, datum) {
+                        result += '<br /> <i>' + datum.series.name + '</i>: ' + datum.y + ' человек';
+
+                    });
+                    //console.log()
+                    result += '<br />' + this.points[0].point.manager
+
+                    return result;
+                },
+                //headerFormat: '<div style="font-size:13px">{point.key}</div>',
+                //pointFormat: '<div><b>{series.name}</b>: ' + '{point.y} человек</div>' ,
+                //footerFormat: '',
+                shared: true,
+                useHTML: true
+            },
+            legend: {
+                align: 'right',
+                x: -70,
+                verticalAlign: 'top',
+                y: 20,
+                floating: true,
+                backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+                borderColor: '#CCC',
+                borderWidth: 1,
+                shadow: false
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0,
+                    stacking: 'normal',
+                    minPointLength: 2
+                }
+            },
+            series: [{
+                name: 'Вакансий',
+                data: JSON.parse('<%= @plotDataDepEmployeeStats['vacancy'].to_json.html_safe %>'),
+                color: 'rgb(144, 237, 125)'
+
+            },{
+                name: 'Сотрудников',
+                data: JSON.parse('<%= @plotDataDepEmployeeStats['employee_count'].to_json.html_safe %>'),
+                color: 'rgb(124, 181, 236)'
+
+            }]
+        });
+    });
 </script>
