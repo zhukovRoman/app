@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   get 'employee/index'
   get 'employee/editmanagment'
   get 'employee/calculate'
+  get 'employee/salaryXMLChange'
 
 
 

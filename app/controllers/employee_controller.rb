@@ -187,6 +187,23 @@ class EmployeeController < ApplicationController
     end
   end
 
+  #def salaryXMLChange
+  #  path = "salary_05_2014.xml"
+  #  if !File.file?(path)
+  #    render plain: "file not found!"
+  #    return
+  #  else
+  #    f = File.open(rename_XML(path))
+  #    xml = Nokogiri::XML(f)
+  #    xml.xpath("//data/employees/employee").each do |node|
+  #      node.attribute('salary').content = rand(20000).to_s
+  #      node.attribute('bonus').content = rand(15000).to_s
+  #      node.attribute('NDFL').content = rand(20000).to_s
+  #    end
+  #    render plain: xml.to_html
+  #  end
+  #end
+
   def salaryXmlParse
     path = "salary_05_2014.xml"
     if !File.file?(path)
@@ -205,7 +222,8 @@ class EmployeeController < ApplicationController
       xml.xpath("//data/employees/employee").each do |node|
         empoloyee = Employee.find_by tab_number: node.attribute('id').inner_text()
         if empoloyee!=nil
-          empoloyee.salaries.create(salary: node.attribute('salary').inner_text(), bonus: node.attribute('bonus').inner_text(),
+          empoloyee.salaries.create(salary: node.attribute('salary').inner_text(),
+                                    bonus: node.attribute('bonus').inner_text(),
                                     insurance: node.attribute('insurance').inner_text(),
                                     NDFL: node.attribute('NDFL').inner_text(),
                                     retention: node.attribute('retention').inner_text(),
