@@ -13,7 +13,10 @@ Rails.application.routes.draw do
   get 'employee/personalInit'
   get 'employee/vacancies'
   get 'employee/index'
+
   get 'employee/editmanagment'
+  post 'employee/editmanagment'
+
   get 'employee/calculate'
   get 'employee/salaryXMLChange'
 

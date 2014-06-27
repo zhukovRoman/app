@@ -90,6 +90,20 @@ class EmployeeController < ApplicationController
   end
 
   def editmanagment
+    if request.post? && params['dep'] != nil
+
+      Department.where(parent_id: nil).update_all(:department_type => 0)
+
+      params['dep'].each do |k,v|
+        puts "dep #{k} val #{v}"
+        dep = Department.find(k)
+        dep.department_type = 1
+        dep.save!
+      end
+
+    end
+
+    @departments = Department.where(parent_id: nil)
 
   end
 

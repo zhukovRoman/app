@@ -22,7 +22,7 @@
           <div class="col-md-2">
             <%= text_field_tag(vac.id, vac.count, name: "vacancies[#{vac.id}]", id:"vacnacy_#{vac.id}", class: "form-control" )  %>
           </div>
-          <label for="inputEmail3" class="col-md-10 control-label" style="text-align: left; padding-top: 4px;"><%= vac.department.name %></label>
+          <label class="col-md-10 control-label" style="text-align: left; padding-top: 4px;"><%= vac.department.name %></label>
 
         </div>
     <% end -%>

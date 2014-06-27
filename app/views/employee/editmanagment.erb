@@ -1,1 +1,18 @@
-<h3>В разработке</h3>
+<h2>Редактирование типов подразделений</h2>
+<h4>Отметьте производственные подразделения</h4>
+<%= form_tag("editmanagment", method: "post", class:"form-horizontal form-dep-type") do %>
+    <%= submit_tag("Cохранить", class: "btn btn-success btn-sm", style:"margin-bottom: 5px") %>
+    <% @departments.each do |dep| %>
+        <div class="form-group">
+          <div class="col-sm-offset-1 col-sm-10">
+            <div class="checkbox" style="padding-top: 0px;">
+              <label>
+                <%= check_box_tag(dep.id, 1, checked=(dep.department_type==1) ,name: "dep[#{dep.id}]", id:"dep_#{dep.id}" )  %>
+                <%= dep.name %>
+              </label>
+            </div>
+          </div>
+        </div>
+    <% end -%>
+    <%= submit_tag("Cохранить", class: "btn btn-success btn-sm") %>
+<% end %>
