@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5f9abbab-e858-4c37-adea-ecaae39daf1e" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db/development.sqlite3" afterPath="$PROJECT_DIR$/db/development.sqlite3" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/employee/editmanagment.erb" afterPath="$PROJECT_DIR$/app/views/employee/editmanagment.erb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/assets/stylesheets/employee.css.scss" afterPath="$PROJECT_DIR$/app/assets/stylesheets/employee.css.scss" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/employee_controller.rb" afterPath="$PROJECT_DIR$/app/controllers/employee_controller.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/routes.rb" afterPath="$PROJECT_DIR$/config/routes.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/employee/vacancies.html.erb" afterPath="$PROJECT_DIR$/app/views/employee/vacancies.html.erb" />
-    </list>
+    <list default="true" id="5f9abbab-e858-4c37-adea-ecaae39daf1e" name="Default" comment="" />
     <ignored path="app.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path=".idea/" />
@@ -20,7 +13,7 @@
   </component>
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/app@Production__app.coverage" NAME="Production: app Coverage Results" MODIFIED="1403523718417" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="app" />
+    <SUITE FILE_PATH="coverage/app@Production__app.coverage" NAME="Production: app Coverage Results" MODIFIED="1403859439850" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="app" />
     <SUITE FILE_PATH="coverage/app@Development__app.coverage" NAME="Development: app Coverage Results" MODIFIED="1403816068922" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="app" />
   </component>
   <component name="CreatePatchCommitExecutor">
@@ -35,10 +28,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="employee_controller.rb" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="employee_controller.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/controllers/employee_controller.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="100" column="15" selection-start="3457" selection-end="3457" vertical-scroll-proportion="0.5470086" vertical-offset="160" max-vertical-offset="1680">
+            <state line="100" column="15" selection-start="3457" selection-end="3457" vertical-scroll-proportion="0.0" vertical-offset="16" max-vertical-offset="1680">
               <folding>
                 <element signature="e#354#3168#0" expanded="false" />
                 <element signature="e#1218#2354#0" expanded="false" />
@@ -48,6 +41,27 @@
                 <element signature="e#10662#12460#0" expanded="false" />
                 <marker date="1403859260000" expanded="true" signature="7555:8036" placeholder="..." />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="employee_transfer_2014_6.log" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/log/employee_transfer_2014_6.log">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="399" column="121" selection-start="91045" selection-end="91054" vertical-scroll-proportion="-236.44444" vertical-offset="0" max-vertical-offset="15040">
+              <folding />
+            </state>
+          </provider>
+          <provider editor-type-id="com.intellij.persistence.database.editor.CsvTableFileEditorProvider">
+            <state />
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="salary_2014_6.log" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/log/salary_2014_6.log">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="3" column="0" selection-start="393" selection-end="393" vertical-scroll-proportion="0.102564104" vertical-offset="0" max-vertical-offset="468">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -278,20 +292,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="log" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="config" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -436,7 +436,7 @@
       <recent name="$PROJECT_DIR$/public" />
     </key>
   </component>
-  <component name="RunManager" selected="Rails.Development: app">
+  <component name="RunManager" selected="Rails.Production: app">
     <configuration default="true" type="RakeRunConfigurationType" factoryName="Rake">
       <module name="" />
       <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="-e $stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift)" />
@@ -623,7 +623,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32891566" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25240386" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
@@ -631,7 +631,7 @@
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.328125" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20457797" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20457797" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39976552" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
@@ -807,16 +807,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/log/employee_transfer_2014_6.log">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="399" column="121" selection-start="91045" selection-end="91054" vertical-scroll-proportion="-2.6037736" vertical-offset="6246" max-vertical-offset="7776">
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="com.intellij.persistence.database.editor.CsvTableFileEditorProvider">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/personalflow_02_2014.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="11" column="30" selection-start="694" selection-end="703" vertical-scroll-proportion="-6.769231" vertical-offset="0" max-vertical-offset="720">
@@ -915,16 +905,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/log/salary_2014_6.log">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="0" selection-start="393" selection-end="393" vertical-scroll-proportion="0.09775967" vertical-offset="0" max-vertical-offset="491">
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="com.intellij.persistence.database.editor.CsvTableFileEditorProvider">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/salary_01_2014.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="244" column="17" selection-start="30319" selection-end="30327" vertical-scroll-proportion="8.395699" vertical-offset="0" max-vertical-offset="4144">
@@ -1001,7 +981,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/controllers/employee_controller.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="100" column="15" selection-start="3457" selection-end="3457" vertical-scroll-proportion="0.5470086" vertical-offset="160" max-vertical-offset="1680">
+        <state line="100" column="15" selection-start="3457" selection-end="3457" vertical-scroll-proportion="0.0" vertical-offset="16" max-vertical-offset="1680">
           <folding>
             <element signature="e#354#3168#0" expanded="false" />
             <element signature="e#1218#2354#0" expanded="false" />
@@ -1012,6 +992,26 @@
             <marker date="1403859260000" expanded="true" signature="7555:8036" placeholder="..." />
           </folding>
         </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/log/employee_transfer_2014_6.log">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="399" column="121" selection-start="91045" selection-end="91054" vertical-scroll-proportion="-236.44444" vertical-offset="0" max-vertical-offset="15040">
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="com.intellij.persistence.database.editor.CsvTableFileEditorProvider">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/log/salary_2014_6.log">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="0" selection-start="393" selection-end="393" vertical-scroll-proportion="0.102564104" vertical-offset="0" max-vertical-offset="468">
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="com.intellij.persistence.database.editor.CsvTableFileEditorProvider">
+        <state />
       </provider>
     </entry>
   </component>
