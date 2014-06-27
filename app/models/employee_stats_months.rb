@@ -14,7 +14,7 @@ class EmployeeStatsMonths < ActiveRecord::Base
     stat.avg_salary = monthsSalaries.average("salary")+monthsSalaries.average("retention")
 
     #calc employee flow
-    stat.employee_count = Employee.count
+    stat.employee_count = Employee.get_real_count_of_employees
     personalFlows = PersonalFlow.where(flow_date: for_date.at_beginning_of_month..for_date.at_end_of_month)
                                 .where.not(flow_date: for_date.at_beginning_of_year)
                                 .where.not(flow_date: for_date.at_end_of_year)

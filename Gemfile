@@ -57,7 +57,9 @@ gem 'bootstrap-sass', '~> 3.1.1'
 
 gem 'devise'
 
-#gem 'tiny_tds'
-#gem 'activerecord-sqlserver-adapter', '~> 4.0.0'
+gem 'tiny_tds'
+gem 'activerecord-sqlserver-adapter', '~> 4.1.0'
+#gem 'activerecord-sqlserver-adapter', '~> 4.0.0',
+#    :git => "git://github.com/rails-sqlserver/activerecord-sqlserver-adapter.git"
 
 #gem 'russian', '~> 0.6.0'

@@ -41,26 +41,26 @@ class EmployeeController < ApplicationController
     EmployeeStatsMonths.where(month: Date.current-1.year..Date.current).each do |stat|
       #@plotXAxis.push(stat.month.strftime('%b'))
       @plotXAxis.push(@standalone_month_names[stat.month.month])
-      @plotDataSalary.push(stat.salary)
-      @plotDataBonus.push(stat.bonus)
-      @plotDataTax.push(stat.tax)
-      @plotDataAvgSalary.push(stat.avg_salary.round 1)
+      @plotDataSalary.push(stat.salary.round 2)
+      @plotDataBonus.push(stat.bonus.round 2)
+      @plotDataTax.push(stat.tax.round 2)
+      @plotDataAvgSalary.push((stat.avg_salary.round 2))
 
       @plotDataEmployeeAdd.push(stat.employee_adds)
       @plotDataEmployeeCount.push(stat.employee_count)
       @plotDataEmployeeDismiss.push(stat.employee_dismiss)
       @plotDataVacancyCount.push(stat.vacancy_count)
 
-      @plotDatakNeuk.push(stat.k_complect.round 4)
-      @plotDatakTek.push(stat.k_dismiss.round 4)
+      @plotDatakNeuk.push((stat.k_complect.round 4))
+      @plotDatakTek.push((stat.k_dismiss.round 4))
 
       @plotDataManageCount.push((100*stat.employee_manage_count.to_f/stat.employee_count).round 1)
       @plotDataProdCount.push((100*stat.employee_production_count.to_f/stat.employee_count).round 1)
 
-      @plotDataManageBonus.push(stat.bonus_manage)
-      @plotDataManageSalary.push(stat.salary_manage)
-      @plotDataManageTax.push(stat.tax_manage)
-      @plotDataManageAvg.push(stat.avg_salary_manage.round 0)
+      @plotDataManageBonus.push(stat.bonus_manage.round 2)
+      @plotDataManageSalary.push(stat.salary_manage.round 2)
+      @plotDataManageTax.push(stat.tax_manage.round 2)
+      @plotDataManageAvg.push((stat.avg_salary_manage.round 0))
       @plotDataAUPCount.push(stat.AUP_count)
     end
 
@@ -150,6 +150,7 @@ class EmployeeController < ApplicationController
   #   Разбор XML  #
   #################
   def personalInit
+
     path = "personal.xml"
     if !File.file?(path)
       render plain: "file not found!"
@@ -163,21 +164,22 @@ class EmployeeController < ApplicationController
                                         out_number: node.attribute('id').inner_text())
         node.xpath("./employee").each do |employee|
           directorate.employees.create(FIO: employee.attribute('FIO').to_s, tab_number: employee.attribute('id').to_s,
-                                       stavka: employee.attribute('stavka').inner_text(), post: employee.attribute('post').to_s)
+                                       stavka: employee.attribute('stavka').inner_text().sub(",", "."), post: employee.attribute('post').to_s)
         end
         node.xpath("./department").each do |dep|
           department = Department.create(name: dep.attribute('name').to_s, vacancy_count: 0,
                                          out_number: dep.attribute('id').to_s, parent: directorate)
           dep.xpath("./employee").each do |employee|
+            puts employee.attribute('stavka').inner_text().sub(",", ".")
             department.employees.create(FIO: employee.attribute('FIO').to_s, tab_number: employee.attribute('id').to_s,
-                                        stavka: employee.attribute('stavka').inner_text(), post: employee.attribute('post').to_s)
+                                        stavka: employee.attribute('stavka').inner_text().sub(",", "."), post: employee.attribute('post').to_s)
           end
           dep.xpath("./sector").each do |sector|
             sector_obj = Department.create(name: sector.attribute('name').to_s, vacancy_count: 0,
                                            out_number: sector.attribute('id').to_s , parent: department)
             sector.xpath("./employee").each do |employee|
               sector_obj.employees.create(FIO: employee.attribute('FIO').to_s, tab_number: employee.attribute('id').to_s,
-                                          stavka: employee.attribute('stavka').inner_text(), post: employee.attribute('post').to_s)
+                                          stavka: employee.attribute('stavka').inner_text().sub(",", ".") , post: employee.attribute('post').to_s)
             end
           end
         end
@@ -187,25 +189,32 @@ class EmployeeController < ApplicationController
     end
   end
 
-  #def salaryXMLChange
-  #  path = "salary_05_2014.xml"
-  #  if !File.file?(path)
-  #    render plain: "file not found!"
-  #    return
-  #  else
-  #    f = File.open(rename_XML(path))
-  #    xml = Nokogiri::XML(f)
-  #    xml.xpath("//data/employees/employee").each do |node|
-  #      node.attribute('salary').content = rand(20000).to_s
-  #      node.attribute('bonus').content = rand(15000).to_s
-  #      node.attribute('NDFL').content = rand(20000).to_s
-  #    end
-  #    render plain: xml.to_html
-  #  end
-  #end
+  def salaryXMLChange
+    #path = "salary_05_2014.xml"
+    #if !File.file?(path)
+    #  render plain: "file not found!"
+    #  return
+    #else
+    #  f = File.open(rename_XML(path))
+    #  xml = Nokogiri::XML(f)
+    #  xml.xpath("//data/employees/employee").each do |node|
+    #    node.attribute('salary').content = rand(20000).to_s
+    #    node.attribute('bonus').content = rand(15000).to_s
+    #    node.attribute('NDFL').content = rand(20000).to_s
+    #  end
+    #  render plain: xml.to_html
+    #end
+    #empl = Employee.create(FIO: "test", stavka: "0,3");
+    #puts empl.attributes
+    #empl.save
+    #puts empl.attributes
+    render plain: Employee.find_by_FIO("test").attributes
+
+  end
 
   def salaryXmlParse
-    path = "salary_05_2014.xml"
+    logger = Logger.new("#{Rails.root}/log/salary_#{Date.current.year}_#{Date.current.month}.log")
+    path = "salary_01_2014.xml"
     if !File.file?(path)
       render plain: "file not found!"
       return
@@ -222,14 +231,27 @@ class EmployeeController < ApplicationController
       xml.xpath("//data/employees/employee").each do |node|
         empoloyee = Employee.find_by tab_number: node.attribute('id').inner_text()
         if empoloyee!=nil
-          empoloyee.salaries.create(salary: node.attribute('salary').inner_text(),
-                                    bonus: node.attribute('bonus').inner_text(),
-                                    insurance: node.attribute('insurance').inner_text(),
-                                    NDFL: node.attribute('NDFL').inner_text(),
-                                    retention: node.attribute('retention').inner_text(),
+          empoloyee.salaries.create(salary: node.attribute('salary').inner_text().sub(",", "."),
+                                    bonus: node.attribute('bonus').inner_text().sub(",", "."),
+                                    insurance: node.attribute('insurance').inner_text().sub(",", "."),
+                                    NDFL: node.attribute('NDFL').inner_text().sub(",", "."),
+                                    retention: node.attribute('retention').inner_text().sub(",", "."),
                                     salary_date: date)
         else
-          puts "НЕ НАЙДЕН СОТРУДНИК С ТАБЕЛЬНЫМ НОМЕРОМ #{node.attribute('id').inner_text()} ДЛЯ НАЧИСЛЕНИЯ ЗП"
+          puts "1111"
+          dep = Department.find_by_out_number (node.attribute('unit').inner_text())
+          if dep != nil
+            logger.warn("НЕ НАЙДЕН СОТРУДНИК С ТАБЕЛЬНЫМ НОМЕРОМ #{node.attribute('id').inner_text()} ДЛЯ НАЧИСЛЕНИЯ ЗП (создадим пустого)")
+            emp = Employee.create(department_id: dep.id, tab_number: node.attribute('id').inner_text(), FIO: "empty")
+            emp.salaries.create(salary: node.attribute('salary').inner_text().sub(",", "."),
+                                 bonus: node.attribute('bonus').inner_text().sub(",", "."),
+                                 insurance: node.attribute('insurance').inner_text().sub(",", "."),
+                                 NDFL: node.attribute('NDFL').inner_text().sub(",", "."),
+                                 retention: node.attribute('retention').inner_text().sub(",", "."),
+                                 salary_date: date)
+          else
+            logger.warn("НЕ НАЙДЕН СОТРУДНИК И ЕГО ПОДРАЗДЕЛЕНИЕ С ТАБЕЛЬНЫМ НОМЕРОМ #{node.attribute('id').inner_text()} ДЛЯ НАЧИСЛЕНИЯ ЗП")
+          end
         end
       end
       f.close
@@ -238,7 +260,7 @@ class EmployeeController < ApplicationController
   end
 
   def personalflowXmlParse
-    path = "personalflow_0X_2014.xml"
+    path = "personalflow_0x_2014.xml"
     if !File.file?(path)
       render plain: "file not found!"
       return
@@ -250,9 +272,10 @@ class EmployeeController < ApplicationController
           Employee.add_employee(node.attribute('FIO').inner_text(),
                                  node.attribute('id').inner_text(),
                                  node.attribute('post').inner_text(),
-                                 node.attribute('stavka').inner_text(),
+                                 node.attribute('stavka').inner_text().sub(",", "."),
                                  node.parent.attribute('id').inner_text(),
-                                 node.attribute('date').inner_text())
+                                 node.attribute('date').inner_text(),
+                                node.parent)
       end
       xml.xpath("//employee[@type='#{Employee::FLOWDISMISSTYPE}']").each do |node|
           Employee.dismiss_employee(node.attribute('id').inner_text(),
@@ -263,7 +286,7 @@ class EmployeeController < ApplicationController
       xml.xpath("//employee[@type='#{Employee::FLOWTRANSFERTYPE}']").each do |node|
           Employee.transfer_employee(node.attribute('id').inner_text(),
                                      node.attribute('post').inner_text(),
-                                     node.attribute('stavka').inner_text(),
+                                     node.attribute('stavka').inner_text().sub(",", "."),
                                      node.attribute('date').inner_text(),
                                      node.parent.attribute('id').inner_text(),
                                      node.attribute('post').inner_text())

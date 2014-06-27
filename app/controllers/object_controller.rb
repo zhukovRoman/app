@@ -1,4 +1,4 @@
-class ObjectsController < ApplicationController
+class ObjectController < ApplicationController
   before_filter :authenticate_user!
   before_action :change_partName
 
@@ -8,5 +8,9 @@ class ObjectsController < ApplicationController
 
   def index
 
+    puts Obj.get_years_enters_plan
+    puts Obj.get_years_enters_fact
   end
+
+
 end

@@ -45,9 +45,9 @@ class EmployeeStatsDepartments < ActiveRecord::Base
       EmployeeStatsDepartments.where(month: m.month).each do |s|
         result[@standalone_month_names[m.month.month]][cat].push(Department.find(s.department_id).name)
         avg['data'].push(s.avg_salary.round 2)
-        bonus['data'].push(s.bonus)
-        tax['data'].push(s.tax)
-        salary['data'].push(s.salary)
+        bonus['data'].push(s.bonus.round 2)
+        tax['data'].push(s.tax.round 2)
+        salary['data'].push(s.salary.round 2)
       end
       result[@standalone_month_names[m.month.month]][data].push(tax)
       result[@standalone_month_names[m.month.month]][data].push(bonus)

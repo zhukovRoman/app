@@ -3,4 +3,16 @@
   <data-source source="LOCAL" name="Rails app: production" uuid="76bf4e19-8149-42ab-ad11-9deeb3287038">
     <database-info product="" version="" jdbc-version="" driver-name="" driver-version=""/>
   </data-source>
+  <data-source source="LOCAL" name="Rails app: development" uuid="d860782f-c525-4173-89c7-83c07216fef9">
+    <database-info product="" version="" jdbc-version="" driver-name="" driver-version=""/>
+  </data-source>
+  <data-source source="LOCAL" name="Rails app: test" uuid="290f8bc1-5d1e-4c62-9ac2-c7186d010c00">
+    <database-info product="" version="" jdbc-version="" driver-name="" driver-version=""/>
+  </data-source>
+  <data-source source="LOCAL" name="Rails app: mssql" uuid="51348bce-13ea-46a5-9d3a-63de6289833c">
+    <database-info product="" version="" jdbc-version="" driver-name="" driver-version=""/>
+  </data-source>
+  <data-source source="LOCAL" name="Rails app: mssqlObjects" uuid="922801d9-1778-4ac8-bd21-335915e957f6">
+    <database-info product="" version="" jdbc-version="" driver-name="" driver-version=""/>
+  </data-source>
 </component>

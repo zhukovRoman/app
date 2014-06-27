@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   devise_for :users
-  get 'objects/index'
+  get 'object/index'
 
   get 'employee/vacancies'
   post 'employee/vacancies'
@@ -19,7 +19,7 @@ Rails.application.routes.draw do
 
 
 
-  get 'objects/index'
+  get 'object/index'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
