@@ -6,6 +6,7 @@
 <div id="container3" style="min-width: 310px; height: 600px; margin: 0 auto"></div>
 <div id="container4" style="min-width: 310px; height: 600px; margin: 0 auto"></div>
 <div id="container5" style="min-width: 310px; height: 600px; margin: 0 auto"></div>
+<div id="container6" style="min-width: 310px; height: 600px; margin: 0 auto"></div>
 
 <script type="application/javascript">
     var podryadchick = [
@@ -88,8 +89,6 @@
     var years = [2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018];
     var polyStyle = "";
 </script>
-
-
 
 <script type="application/javascript">
     $(function () {
@@ -643,4 +642,76 @@
 </script>
 
 
+<script type="application/javascript">
+    $(function () {
+        $('#container6').highcharts({
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Объекты по годам ввода и стадиям'
+            },
+            xAxis: {
+                categories: ['2014', '2015', '2016', '2017', '2018']
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Число объектов'
+                },
+                stackLabels: {
+                    enabled: false,
+                    style: {
+                        fontWeight: 'bold',
+                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                    }
+                }
+            },
+            legend: {
+                align: 'right',
+                x: -70,
+                verticalAlign: 'top',
+                y: 20,
+                floating: true,
+                backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+                borderColor: '#CCC',
+                borderWidth: 1,
+                shadow: false
+            },
+            tooltip: {
+                formatter: function() {
+                    return '<b>'+ this.x +'</b><br/>'+
+                            this.series.name +': '+ this.y +'<br/>'+
+                            'Total: '+ this.point.stackTotal;
+                }
+            },
+            plotOptions: {
+                column: {
+                    stacking: 'normal',
+                    dataLabels: {
+                        enabled: true,
+                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+                        style: {
+                            textShadow: '0 0 3px black, 0 0 3px black'
+                        }
+                    }
+                }
+            },
+            series: [{
+                name: 'Конкурсные процедуры',
+                data: [5, 3, 4, 7, 2]
+            }, {
+                name: 'СМР',
+                data: [2, 2, 3, 2, 1]
+            }, {
+                name: 'Проектирование',
+                data: [3, 1, 4, 1, 5]
+            },{
+                name: 'Сдан',
+                data: [3, 2, 3, 4, 1]
+            }]
+        });
+    });
 
+
+</script>

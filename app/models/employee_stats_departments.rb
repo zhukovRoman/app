@@ -11,12 +11,17 @@ class EmployeeStatsDepartments < ActiveRecord::Base
       end
       monthsSalaries = Salary.joins(:employee).where(
                     salaries: {salary_date: for_date.at_beginning_of_month..for_date.at_end_of_month},
-                    employees: {department_id: dep.id}
-                                                )
-      stat.salary = monthsSalaries.sum("salary") + monthsSalaries.sum("retention")
-      stat.tax = monthsSalaries.sum("NDFL") + monthsSalaries.sum("tax")
-      stat.bonus = monthsSalaries.sum("bonus")
-      stat.avg_salary = monthsSalaries.average("salary")+monthsSalaries.average("retention")
+                    employees: {department_id: dep.id})
+
+        stat.salary = monthsSalaries.sum("salary") + monthsSalaries.sum("retention")
+        stat.tax = monthsSalaries.sum("NDFL") + monthsSalaries.sum("tax")
+        stat.bonus = monthsSalaries.sum("bonus")
+        avg_salary = monthsSalaries.average("salary")!=nil ? monthsSalaries.average("salary") : 0
+        avg_retention = monthsSalaries.average("retention") != nil ? monthsSalaries.average("retention") : 0
+        stat.avg_salary = avg_salary  + avg_retention
+
+
+
 
     #  get manager fio
       stat.manager = dep.get_manager_fio
@@ -55,5 +60,13 @@ class EmployeeStatsDepartments < ActiveRecord::Base
       result[@standalone_month_names[m.month.month]][data].push(avg)
     end
     return result
+  end
+
+  def self.fillCurrentMonth
+    Department.where(:parent_id => nil).each do |dep|
+      EmployeeStatsDepartments.create(month: Date.current.at_beginning_of_month+15.day,
+                                      department_id:dep.id,
+                                      salary: 0)
+    end
   end
 end

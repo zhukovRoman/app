@@ -11,7 +11,10 @@ class EmployeeStatsMonths < ActiveRecord::Base
     stat.salary = monthsSalaries.sum("salary") + monthsSalaries.sum("retention")
     stat.tax = monthsSalaries.sum("NDFL") + monthsSalaries.sum("tax")
     stat.bonus = monthsSalaries.sum("bonus")
-    stat.avg_salary = monthsSalaries.average("salary")+monthsSalaries.average("retention")
+    avg_salary = monthsSalaries.average("salary")!=nil ? monthsSalaries.average("salary") : 0
+    avg_retention = monthsSalaries.average("retention") != nil ? monthsSalaries.average("retention") : 0
+    stat.avg_salary = avg_salary  + avg_retention
+    #stat.avg_salary = monthsSalaries.average("salary")+monthsSalaries.average("retention")
 
     #calc employee flow
     stat.employee_count = Employee.get_real_count_of_employees
@@ -38,7 +41,9 @@ class EmployeeStatsMonths < ActiveRecord::Base
     stat.salary_manage = managersMonthSalaries.sum("salary") + managersMonthSalaries.sum("retention")
     stat.tax_manage = managersMonthSalaries.sum("NDFL")+managersMonthSalaries.sum("tax")
     stat.bonus_manage = managersMonthSalaries.sum("bonus")
-    stat.avg_salary_manage = managersMonthSalaries.average("salary")+managersMonthSalaries.average("retention")
+    avg_m_salary = managersMonthSalaries.average("salary") != nil ? managersMonthSalaries.average("salary") : 0
+    avg_m_retention = managersMonthSalaries.average("retention") != nil ? managersMonthSalaries.average("retention") : 0
+    stat.avg_salary_manage = avg_m_salary + avg_m_retention
     stat.AUP_count = Employee::get_managers_count
     stat.save
     return stat

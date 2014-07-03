@@ -6,12 +6,15 @@
 </div>
 
 <div class="col-md-12">
+
   <div id="salary_structure_chart" style="height: 600px"></div>
-  <div id="employee_situation_chart" style="height: 600px"></div>
+  <!--<div id="employee_situation_chart" style="height: 600px"></div>-->
+  <%= render 'employee/charts/employee_situation_chart'%>
   <div id="employee_koef_chart" style="height: 600px"></div>
   <div id="employee_type_personal" style="height: 600px"></div>
   <div id="employee_manage_salary_structure_chart" style="height: 600px"></div>
   <div id="departmens_emplyees_situation" style="height: 600px"></div>
+
 </div>
 
 <script src="http://code.highcharts.com/highcharts.js"></script>
@@ -37,13 +40,13 @@
                 //chart.series[1].hide();
                 chart.series[2].setData(monthsData[this.textContent].data[2].data, false )
                 chart.series[2].hide();
-                chart.series[3].setData(monthsData[this.textContent].data[3].data, false )
+                chart.series[3].setData(monthsData[this.textContent].data[3].data, true )
                 chart.renderer.button('Назад',
                         200,
                         10,
                         returnYearChart).add();
                 chart.series[2].show();
-                chart.redraw();
+//                chart.redraw();
             });
         }
         var chartYear = {
@@ -394,7 +397,6 @@
 
 </script>
 <script type="text/javascript">
-
     $(function () {
         $('#departmens_emplyees_situation').highcharts({
             chart: {

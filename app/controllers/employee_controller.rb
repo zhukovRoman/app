@@ -70,6 +70,10 @@ class EmployeeController < ApplicationController
     @plotDataDepEmployeeStats['vacancy'] = (Array.new)
     @plotDataDepEmployeeStats['employee_count'] = (Array.new)
 
+    if(EmployeeStatsDepartments.where(month: (Date.current-1.month).at_beginning_of_month..(Date.current-1.month).at_end_of_month).count == 0)
+      EmployeeStatsDepartments.fillCurrentMonth()
+    end
+
     EmployeeStatsDepartments.where(month: (Date.current-1.month).at_beginning_of_month..(Date.current-1.month).at_end_of_month).each do |s|
       dep = Department.find(s.department_id)
       @plotXAxisDep.push(dep.name)
@@ -152,7 +156,7 @@ class EmployeeController < ApplicationController
   end
 
   def calculate
-    ["01", "02", "03", "04", "05"].each do |m|
+    ["06"].each do |m|
       EmployeeStatsMonths.calculate_stat(Date.parse("2014-#{m}-05"))
       EmployeeStatsDepartments.calculate_stat(Date.parse("2014-#{m}-05"))
     end

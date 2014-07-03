@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get 'api/getchart'
+
+  get 'apartment/index'
+
   devise_for :users
   get 'object/index'
 
@@ -20,6 +24,9 @@ Rails.application.routes.draw do
   get 'employee/calculate'
   get 'employee/salaryXMLChange'
 
+
+  get 'apartment/index'
+  get 'api/getchart'
 
 
   get 'object/index'

@@ -53,7 +53,7 @@ gem 'yaml_db'
 
 gem 'nokogiri'
 
-gem 'bootstrap-sass', '~> 3.1.1'
+#gem 'bootstrap-sass', '~> 3.1.1'
 
 gem 'devise'
 

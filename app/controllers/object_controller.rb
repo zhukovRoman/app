@@ -8,8 +8,8 @@ class ObjectController < ApplicationController
 
   def index
 
-    puts Obj.get_years_enters_plan
-    puts Obj.get_years_enters_fact
+    #puts Obj.get_years_enters_plan
+    #puts Obj.get_years_enters_fact
   end
 
 
