@@ -715,3 +715,66 @@
 
 
 </script>
+
+<div class="col-sm-12" style="text-align: center; margin-top: 20px">
+
+<a class="btn btn-primary" role="button" href="#">2014</a>
+<a  class="btn btn-primary" role="button" href="#">2015</a>
+<a class="btn btn-primary" role="button" href="#">2016</a>
+<a class="btn btn-primary" role="button" href="#">2017</a>
+<a  class="btn btn-primary" role="button" href="#">2018</a>
+</div>
+<div id="container" style="min-width: 310px; height: 600px; max-width: 600px; margin: 0 auto"></div>
+<script>
+    $(function () {
+        var chart;
+
+        $(document).ready(function () {
+
+            // Build the chart
+            $('#container').highcharts({
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false
+                },
+                title: {
+                    text: 'Объекты 2014 года по стадиям'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.y}</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true
+                        },
+                        showInLegend: true,
+                        startAngle: -180,
+                        endAngle: 180
+                        //center: ['50%', '75%']
+                    }
+                },
+                series: [{
+                    type: 'pie',
+                    innerSize: '50%',
+                    name: 'Число объектов',
+                    data: [
+                        ['Был объединен',   45],
+                        ['Ввод в эксплуатацию',       26],
+                        ['Исключен из АИП',    8],
+                        ['Конкурсные процедуры',     6],
+                        ['На исключение из АИП',   0],
+                        ['Новая карточка',   4],
+                        ['Передан городу',       26],
+                        ['СМР',    8],
+                        ['Сдан',     6],
+                    ]
+                }]
+            });
+        });
+
+    });
+</script>
