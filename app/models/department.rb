@@ -44,6 +44,48 @@ class Department < ActiveRecord::Base
     return (name.length < 35) ? name : name[0,35]+"…"
   end
 
+  def self.createDepartmentFromXML(departmentNode)
+    if (departmentNode.name()=="sector")
+      # ищем департамент для сектора
+      dep = Department.find_by out_number:departmentNode.parent.attribute('id').inner_text()
+      if dep!=nil
+        return Department.create(name: departmentNode.attribute('name').to_s, vacancy_count: 0,
+                                 out_number: departmentNode.attribute('id').to_s , parent: dep)
+      else
+      #  такого департамента нет - надо искать управление
+        departmentXMLNode = departmentNode.parent
+        directorate = Department.find_by out_number:departmentXMLNode.attribute('id').inner_text()
+        if directorate==nil
+          #  создаем управление
+          directorate = Department.create(name: departmentXMLNode.parent.attribute('name').to_s, vacancy_count: 0,
+                                        out_number: departmentXMLNode.parent.attribute('id').to_s , parent: nil)
+        end
+        # создаем департамент
+        department = Department.create(name: departmentXMLNode.attribute('name').to_s, vacancy_count: 0,
+                                       out_number: departmentXMLNode.attribute('id').to_s , parent: directorate)
+        return Department.create(name: departmentNode.attribute('name').to_s, vacancy_count: 0,
+                                 out_number: departmentNode.attribute('id').to_s , parent: department)
+      end
+    end
+    if departmentNode.name()=="department"
+      #  ищем управление для депаратамента
+      departmentXMLNode = departmentNode.parent
+      directorate = Department.find_by out_number:departmentXMLNode.attribute('id').inner_text()
+      if directorate==nil
+        #  создаем управление
+        directorate = Department.create(name: departmentXMLNode.parent.attribute('name').to_s, vacancy_count: 0,
+                                        out_number: departmentXMLNode.parent.attribute('id').to_s , parent: nil)
+      end
+      # создаем департамент
+       return Department.create(name: departmentXMLNode.attribute('name').to_s, vacancy_count: 0,
+                                     out_number: departmentXMLNode.attribute('id').to_s , parent: directorate)
+    end
+    if departmentNode.name()=="directorate"
+      return Department.create(name: departmentNode.attribute('name').to_s, vacancy_count: 0,
+                        out_number: departmentNode.attribute('id').to_s , parent: nil)
+    end
+
+  end
 
 
 end

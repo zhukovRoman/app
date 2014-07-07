@@ -28,7 +28,7 @@ class EmployeeStatsDepartments < ActiveRecord::Base
 
       stat.employee_count = dep.calc_employee_count
       stat.vacancy_count = Vacancies.where(for_date: for_date.at_beginning_of_month..for_date.at_end_of_month,
-                            department_id: dep.id).count("id")
+                            department_id: dep.id).take.count
       stat.save
     end
 

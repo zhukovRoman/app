@@ -28,7 +28,8 @@
             }, 100);
         }
         function rebindXaxis () {
-            $('.highcharts-axis-labels text, .highcharts-axis-labels span').click(function () {
+            $('#salary_structure_chart .highcharts-axis-labels text, ' +
+                    '#salary_structure_chart .highcharts-axis-labels span').click(function () {
                 chart = $('#salary_structure_chart').highcharts();
                 chart.xAxis[0].setCategories(monthsData[this.textContent].categories, false);
                 //console.log(chart.xAxis[0].labels)

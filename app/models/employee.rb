@@ -5,12 +5,15 @@ class Employee < ActiveRecord::Base
   has_many :salaries, class_name: "Salary", foreign_key: "employee_id"
   has_many :flows, class_name: "PersonalFlow", foreign_key: "employee_id"
 
+  REPORTSPATH = "/tmp/employee/reports/"
+
   POSTMANAGER = "Начальник управления"
   POSTMANAGERALTERNATE = "Заместитель начальника управления"
   POSTMANAGERSIMPLE = "Начальник"
   POSTGENDIRECTOR = "Генеральный директор"
   POSTZAMGENDIR = "Первый заместитель генерального директора"
   POSTDIRSIMPLE = "директор"
+
 
   #QueryStringManagersAndAlternate = "post like '#{POSTMANAGERSIMPLE}%' or post like '#{POSTMANAGERALTERNATE}%'" +
   #                                  "or post like '#{POSTGENDIRECTOR}' or post like '#{POSTZAMGENDIR}%'"
@@ -23,6 +26,9 @@ class Employee < ActiveRecord::Base
 
   OUTPOST = "%вн. совм.%"
 
+  def self.getReportsPath
+    return REPORTSPATH
+  end
 
   def self.get_real_count_of_employees
     return  Employee.where("stavka > 0 and FIO not like '#{OUTPOST}'").count
@@ -97,7 +103,7 @@ class Employee < ActiveRecord::Base
     logger.info "ПРИНЯТ НА РАБОТУ СОТРУДНИК #{empl.attributes}"
   end
 
-  def self.transfer_employee (tab_number, new_post, stavka, date_of_operation, new_dep_out_id, post)
+  def self.transfer_employee (tab_number, new_post, stavka, date_of_operation, new_dep_out_id, post, departmentNode)
     logger = Logger.new("#{Rails.root}/log/employee_transfer_#{Date.current.year}_#{Date.current.month}.log")
     empl_id = nil
     old_dep = nil
@@ -110,17 +116,19 @@ class Employee < ActiveRecord::Base
       old_post = empl.post
 
       new_department = Department.find_by out_number: new_dep_out_id
-      if new_department != nil
-        new_dep = new_department.id
 
-        empl.department_id = new_department.id
-        empl.stavka = stavka
-        empl.post = post
-        empl.save
-        logger.info "ПЕРВОД #{empl.attributes}"
-      else
-        logger.warn "Не найден департамент, в который переведн сотрудник #{empl.attributes}"
+      if new_department==nil
+        logger.warn "Не найдено подразделение, в которое переведен сотрудник #{empl.attributes}. Создаем подразделение!"
+        new_department = Department.createDepartmentFromXML(departmentNode)
       end
+
+      new_dep = new_department.id
+      empl.department_id = new_department.id
+      empl.stavka = stavka
+      empl.post = post
+      empl.save
+      logger.info "ПЕРВОД #{empl.attributes}"
+
 
     else
       logger.warn "Не найден сотрудник с табельным номером #{tab_number} для перевода"

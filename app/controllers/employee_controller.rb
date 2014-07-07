@@ -1,6 +1,6 @@
 class EmployeeController < ApplicationController
 
-  before_filter :authenticate_user!, :except => [:personalflowXmlParse, :salaryXmlParse, :personalInit]
+  before_filter :authenticate_user!, :except => [:personalflowXmlParse, :salaryXmlParse, :personalInit, :calculate]
   before_action :change_partName
 
   def change_partName
@@ -8,8 +8,8 @@ class EmployeeController < ApplicationController
   end
 
   def rename_XML (path)
-    #File.rename(path, "_"+path)
-    #return "_"+path
+    #File.rename(path, path+".c")
+    #return path+".c"
     return path
   end
 
@@ -156,11 +156,15 @@ class EmployeeController < ApplicationController
   end
 
   def calculate
-    ["06"].each do |m|
+    if params[:month]!=nil
+      m = params[:month]
       EmployeeStatsMonths.calculate_stat(Date.parse("2014-#{m}-05"))
       EmployeeStatsDepartments.calculate_stat(Date.parse("2014-#{m}-05"))
-    end
       render plain: "ок"
+    else
+      render plain: "wrong month number"
+    end
+
   end
 
 
@@ -212,8 +216,13 @@ class EmployeeController < ApplicationController
   end
 
   def salaryXmlParse
+    if params[:month]==nil
+      render plain: "wrong month number"
+      return
+    end
+    m =  params[:month]
     logger = Logger.new("#{Rails.root}/log/salary_#{Date.current.year}_#{Date.current.month}.log")
-    path = "salary_01_2014.xml"
+    path = Employee.getReportsPath + "salary_#{m}_2014.xml"
     if !File.file?(path)
       render plain: "file not found!"
       return
@@ -237,7 +246,6 @@ class EmployeeController < ApplicationController
                                     retention: node.attribute('retention').inner_text().sub(",", "."),
                                     salary_date: date)
         else
-          puts "1111"
           dep = Department.find_by_out_number (node.attribute('unit').inner_text())
           if dep != nil
             logger.warn("НЕ НАЙДЕН СОТРУДНИК С ТАБЕЛЬНЫМ НОМЕРОМ #{node.attribute('id').inner_text()} ДЛЯ НАЧИСЛЕНИЯ ЗП (создадим пустого)")
@@ -259,7 +267,13 @@ class EmployeeController < ApplicationController
   end
 
   def personalflowXmlParse
-    path = "personalflow_0x_2014.xml"
+    if params[:month]==nil
+      render plain: "wrong month number"
+      return
+    end
+    m = params[:month]
+    path = Employee.getReportsPath + "personalflow_#{m}_2014.xml"
+    puts path
     if !File.file?(path)
       render plain: "file not found!"
       return
@@ -274,7 +288,7 @@ class EmployeeController < ApplicationController
                                  node.attribute('stavka').inner_text().sub(",", "."),
                                  node.parent.attribute('id').inner_text(),
                                  node.attribute('date').inner_text(),
-                                node.parent)
+                                 node.parent)
       end
       xml.xpath("//employee[@type='#{Employee::FLOWDISMISSTYPE}']").each do |node|
           Employee.dismiss_employee(node.attribute('id').inner_text(),
@@ -288,7 +302,8 @@ class EmployeeController < ApplicationController
                                      node.attribute('stavka').inner_text().sub(",", "."),
                                      node.attribute('date').inner_text(),
                                      node.parent.attribute('id').inner_text(),
-                                     node.attribute('post').inner_text())
+                                     node.attribute('post').inner_text(),
+                                     node.parent)
       end
     end
     render plain: "ok"
