@@ -12,5 +12,9 @@ class ObjectController < ApplicationController
     #puts Obj.get_years_enters_fact
   end
 
+  def finance
+
+  end
+
 
 end

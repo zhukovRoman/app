@@ -5,6 +5,7 @@ Rails.application.routes.draw do
 
   devise_for :users
   get 'object/index'
+  get 'object/finance'
 
   get 'employee/vacancies'
   post 'employee/vacancies'
@@ -26,6 +27,7 @@ Rails.application.routes.draw do
 
 
   get 'apartment/index'
+  get 'apartment/index2'
   get 'api/getchart'
 
 
