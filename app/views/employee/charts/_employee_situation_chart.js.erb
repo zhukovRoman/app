@@ -1,0 +1,70 @@
+
+$(function () {
+    $('#employee_situation_chart').highcharts(
+            {
+                title: {
+                    text: 'Персонал'
+                },
+                xAxis: {
+                    categories: JSON.parse('<%= @plotXAxis.to_json.html_safe %>')
+                },
+                plotOptions: {
+                    column: {
+                        minPointLength: 3
+                    }
+                },
+                yAxis: [{ // Primary yAxis
+                    title: {
+                        text: 'Человек',
+                        style: {
+                            color: Highcharts.getOptions().colors[1]
+                        }
+                    }
+                }, { // Secondary yAxis
+                    title: {
+                        text: 'Человек',
+                        style: {
+                            color: Highcharts.getOptions().colors[0]
+                        }
+                    },
+                    labels: {
+                        format: '{value}'
+                    },
+                    opposite: true,
+                    tickInterval: 1
+                }],
+                labels: {
+                    items: []
+                },
+                tooltip: {
+                    shared: true
+                },
+                series: [
+                    {
+                        type: 'column',
+                        name: 'Принято',
+                        data: <%= @plotDataEmployeeAdd.as_json %>
+                    },
+                    {
+                        type: 'column',
+                        name: 'Уволено',
+                        data: <%= @plotDataEmployeeDismiss.as_json %>
+                    },  {
+                        type: 'column',
+                        name: 'Вакансий',
+                        data: <%= @plotDataVacancyCount.as_json %>
+                    }, {
+                        type: 'spline',
+                        name: 'Число сотрудников',
+                        color: 'red',
+                        data: <%= @plotDataEmployeeCount.as_json %>,
+                        yAxis: 1,
+                        marker: {
+                            lineWidth: 2,
+                            lineColor: 'red',
+                            fillColor: 'white'
+                        }
+                    }]
+            }
+    )
+});

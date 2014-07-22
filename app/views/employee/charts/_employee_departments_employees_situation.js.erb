@@ -1,0 +1,71 @@
+$(function () {
+    $('#departmens_emplyees_situation').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Число сотрудников и вакансий по подразделениям'
+        },
+        xAxis: {
+            categories: JSON.parse('<%= @plotXAxisDep.to_json.html_safe %>'),
+            labels: {
+                rotation: -65,
+                formatter: formatterFunction
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: ''
+            }
+        },
+        tooltip: {
+            formatter: function() {
+                var result = '<b>' + this.x + '</b>';
+                $.each(this.points, function(i, datum) {
+                    result += '<br /> <i>' + datum.series.name + '</i>: ' + datum.y + ' человек';
+
+                });
+                //console.log()
+                result += '<br />' + this.points[0].point.manager
+
+                return result;
+            },
+            //headerFormat: '<div style="font-size:13px">{point.key}</div>',
+            //pointFormat: '<div><b>{series.name}</b>: ' + '{point.y} человек</div>' ,
+            //footerFormat: '',
+            shared: true,
+            useHTML: true
+        },
+        legend: {
+            align: 'right',
+            x: -70,
+            verticalAlign: 'top',
+            y: 20,
+            floating: true,
+            backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+            borderColor: '#CCC',
+            borderWidth: 1,
+            shadow: false
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0,
+                stacking: 'normal',
+                minPointLength: 2
+            }
+        },
+        series: [{
+            name: 'Вакансий',
+            data: JSON.parse('<%= @plotDataDepEmployeeStats['vacancy'].to_json.html_safe %>'),
+            color: 'rgb(144, 237, 125)'
+
+        },{
+            name: 'Сотрудников',
+            data: JSON.parse('<%= @plotDataDepEmployeeStats['employee_count'].to_json.html_safe %>'),
+            color: 'rgb(124, 181, 236)'
+
+        }]
+    });
+});

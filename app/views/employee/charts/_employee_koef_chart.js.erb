@@ -1,0 +1,28 @@
+$(function () {
+    $('#employee_koef_chart').highcharts({
+        title: {
+            text: 'Коэффиценты текучести кадров'
+        },
+        xAxis: {
+            categories: JSON.parse('<%= @plotXAxis.to_json.html_safe %>')
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: '%'
+            }
+        },
+        tooltip: {
+            valueSuffix: '%'
+        },
+        series: [{
+            name: 'Неукомплектованность кадров',
+            data: <%= @plotDatakNeuk.as_json%>,
+            type: 'spline'
+        }, {
+            name: 'Коэффициент увольнений',
+            type: 'spline',
+            data: <%= @plotDatakTek.as_json%>
+        }]
+    });
+});

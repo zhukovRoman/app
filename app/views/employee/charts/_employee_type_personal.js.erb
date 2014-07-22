@@ -1,0 +1,39 @@
+$(function () {
+    $('#employee_type_personal').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Отношение производственного персонала к управленческому'
+        },
+        xAxis: {
+            categories: JSON.parse('<%= @plotXAxis.to_json.html_safe %>')
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: '%'
+            }
+        },
+        tooltip: {
+            shared: true,
+            valueSuffix: '%'
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0,
+                stacking: 'percent'
+            }
+        },
+        series: [{
+            name: 'Производественный',
+            data: <%= @plotDataProdCount.as_json %>
+
+        }, {
+            name: 'Управленческий',
+            data: <%= @plotDataManageCount.as_json %>
+
+        }]
+    });
+});

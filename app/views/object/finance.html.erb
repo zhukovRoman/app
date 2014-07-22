@@ -1,0 +1,326 @@
+<div id="map" style="height: 600px"></div>
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+<script>
+
+    var chart = {
+        credits:  {
+            enabled: false
+        },
+        title: {
+            text: 'Освоение бюджета',
+            x: -20 //center
+        },
+        xAxis: {
+            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Бюджет (руб)'
+            },
+            plotLines: [{
+                value: 0,
+                width: 1,
+                color: '#808080'
+            }]
+        },
+        tooltip: {
+            shared: true,
+            valueSuffix: 'рублей'
+        },
+
+        series: [{
+            color: "red",
+            name: 'Предельный объем инвестиций на год',
+            data: [26984200, 26984200, 26984200, 26984200, 26984200, 26984200, 26984200, 26984200, 26984200, 26984200, 26984200, 26984200]
+        }, {
+            color: 'green',
+            name: 'Освоено в этом году',
+            data: [10, 300000, 1000000, 1800000, 2000000, 2238854]
+        }
+        ]
+    };
+
+    var map = L.map('map').setView([55.75,37.609], 10);
+
+    L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+            '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+            'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+        id: 'examples.map-i86knfo3'
+    }).addTo(map);
+
+
+
+    var popup = L.popup({maxWidth:500})
+            .setLatLng([55.8,37.609])
+            .setContent("<div id='chart' style='width: 500px; height: 300px'>fdsfsd</div>");
+    marker = L.marker([55.683,37.929]).addTo(map)
+            .bindPopup(popup);
+    marker.on('click', onObjectClicked);
+
+    function onObjectClicked(){
+        console.log("open pop up");
+        $("#chart").highcharts(chart);
+
+    }
+
+</script>
+
+
+<ul class="nav nav-tabs" role="tablist" style="margin-top: 20px">
+  <li class="active"><a href="#budjet" role="tab" data-toggle="tab">Освоение бюджета</a></li>
+  <li><a href="#kontract" role="tab" data-toggle="tab">Сумма по контрактам</a></li>
+  <li><a href="#avance" role="tab" data-toggle="tab">Авансы</a></li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+  <div class="tab-pane active" id="budjet"><div id="chart-finance" style="width: 1100px; height: 500px" ></div></div>
+  <div class="tab-pane" id="kontract"><div id="chart-kontract" style="width: 1100px; height: 500px" ></div></div>
+  <div class="tab-pane" id="avance"><div id="chart-avance" style="width: 1100px; height: 500px" ></div></div>
+</div>
+
+
+<script type="application/javascript">
+    var formatterFunction = function(){
+        return format(this.value)
+    }
+    var format = function (value)
+    {
+        if (value > 1000*1000*1000) return value/(1000*1000*1000)+" млрд"
+        if (value > 1000*1000) return value/(1000*1000)+" млн"
+        if (value > 1000) return value/(1000)+" тыс"
+    }
+</script>
+<script type="application/javascript">
+    $(function () {
+        $('#chart-finance').highcharts({
+            chart: {
+                type: 'area'
+            },
+            credits:  {
+                enabled: false
+            },
+            title: {
+                text: 'Освоение бюджета по всем объектам',
+                x: -20 //center
+            },
+            xAxis: {
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+            },
+            yAxis: [{
+                min: 0,
+                endOnTick: false,
+                title: {
+                    text: 'Бюджет (руб)'
+                },
+                labels: {
+                   formatter: formatterFunction
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+            {
+                endOnTick: false,
+                labels:{
+                    formatter:function(){
+                        var max=this.axis.linkedParent.dataMax,
+                                min=this.axis.linkedParent.dataMin,
+                                range=max-min;
+                        return Math.round((this.value-min)/(range)*100) + ' %';
+                    }
+                },
+                linkedTo:0,
+                opposite:true,
+                title: {
+                    text: ''
+                }
+            }
+
+            ],
+            tooltip: {
+                shared: true,
+////                valueSuffix: ' рублей',
+//                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+//                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+//                                '<td style="padding:0"><b>{point.y} рублей</b></td></tr>',
+//                footerFormat: '</table>',
+                useHTML: true,
+                formatter: function() {
+                    var header = "<div style='font-weight: bold'>" + this.x + "</div>"
+                    var body = ""
+                    for (index = 0; index < this.points.length; ++index) {
+                        body += "<div>" +
+                                "<span style=' padding: 0px 3px; border-radius: 5px; background-color: "+
+                                this.points[index].series.color + "'></span>" +
+                                format(this.points[index].y) + "</div>"
+                    }
+                    if (this.points[1] != undefined)
+                        body += "<div> Не освоено: " + format(this.points[0].y - this.points[1].y) + "</div>"
+                    return header+body;
+
+                }
+            },
+
+            series: [{
+                color: "rgb(241, 92, 128)",
+                name: 'Предельный объем инвестиций на год',
+                data: [51120127185, 51120127185, 51120127185, 51120127185, 51120127185, 51120127185, 51120127185, 51120127185, 51120127185, 51120127185, 51120127185, 51120127185]
+            }, {
+                color: 'rgb(144, 237, 125)',
+                name: 'Освоено в этом году',
+                data: [100000000, 1000000000, 9000000000, 11325992911, 20000000000, 21325992911]
+            }
+
+            ]
+        });
+    });
+</script>
+<script type="application/javascript">
+    $(function () {
+        $('#chart-kontract').highcharts({
+//            chart: {
+//                type: 'area'
+//            },
+            credits:  {
+                enabled: false
+            },
+            title: {
+                text: 'Выплаты по контрактам по всем объектам',
+                x: -20 //center
+            },
+            xAxis: {
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+            },
+            yAxis: [{
+                min: 0,
+                endOnTick: false,
+                title: {
+                    text: 'Сумма контрактов (руб)'
+                },
+                labels: {
+                    formatter: formatterFunction
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+                {
+                    endOnTick: false,
+                    labels:{
+                        formatter:function(){
+                            var max=this.axis.linkedParent.dataMax,
+                                    min=this.axis.linkedParent.dataMin,
+                                    range=max-min;
+                            return Math.round((this.value-min)/(range)*100) + ' %';
+                        }
+                    },
+                    linkedTo:0,
+                    opposite:true,
+                    title: {
+                        text: ''
+                    }
+                }
+
+            ],
+            tooltip: {
+                shared: true,
+                valueSuffix: ' рублей'
+            },
+
+            series: [{
+                color: "rgb(241, 92, 128)",
+                name: 'Сумма контрактов',
+                data: [200849603266, 200849603266, 200849603266, 200849603266, 200849603266, 200849603266, 200849603266, 200849603266, 200849603266, 200849603266, 200849603266, 200849603266]
+            }, {
+                color: 'rgb(144, 237, 125)',
+                name: 'Оплачено по контрактам',
+                data: [10, 10435452471, 30435452471, 48435452471, 62435452471, 91435452471]
+            }, {
+                color: 'rgb(124, 181, 236)',
+                name: 'Выполнено работ на сумму',
+                data: [10, 5435452471, 25435452471, 45435452471, 59435452471, 84375309779]
+            }
+            ]
+        });
+    });
+</script>
+<script type="application/javascript">
+    $(function () {
+        $('#chart-avance').highcharts({
+            chart: {
+                type: 'area'
+            },
+            credits:  {
+                enabled: false
+            },
+            title: {
+                text: 'Авансы',
+                x: -20 //center
+            },
+            xAxis: {
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+            },
+            yAxis: [{
+                min: 0,
+                endOnTick: false,
+                title: {
+                    text: 'Сумма авансов (руб)'
+                },
+                labels: {
+                    formatter: formatterFunction
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+                {   min: 0,
+                    endOnTick: false,
+                    labels:{
+                        formatter:function(){
+                            var max=this.axis.linkedParent.dataMax,
+                                    min=this.axis.linkedParent.dataMin,
+                                    range=max-min;
+                            return Math.round((this.value-min)/(range)*100) + ' %';
+                        }
+                    },
+                    linkedTo:0,
+                    opposite:true,
+                    title: {
+                        text: ''
+                    }
+                }
+
+            ],
+            tooltip: {
+                shared: true,
+                valueSuffix: ' рублей'
+            },
+
+            series: [{
+                color: "rgb(241, 92, 128)",
+                name: 'Выдано авансов',
+                data: [9541461153, 15541461153, 20541461153, 25541461153, 28541461153, 29541461153]
+            }, {
+                color: 'rgb(144, 237, 125)',
+                name: 'Погашено авансов',
+                data: [3706386906, 9706386906, 13706386906, 15706386906, 18706386906, 20706386906]
+            }
+            ]
+        });
+    });
+</script>

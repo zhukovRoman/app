@@ -1,8 +1,4 @@
-<div id="employee_situation_chart2" style="height: 600px"></div>
+<div id="employee_situation_chart" style="height: 600px"></div>
 <script type="text/javascript">
-    $(function () {
-        $('#employee_situation_chart2').highcharts(<%= render 'employee/charts/employee_situation_chart_js' %>);
-    });
-
-
+    <%= render 'employee/charts/employee_situation_chart.js' %>
 </script>

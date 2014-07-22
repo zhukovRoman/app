@@ -1,0 +1,123 @@
+
+
+$(function () {
+    function returnYearChart() {
+        setTimeout(function(){
+            $('#salary_structure_chart').highcharts(chartYear);
+            rebindXaxis();
+        }, 100);
+    }
+    function rebindXaxis () {
+        $('#salary_structure_chart .highcharts-axis-labels text, ' +
+                '#salary_structure_chart .highcharts-axis-labels span').click(function () {
+                    chart = $('#salary_structure_chart').highcharts();
+                    chart.xAxis[0].setCategories(monthsData[this.textContent].categories, false);
+                    chart.xAxis[0].options.labels.rotation = -65;
+                    chart.xAxis[0].options.labels.formatter = formatterFunction;
+                    chart.series[0].setData(monthsData[this.textContent].data[0].data, false )
+                    chart.series[1].setData(monthsData[this.textContent].data[1].data, false )
+                    chart.series[2].setData(monthsData[this.textContent].data[2].data, false )
+                    chart.series[2].hide();
+                    chart.series[3].setData(monthsData[this.textContent].data[3].data, true )
+                    chart.renderer.button('Назад',
+                            200,
+                            10,
+                            returnYearChart).add();
+                    chart.series[2].show();
+                });
+    }
+    var chartYear = {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Структура заработной платы'
+        },
+        xAxis: {
+            labels: {
+                formatter: formatterFunction
+            },
+            categories: JSON.parse('<%= @plotXAxis.to_json.html_safe %>')
+        },
+        yAxis: [{
+            min: 0,
+            title: {
+                text: 'Сумма'
+            },
+            stackLabels: {
+                enabled: false,
+                style: {
+                    fontWeight: 'bold',
+                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                }
+            },
+            labels: {
+                formatter: function() {
+                    return this.value / 1000 +' т.р.';
+                }
+            }
+        },{
+            title:{text:'Средняя зарплата'},
+            opposite: true,
+            labels: {
+                formatter: function() {
+                    return this.value / 1000 +' т.р.';
+                }
+            }
+        }],
+        legend: {
+            align: 'right',
+            x: -70,
+            verticalAlign: 'top',
+            y: 20,
+            floating: true,
+            backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+            borderColor: '#CCC',
+            borderWidth: 1,
+            shadow: false
+        },
+        tooltip: {
+            shared: true
+        },
+        plotOptions: {
+            column: {
+                stacking: 'normal'
+            }
+        },
+        series: [
+            {
+                name: 'Налоги',
+                data: <%= @plotDataTax.as_json %>,
+                tooltip: {
+                    valueSuffix: ' руб'
+                }
+            },{
+                name: 'Премии',
+                data: <%= @plotDataBonus.as_json %>,
+                tooltip: {
+                    valueSuffix: ' руб'
+                }
+            }, {
+                name: 'Зарплата',
+                data: <%= @plotDataSalary.as_json %>,
+                tooltip: {
+                    valueSuffix: ' руб'
+                }
+            }
+            ,{
+                name: 'Средняя зарплата',
+                type: 'spline',
+                yAxis: 1,
+                data: <%= @plotDataAvgSalary.as_json %>,
+                tooltip: {
+                    valueSuffix: ' руб'
+                }
+            }
+        ]
+    };
+
+    var monthsData = JSON.parse('<%= @drilldownData.to_json.html_safe %>')
+    $('#salary_structure_chart').highcharts(chartYear);
+    rebindXaxis();
+
+});

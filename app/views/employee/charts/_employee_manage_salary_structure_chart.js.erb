@@ -1,0 +1,103 @@
+$(function () {
+    $('#employee_manage_salary_structure_chart').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Структура заработной платы АУП'
+        },
+        xAxis: {
+            categories: JSON.parse('<%= @plotXAxis.to_json.html_safe %>')
+        },
+        yAxis: [{
+            min: 0,
+            title: {
+                text: 'Сумма'
+            },
+            stackLabels: {
+                enabled: false,
+                style: {
+                    fontWeight: 'bold',
+                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                }
+            },
+            labels: {
+                formatter: function() {
+                    return this.value / 1000 +' т.р.';
+                }
+            }
+        },{
+            title:{text:'Средняя зарплата'},
+            opposite: true,
+            labels: {
+                formatter: function() {
+                    return this.value / 1000 +' т.р.';
+                }
+            }
+        }
+            ,{
+                title:{text:'Количество персонала'}
+                //opposite: true,
+            }],
+        legend: {
+            align: 'right',
+            x: -70,
+            verticalAlign: 'top',
+            y: 20,
+            floating: true,
+            backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+            borderColor: '#CCC',
+            borderWidth: 1,
+            shadow: false
+        },
+        tooltip: {
+
+            shared: true
+        },
+        plotOptions: {
+            column: {
+                stacking: 'normal'
+            }
+        },
+        series: [
+            {
+                name: 'Налоги',
+                stack: 'ZP',
+                data: <%= @plotDataManageTax.as_json %>,
+                tooltip: {
+                    valueSuffix: ' руб'
+                }
+            },{
+                name: 'Премии',
+                stack: 'ZP',
+                data: <%= @plotDataManageBonus.as_json %>,
+                tooltip: {
+                    valueSuffix: ' руб'
+                }
+            }, {
+                name: 'ЗП',
+                stack: 'ZP',
+                data: <%= @plotDataManageSalary.as_json %>,
+                tooltip: {
+                    valueSuffix: ' руб'
+                }
+            }
+            , {
+                name: 'Количество АУП',
+                stack: 'none',
+                yAxis: 2,
+                data: <%= @plotDataAUPCount.as_json %>,
+                tooltip: {
+                    valueSuffix: ' чел'
+                }
+            }
+            ,{
+                name: 'Средняя зарплата',
+                type: 'spline',
+                yAxis: 1,
+                data: <%= @plotDataManageAvg.as_json %>,
+                tooltip: {
+                    valueSuffix: ' руб'
+                }}                    ]
+    });
+});
