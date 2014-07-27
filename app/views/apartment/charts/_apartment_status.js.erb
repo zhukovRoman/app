@@ -1,0 +1,34 @@
+function getRandomInt(min, max)
+{
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function getRandomArray (size, min, max ){
+    min = min || 0;
+    max = max || 250
+    res = Array();
+    while (size-- > 0)
+    {
+        res.push (getRandomInt(min,max))
+    }
+    return res;
+}
+
+addArrays = function (arr1, arr2)
+{
+    for (i=0; i < arr1.length; i++){
+        arr1[i] += arr2[i];
+    }
+    //console.log (arr1)
+    return arr1;
+}
+
+<%= render "apartment/charts/apartment_status_data.js" %>
+
+var current_status_data = finance_status_data;
+
+
+
+
+
+

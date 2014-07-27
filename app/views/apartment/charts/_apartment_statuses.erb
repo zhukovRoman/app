@@ -1,0 +1,24 @@
+<div class="tab-pane active" id="statuses">
+  <div class="col-sm-12" style="margin-top: 20px">
+      <div class="col-sm-6 ">
+        <div class="btn-group" data-toggle="buttons" id="value_filter">
+          <label label-default="" id="in-pcs" class="btn btn-default " data="pcs_status_data">
+            <input name="options"  type="radio" checked="checked">В квартирах
+          </label>
+          <label label-default=""  id="in-m2" class="btn btn-default" data="m2_status_data">
+            <input name="options"  type="radio">В м<sup>2</sup>
+          </label>
+          <label label-default="" id="in-fin" class="btn btn-default active" data="finance_status_data">
+            <input name="options"  type="radio">В финанасах
+          </label>
+        </div>
+      </div>
+    <%= render "apartment/charts/commons_part/rooms_filter" %>
+  </div>
+  <div class="row">
+    <div id="apartment-status-chart" class ="chart" style="height: 500px; width: 900px;"></div>
+  </div>
+  <script type="application/javascript">
+    <%= render "apartment/charts/apartment_status.js" %>
+  </script>
+</div>

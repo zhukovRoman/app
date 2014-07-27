@@ -2,31 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5f9abbab-e858-4c37-adea-ecaae39daf1e" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/views/employee/charts/_employee_common_scripts.js.erb" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/views/employee/charts/_employee_departments_employees_situation.erb" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/views/employee/charts/_employee_departments_employees_situation.js.erb" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/views/employee/charts/_employee_koef_chart.erb" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/views/employee/charts/_employee_koef_chart.js.erb" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/views/employee/charts/_employee_manage_salary_structure_chart.erb" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/views/employee/charts/_employee_manage_salary_structure_chart.js.erb" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/views/employee/charts/_employee_salary_structure_chart.erb" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/views/employee/charts/_employee_salary_structure_chart.js.erb" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/views/employee/charts/_employee_type_personal.erb" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/views/employee/charts/_employee_type_personal.js.erb" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/xml/auk.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/xml/auk.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/views/object/finance.html.erb" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/views/employee/charts/_employee_situation_chart_js.erb" afterPath="$PROJECT_DIR$/app/views/employee/charts/_employee_situation_chart.js.erb" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/views/apartment/charts/_apartment_status.erb" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/views/apartment/charts/_apartment_status.js.erb" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/views/apartment/charts/_apartment_status_data.js.erb" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/views/apartment/charts/_apartment_statuses.erb" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/views/apartment/charts/commons_part/_common_scripts.js.erb" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/views/apartment/charts/commons_part/_rooms_filter.html.erb" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/app/views/apartment/index2.html.erb" afterPath="$PROJECT_DIR$/app/views/apartment/index.html.erb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db/development.sqlite3" afterPath="$PROJECT_DIR$/db/development.sqlite3" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/employee/charts/_employee_situation_chart.erb" afterPath="$PROJECT_DIR$/app/views/employee/charts/_employee_situation_chart.erb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/apartment_controller.rb" afterPath="$PROJECT_DIR$/app/controllers/apartment_controller.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/api_controller.rb" afterPath="$PROJECT_DIR$/app/controllers/api_controller.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/employee/index.erb" afterPath="$PROJECT_DIR$/app/views/employee/index.erb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/apartment/index.html.erb" afterPath="$PROJECT_DIR$/app/views/apartment/index.html.erb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/object/index.html.erb" afterPath="$PROJECT_DIR$/app/views/object/index.html.erb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/welcome/index.html.erb" afterPath="$PROJECT_DIR$/app/views/welcome/index.html.erb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/object_controller.rb" afterPath="$PROJECT_DIR$/app/controllers/object_controller.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/routes.rb" afterPath="$PROJECT_DIR$/config/routes.rb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/employee/charts/_employee_salary_structure_chart.js.erb" afterPath="$PROJECT_DIR$/app/views/employee/charts/_employee_salary_structure_chart.js.erb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/assets/stylesheets/apartment.css.scss" afterPath="$PROJECT_DIR$/app/assets/stylesheets/apartment.css.scss" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/assets/stylesheets/application.scss" afterPath="$PROJECT_DIR$/app/assets/stylesheets/application.scss" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/apartment/index2.html.erb" afterPath="$PROJECT_DIR$/app/views/apartment/index2.html.erb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="app.iws" />
@@ -41,7 +28,7 @@
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/app@Production__app.coverage" NAME="Production: app Coverage Results" MODIFIED="1403859439850" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="app" />
-    <SUITE FILE_PATH="coverage/app@Development__app.coverage" NAME="Development: app Coverage Results" MODIFIED="1406017956026" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="app" />
+    <SUITE FILE_PATH="coverage/app@Development__app.coverage" NAME="Development: app Coverage Results" MODIFIED="1406454996161" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="app" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -55,47 +42,58 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="object_controller.rb" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/controllers/object_controller.rb">
+      <file leaf-file-name="_rooms_filter.html.erb" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/views/apartment/charts/commons_part/_rooms_filter.html.erb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="6" column="5" selection-start="49" selection-end="180" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="416">
+            <state line="14" column="8" selection-start="41" selection-end="639" vertical-scroll-proportion="-8.96" vertical-offset="0" max-vertical-offset="368">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.erb" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/views/employee/index.erb">
+      <file leaf-file-name="index2.html.erb" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/views/apartment/index2.html.erb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="20" column="9" selection-start="608" selection-end="608" vertical-scroll-proportion="0.49473685" vertical-offset="85" max-vertical-offset="608">
+            <state line="58" column="10" selection-start="1696" selection-end="1696" vertical-scroll-proportion="25.24" vertical-offset="1559" max-vertical-offset="2336">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="_employee_departments_employees_situation.erb" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/views/employee/charts/_employee_departments_employees_situation.erb">
+      <file leaf-file-name="apartment_controller.rb" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/controllers/apartment_controller.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="4" column="0" selection-start="190" selection-end="190" vertical-scroll-proportion="-2.56" vertical-offset="0" max-vertical-offset="160">
+            <state line="13" column="0" selection-start="218" selection-end="218" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="352">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="_employee_departments_employees_situation.js.erb" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/views/employee/charts/_employee_departments_employees_situation.js.erb">
+      <file leaf-file-name="_apartment_statuses.erb" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/views/apartment/charts/_apartment_statuses.erb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="2" vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="1216">
+            <state line="21" column="49" selection-start="1064" selection-end="1064" vertical-scroll-proportion="-13.44" vertical-offset="0" max-vertical-offset="464">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="api_controller.rb" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/controllers/api_controller.rb">
+      <file leaf-file-name="_apartment_status.js.erb" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/views/apartment/charts/_apartment_status.js.erb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="3" column="26" selection-start="163" selection-end="163" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="192">
+            <state line="9" column="22" selection-start="224" selection-end="224" vertical-scroll-proportion="0.18532819" vertical-offset="0" max-vertical-offset="777">
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="_apartment_status_data.js.erb" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/views/apartment/charts/_apartment_status_data.js.erb">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="165" column="54" selection-start="6658" selection-end="6658" vertical-scroll-proportion="-2.8" vertical-offset="0" max-vertical-offset="5008">
+              <folding>
+                <element signature="e#26#6141#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -121,17 +119,9 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/db/migrate/20140524160409_create_db.rb" />
-        <option value="$PROJECT_DIR$/db/migrate/20140615183155_add_salary_fields.rb" />
-        <option value="$PROJECT_DIR$/db/migrate/20140618094449_create_employee_stats.rb" />
-        <option value="$PROJECT_DIR$/db/migrate/20140622110003_add_columns_to_managers_stats.rb" />
-        <option value="$PROJECT_DIR$/app/controllers/welcome_controller.rb" />
-        <option value="$PROJECT_DIR$/log/salary_2014_6.log" />
-        <option value="$PROJECT_DIR$/app/views/employee/vacancies.html.erb" />
         <option value="$PROJECT_DIR$/app/assets/stylesheets/employee.css.scss" />
         <option value="$PROJECT_DIR$/app/views/employee/editmanagment.erb" />
         <option value="$PROJECT_DIR$/Gemfile" />
-        <option value="$PROJECT_DIR$/app/assets/stylesheets/application.scss" />
         <option value="$PROJECT_DIR$/app/assets/javascripts/application.js" />
         <option value="$PROJECT_DIR$/app/views/layouts/application.html.erb" />
         <option value="$PROJECT_DIR$/app/views/employee/_chart1.erb" />
@@ -149,12 +139,9 @@
         <option value="$PROJECT_DIR$/app/views/object/finance.html.rb.erb" />
         <option value="$PROJECT_DIR$/app/views/object/index.html.erb" />
         <option value="$PROJECT_DIR$/app/views/object/finance.html.erb" />
-        <option value="$PROJECT_DIR$/app/views/apartment/index.html.erb" />
         <option value="$PROJECT_DIR$/xml/auk.json" />
         <option value="$PROJECT_DIR$/config/routes.rb" />
-        <option value="$PROJECT_DIR$/app/views/apartment/index2.html.erb" />
         <option value="$PROJECT_DIR$/app/views/welcome/index.html.erb" />
-        <option value="$PROJECT_DIR$/app/controllers/apartment_controller.rb" />
         <option value="$PROJECT_DIR$/app/controllers/object_controller.rb" />
         <option value="$PROJECT_DIR$/app/views/employee/charts/_employee_salary_structure_chart_js.erb" />
         <option value="$PROJECT_DIR$/app/views/employee/charts/_employee_salary_structure_chart.erb" />
@@ -164,7 +151,6 @@
         <option value="$PROJECT_DIR$/app/views/employee/charts/_employee_situation_chart.js.erb" />
         <option value="$PROJECT_DIR$/app/views/employee/charts/_employee_type_personal.js.erb" />
         <option value="$PROJECT_DIR$/app/views/employee/charts/_employee_type_personal.erb" />
-        <option value="$PROJECT_DIR$/app/views/employee/charts/_employee_salary_structure_chart.js.erb" />
         <option value="$PROJECT_DIR$/app/views/employee/charts/_employee_manage_salary_structure_chart.js.erb" />
         <option value="$PROJECT_DIR$/app/views/employee/charts/_employee_manage_salary_structure_chart.erb" />
         <option value="$PROJECT_DIR$/app/views/employee/charts/_employee_departments_employees_situation.erb" />
@@ -172,6 +158,18 @@
         <option value="$PROJECT_DIR$/app/views/employee/charts/_employee_common_scripts.js.erb" />
         <option value="$PROJECT_DIR$/app/views/employee/charts/_employee_departments_employees_situation.js.erb" />
         <option value="$PROJECT_DIR$/app/views/employee/index.erb" />
+        <option value="$PROJECT_DIR$/app/views/apartment/index.html.erb" />
+        <option value="$PROJECT_DIR$/app/assets/stylesheets/application.scss" />
+        <option value="$PROJECT_DIR$/app/assets/stylesheets/apartment.css.scss" />
+        <option value="$PROJECT_DIR$/app/views/apartment/charts/commons_part/_rooms_filter.html.erb" />
+        <option value="$PROJECT_DIR$/app/views/apartment/charts/_apartment_statuses_in_money.js.erb" />
+        <option value="$PROJECT_DIR$/app/views/employee/charts/_employee_salary_structure_chart.js.erb" />
+        <option value="$PROJECT_DIR$/app/views/apartment/charts/_apartment_status_in_money.js.erb" />
+        <option value="$PROJECT_DIR$/app/views/apartment/index2.html.erb" />
+        <option value="$PROJECT_DIR$/app/controllers/apartment_controller.rb" />
+        <option value="$PROJECT_DIR$/app/views/apartment/charts/_apartment_statuses.erb" />
+        <option value="$PROJECT_DIR$/app/views/apartment/charts/_apartment_status_data.js.erb" />
+        <option value="$PROJECT_DIR$/app/views/apartment/charts/_apartment_status.js.erb" />
       </list>
     </option>
   </component>
@@ -183,8 +181,7 @@
     <option name="CUSTOM_FILTER" value="" />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1440" />
-    <option name="width" value="1600" />
+    <option name="width" value="1440" />
     <option name="height" value="900" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
@@ -232,6 +229,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="RailsProjectView" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -343,6 +341,102 @@
               <option name="myItemId" value="app" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apartment" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apartment" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="charts" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apartment" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="charts" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="commons_part" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="controllers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -364,7 +458,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="RailsProjectView" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -387,11 +480,11 @@
       <recent name="$PROJECT_DIR$/app/views/welcome" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/views/apartment/charts/commons_part" />
+      <recent name="$PROJECT_DIR$/app/views/apartment" />
       <recent name="$PROJECT_DIR$/xml" />
       <recent name="$PROJECT_DIR$/app/views/employee/charts" />
       <recent name="$PROJECT_DIR$/exportXML/salary" />
-      <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/public" />
     </key>
   </component>
   <component name="RunManager" selected="Rails.Development: app">
@@ -580,27 +673,27 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="1440" y="0" width="1600" height="900" extended-state="0" />
+    <frame x="0" y="0" width="1440" height="900" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32891566" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18629807" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.328125" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32692307" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32650602" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2907574" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17453505" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39976552" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3377404" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33734939" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32891566" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -622,47 +715,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/db/migrate/20140615125736_devise_create_users.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="768" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/db/migrate/20140524160409_create_db.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="53" selection-start="212" selection-end="212" vertical-scroll-proportion="-0.85714287" vertical-offset="512" max-vertical-offset="1088" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/salary_01_2014.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="244" column="17" selection-start="30319" selection-end="30327" vertical-scroll-proportion="8.395699" vertical-offset="0" max-vertical-offset="4144" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/assets/javascripts/employee.js.coffee">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="481" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/views/employee/vacancies.html.erb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="44" selection-start="824" selection-end="905" vertical-scroll-proportion="0.39729118" vertical-offset="96" max-vertical-offset="1168" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/log/salary_2014_6.log">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="0" selection-start="393" selection-end="393" vertical-scroll-proportion="0.102564104" vertical-offset="0" max-vertical-offset="468" />
-      </provider>
-      <provider editor-type-id="com.intellij.persistence.database.editor.CsvTableFileEditorProvider">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/log/employee_transfer_2014_6.log">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="399" column="121" selection-start="91045" selection-end="91054" vertical-scroll-proportion="14.476191" vertical-offset="0" max-vertical-offset="15040" />
-      </provider>
-      <provider editor-type-id="com.intellij.persistence.database.editor.CsvTableFileEditorProvider">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/assets/stylesheets/employee.css.scss">
       <provider selected="true" editor-type-id="text-editor">
         <state line="15" column="0" selection-start="235" selection-end="235" vertical-scroll-proportion="0.50104386" vertical-offset="0" max-vertical-offset="479" />
@@ -676,11 +728,6 @@
     <entry file="file://$PROJECT_DIR$/Gemfile">
       <provider selected="true" editor-type-id="text-editor">
         <state line="56" column="0" selection-start="1594" selection-end="1594" vertical-scroll-proportion="0.0" vertical-offset="472" max-vertical-offset="1120" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/assets/stylesheets/application.scss">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="0" selection-start="706" selection-end="706" vertical-scroll-proportion="0.0" vertical-offset="256" max-vertical-offset="1168" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/views/api/getchart.html.erb">
@@ -704,11 +751,11 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/log/production.log">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="22432" />
-      </provider>
       <provider editor-type-id="com.intellij.persistence.database.editor.CsvTableFileEditorProvider">
         <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="22432" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/config/database.yml">
@@ -732,11 +779,11 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/log/employee_transfer_2014_7.log">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="304" column="0" selection-start="82257" selection-end="82257" vertical-scroll-proportion="0.07742998" vertical-offset="4817" max-vertical-offset="5424" />
-      </provider>
       <provider editor-type-id="com.intellij.persistence.database.editor.CsvTableFileEditorProvider">
         <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="304" column="0" selection-start="82257" selection-end="82257" vertical-scroll-proportion="0.07742998" vertical-offset="4817" max-vertical-offset="5424" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/models/department.rb">
@@ -771,9 +818,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/personal.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="182" column="30" selection-start="15217" selection-end="15226" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6016">
-          <folding />
-        </state>
+        <state line="182" column="30" selection-start="15217" selection-end="15226" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6016" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/config/routes.rb">
@@ -785,9 +830,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/xml/auk.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="44" selection-start="818" selection-end="818" vertical-scroll-proportion="0.0" vertical-offset="304" max-vertical-offset="928">
-          <folding />
-        </state>
+        <state line="19" column="44" selection-start="818" selection-end="818" vertical-scroll-proportion="0.0" vertical-offset="304" max-vertical-offset="928" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/views/welcome/index.html.erb">
@@ -797,161 +840,62 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/views/employee/editmanagment.erb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="14" selection-start="716" selection-end="716" vertical-scroll-proportion="0.2962963" vertical-offset="0" max-vertical-offset="756">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/controllers/apartment_controller.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="5" selection-start="203" selection-end="203" vertical-scroll-proportion="0.32" vertical-offset="0" max-vertical-offset="500">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/views/apartment/index2.html.erb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="800" column="33" selection-start="28000" selection-end="28000" vertical-scroll-proportion="0.6421053" vertical-offset="12495" max-vertical-offset="13616">
-          <folding>
-            <marker date="1405629495000" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1405629495000" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1405629495000" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1405629495000" expanded="true" signature="-1:-1" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/controllers/object_controller.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="5" selection-start="49" selection-end="180" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="416">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/views/apartment/index.html.erb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="292" column="0" selection-start="9462" selection-end="11315" vertical-scroll-proportion="1.4929397" vertical-offset="3509" max-vertical-offset="15360">
-          <folding>
-            <marker date="1405513047000" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1405513047000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1405513047000" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1405513047000" expanded="true" signature="-1:-1" placeholder="[...]" />
-            <marker date="1405513047000" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1405513047000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1405513047000" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1405513047000" expanded="true" signature="-1:-1" placeholder="{...}" />
-          </folding>
-        </state>
+        <state line="14" column="14" selection-start="716" selection-end="716" vertical-scroll-proportion="0.2962963" vertical-offset="0" max-vertical-offset="756" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/views/employee/charts/_employee_salary_structure_chart.erb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="66" selection-start="167" selection-end="167" vertical-scroll-proportion="-1.28" vertical-offset="0" max-vertical-offset="144">
-          <folding />
-        </state>
+        <state line="2" column="66" selection-start="167" selection-end="167" vertical-scroll-proportion="-1.28" vertical-offset="0" max-vertical-offset="144" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/views/employee/charts/_employee_situation_chart.erb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="63" selection-start="159" selection-end="159" vertical-scroll-proportion="-1.28" vertical-offset="0" max-vertical-offset="144">
-          <folding />
-        </state>
+        <state line="2" column="63" selection-start="159" selection-end="159" vertical-scroll-proportion="-1.28" vertical-offset="0" max-vertical-offset="144" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/views/employee/charts/_employee_koef_chart.js.erb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="3" selection-start="702" selection-end="702" vertical-scroll-proportion="0.5714286" vertical-offset="0" max-vertical-offset="756">
-          <folding />
-        </state>
+        <state line="27" column="3" selection-start="702" selection-end="702" vertical-scroll-proportion="0.5714286" vertical-offset="0" max-vertical-offset="756" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/views/employee/charts/_employee_situation_chart.js.erb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="68" column="4" selection-start="2353" selection-end="2353" vertical-scroll-proportion="1.4391534" vertical-offset="0" max-vertical-offset="1200">
-          <folding />
-        </state>
+        <state line="68" column="4" selection-start="2353" selection-end="2353" vertical-scroll-proportion="1.4391534" vertical-offset="0" max-vertical-offset="1200" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/views/employee/charts/_employee_koef_chart.erb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="54" selection-start="145" selection-end="145" vertical-scroll-proportion="0.041078307" vertical-offset="0" max-vertical-offset="779">
-          <folding />
-        </state>
+        <state line="2" column="54" selection-start="145" selection-end="145" vertical-scroll-proportion="0.041078307" vertical-offset="0" max-vertical-offset="779" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/views/employee/charts/_employee_type_personal.js.erb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="38" column="3" selection-start="927" selection-end="927" vertical-scroll-proportion="-24.32" vertical-offset="0" max-vertical-offset="704">
-          <folding>
-            <marker date="1406020881000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1406020881000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1406020881000" expanded="true" signature="-1:-1" placeholder="{&quot;type&quot;: 'column'...}" />
-            <marker date="1406020881000" expanded="true" signature="-1:-1" placeholder="{&quot;text&quot;: 'Отношение производственного персонала к управленческому'...}" />
-            <marker date="1406020881000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1406020881000" expanded="true" signature="-1:-1" placeholder="{&quot;min&quot;: 0...}" />
-            <marker date="1406020881000" expanded="true" signature="-1:-1" placeholder="{&quot;text&quot;: '%'...}" />
-            <marker date="1406020881000" expanded="true" signature="-1:-1" placeholder="{&quot;shared&quot;: true...}" />
-            <marker date="1406020881000" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1406020881000" expanded="true" signature="-1:-1" placeholder="{&quot;pointPadding&quot;: 0.2...}" />
-            <marker date="1406020881000" expanded="true" signature="-1:-1" placeholder="[...]" />
-            <marker date="1406020881000" expanded="true" signature="-1:-1" placeholder="{&quot;name&quot;: 'Производественный'...}" />
-            <marker date="1406020881000" expanded="true" signature="-1:-1" placeholder="{&quot;name&quot;: 'Управленческий'...}" />
-          </folding>
-        </state>
+        <state line="38" column="3" selection-start="927" selection-end="927" vertical-scroll-proportion="-24.32" vertical-offset="0" max-vertical-offset="704" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/views/employee/charts/_employee_type_personal.erb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="9" selection-start="164" selection-end="164" vertical-scroll-proportion="-1.92" vertical-offset="0" max-vertical-offset="144">
-          <folding>
-            <marker date="1406020881000" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1406020881000" expanded="true" signature="-1:-1" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/views/employee/charts/_employee_salary_structure_chart.js.erb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="2048">
-          <folding />
-        </state>
+        <state line="3" column="9" selection-start="164" selection-end="164" vertical-scroll-proportion="-1.92" vertical-offset="0" max-vertical-offset="144" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/views/employee/charts/_employee_manage_salary_structure_chart.js.erb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="102" column="3" selection-start="2916" selection-end="2916" vertical-scroll-proportion="-65.28" vertical-offset="0" max-vertical-offset="1728">
-          <folding />
-        </state>
+        <state line="102" column="3" selection-start="2916" selection-end="2916" vertical-scroll-proportion="-65.28" vertical-offset="0" max-vertical-offset="1728" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/views/employee/charts/_employee_manage_salary_structure_chart.erb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="4" selection-start="114" selection-end="186" vertical-scroll-proportion="-1.28" vertical-offset="0" max-vertical-offset="144">
-          <folding>
-            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/controllers/api_controller.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="26" selection-start="163" selection-end="163" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="192">
-          <folding />
-        </state>
+        <state line="2" column="4" selection-start="114" selection-end="186" vertical-scroll-proportion="-1.28" vertical-offset="0" max-vertical-offset="144" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/views/employee/charts/_employee_common_scripts.js.erb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="28" selection-start="28" selection-end="28" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="498">
-          <folding />
-        </state>
+        <state line="0" column="28" selection-start="28" selection-end="28" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="498" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/views/employee/charts/_employee_departments_employees_situation.erb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="0" selection-start="190" selection-end="190" vertical-scroll-proportion="-2.56" vertical-offset="0" max-vertical-offset="160">
-          <folding />
-        </state>
+        <state line="4" column="0" selection-start="190" selection-end="190" vertical-scroll-proportion="0.0" vertical-offset="64" max-vertical-offset="160" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/views/employee/charts/_employee_departments_employees_situation.js.erb">
@@ -961,9 +905,95 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/controllers/api_controller.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="26" selection-start="163" selection-end="163" vertical-scroll-proportion="0.059850372" vertical-offset="0" max-vertical-offset="802" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/apartment/charts/commons_part/_common_scripts.js.erb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="802" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/apartment/charts/_apartment_status.erb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="802" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/assets/stylesheets/apartment.css.scss">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="58" selection-start="278" selection-end="278" vertical-scroll-proportion="-3.2" vertical-offset="0" max-vertical-offset="192" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/assets/stylesheets/application.scss">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="69" column="0" selection-start="1658" selection-end="1658" vertical-scroll-proportion="0.87267905" vertical-offset="446" max-vertical-offset="1200" />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/views/employee/index.erb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="9" selection-start="608" selection-end="608" vertical-scroll-proportion="0.49473685" vertical-offset="85" max-vertical-offset="608">
+        <state line="8" column="0" selection-start="305" selection-end="486" vertical-scroll-proportion="0.16976127" vertical-offset="0" max-vertical-offset="754" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/apartment/index.html.erb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="408" column="6" selection-start="14559" selection-end="14950" vertical-scroll-proportion="-19.92" vertical-offset="6030" max-vertical-offset="13600">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/controllers/object_controller.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="5" selection-start="49" selection-end="180" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="416" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/apartment/charts/commons_part/_rooms_filter.html.erb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="8" selection-start="41" selection-end="639" vertical-scroll-proportion="-8.96" vertical-offset="0" max-vertical-offset="368">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/employee/charts/_employee_salary_structure_chart.js.erb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.09657948" vertical-offset="48" max-vertical-offset="2032">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/controllers/apartment_controller.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="0" selection-start="218" selection-end="218" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="352">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/apartment/index2.html.erb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="58" column="10" selection-start="1696" selection-end="1696" vertical-scroll-proportion="25.24" vertical-offset="1559" max-vertical-offset="2336">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/apartment/charts/_apartment_statuses.erb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="21" column="49" selection-start="1064" selection-end="1064" vertical-scroll-proportion="-13.44" vertical-offset="0" max-vertical-offset="464">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/apartment/charts/_apartment_status_data.js.erb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="165" column="54" selection-start="6658" selection-end="6658" vertical-scroll-proportion="-2.8" vertical-offset="0" max-vertical-offset="5008">
+          <folding>
+            <element signature="e#26#6141#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/apartment/charts/_apartment_status.js.erb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="22" selection-start="224" selection-end="224" vertical-scroll-proportion="0.18532819" vertical-offset="0" max-vertical-offset="777">
           <folding />
         </state>
       </provider>
