@@ -7,13 +7,13 @@ class ObjectController < ApplicationController
   end
 
   def index
-
+    authorize! :index, self
     #puts Obj.get_years_enters_plan
     #puts Obj.get_years_enters_fact
   end
 
   def finance
-
+    authorize! :index, self
   end
 
 
