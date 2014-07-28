@@ -1,0 +1,71 @@
+<div class="tab-pane" id="addprice">
+  <div class="col-sm-12" style="margin-top: 20px">
+    <%= render "apartment/charts/commons_part/rooms_filter" %>
+  </div>
+  <div class="row">
+    <div id="apartment-add-price" class ="chart" style="height: 500px; width: 900px;"></div>
+  </div>
+  <script type="application/javascript">
+      $(function () {
+          $('#apartment-add-price').highcharts({
+              credits:  {
+                  enabled: false
+              },
+              chart: {
+                  type: 'column'
+              },
+              title: {
+                  text: 'Добавочная стоимость квартир'
+              },
+              xAxis: {
+                  categories: ['Неделя 1', 'Неделя 2', 'Неделя 3', 'Неделя 4', 'Неделя 5'],
+                  tickmarkPlacement: 'off',
+                  title: {
+                      enabled: false
+                  }
+              },
+              yAxis: {
+                  title: {
+                      text: 'Миллионов'
+                  },
+                  labels: {
+                      formatter: function() {
+                          return this.value / 1;
+                      }
+                  },
+                  stackLabels: {
+                      enabled: true,
+                      style: {
+                          fontWeight: 'bold',
+                          color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                      }
+                  }
+              },
+              tooltip: {
+                  shared: true,
+                  valueSuffix: ' млн'
+              },
+              plotOptions: {
+                  column: {
+                      stacking: 'normal',
+                      dataLabels: {
+                          enabled: true,
+                          color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+                          style: {
+                              textShadow: '0 0 3px black, 0 0 3px black'
+                          }
+                      }
+                  }
+              },
+              series: [{
+                  name: 'Добавочная стоимость',
+                  data: [12, 25, 3, 14, 33]
+              }, {
+                  name: 'Начальная стоимость',
+                  data: [100, 200, 78, 150, 250]
+
+              }]
+          });
+      });
+  </script>
+</div>

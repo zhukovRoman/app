@@ -23,10 +23,68 @@ addArrays = function (arr1, arr2)
     return arr1;
 }
 
+var setNewValues = function () {
+    //console.log($(this).parent().attr("data"))
+    current_status_data = eval($(this).parent().attr("data"))
+    redrawChart();
+}
+
 <%= render "apartment/charts/apartment_status_data.js" %>
 
 var current_status_data = finance_status_data;
+$(function (){
+    status_chart={
+        credits:  {
+            enabled: false
+        },
+        title: {
+            text: 'Статусы квартир'
+        },
+        xAxis: {
+            categories: ['Неделя 1', 'Неделя 2', 'Неделя 3', 'Неделя 4', 'Неделя 5']
+        },
+        yAxis:{
+            title: {
+                text: current_status_data['y-axis-label']
+            }
+        },
+        tooltip: {
+            shared: true,
+            formatter: function() {
+                var s = '<b>'+ this.x +'</b>';
 
+                $.each(this.points, function(i, point) {
+                    s += '<br/>'+ point.series.name +': '+
+                            point.y + " " + current_status_data['valueSuffix'];
+                });
+
+                return s;
+            }
+//              valueSuffix: 'млн рублей'
+        },
+        series: [{
+            type: 'column',
+            name: 'Забронировано',
+            data: getStatusData("Забронировано")
+        },{
+            type: 'column',
+            name: 'Объявлен аукцион',
+            data: getStatusData('Объявлен аукцион')
+        }, {
+            type: 'column',
+            name: 'Состоялся аукцион',
+            data: getStatusData('Состоялся аукцион')
+        }, {
+            type: 'column',
+            name: 'Подписан ДКП',
+            data: getStatusData('Подписан ДКП')
+        }, {
+            type: 'column',
+            name: 'Передано право собсвтенности',
+            data: getStatusData('Передано право собсвтенности')
+        }]
+    };
+});
 
 
 

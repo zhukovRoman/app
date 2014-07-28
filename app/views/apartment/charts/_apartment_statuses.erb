@@ -17,7 +17,76 @@
   </div>
   <div class="row">
     <div id="apartment-status-chart" class ="chart" style="height: 500px; width: 900px;"></div>
+    <div class="btn-group" style="margin-top: 60px; margin-left: 100px">
+      <button type="button" class="btn btn-default" onclick="showDetailChart()">Забронировано</button>
+      <button type="button" class="btn btn-default">Объявлен аукцион</button>
+      <button type="button" class="btn btn-default">Состоялся аукцион</button>
+      <button type="button" class="btn btn-default">Подписан ДКП</button>
+      <button type="button" class="btn btn-default">Передано ПС</button>
+    </div>
+
+  <div id="apartment-status-detail" class ="chart" style="height: 500px; width: 900px; display: none"></div>
+  <script type="application/javascript">
+      $(function () {
+
+      });
+
+  </script>
   </div>
+  <script type="application/javascript">
+     var showDetailChart = function (){
+        $("#apartment-status-detail").toggle();
+         $('#apartment-status-detail').highcharts({
+             chart: {
+                 type: 'column'
+             },
+             title: {
+                 text: 'Данамика статуса "Забронировано"'
+             },
+             xAxis: {
+                 categories: ['Неделя 1', 'Неделя 2', 'Неделя 3', 'Неделя 4', 'Неделя 5']
+             },
+             yAxis: {
+                 min: 0,
+                 title: {
+                     text: 'Квартир'
+                 }
+             },
+             tooltip: {
+
+                 shared: true
+
+             },
+             plotOptions: {
+                 column: {
+                     pointPadding: 0.2,
+                     borderWidth: 0
+                 }
+             },
+             series: [{
+                 name: 'Некрасовка 1',
+                 data: getRandomArray(5,10,25)
+
+             }, {
+                 name: 'Некрасовка 2',
+                 data: getRandomArray(5,10,25)
+
+             }, {
+                 name: 'Солнцево',
+                 data: getRandomArray(5,10,25)
+
+             }, {
+                 name: 'Базовская',
+                 data: getRandomArray(5,10,25)
+
+             }, {
+                 name: 'Зеленоград',
+                 data: getRandomArray(5,10,25)
+
+             }]
+         });
+     }
+  </script>
   <script type="application/javascript">
     <%= render "apartment/charts/apartment_status.js" %>
   </script>

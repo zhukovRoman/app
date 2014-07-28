@@ -1,141 +1,205 @@
 <script src="http://code.highcharts.com/highcharts.js"></script>
 <script type="application/javascript">
-  var selectAllObjects = function () {
-      $.each($("#objects_filter input"), function(i , val){
-          //console.log(val)
-          $(val).prop('checked', true);
-      });
-      redrawChart();
-  }
-
-  var getRoomsFilter = function () {
-    return ($("#rooms_filter > label.active").attr('id'))
-  }
-
-  var getObjectFilter = function () {
-     var res = Array();
-      $.each($("#objects_filter input:checked"), function(i , val){
-          res.push($(val).attr("id"))
-      })
-      return res;
-  }
-
-  var createChart = function () {
-      rooms_filter = getRoomsFilter();
-      objects_filter = getObjectFilter();
-      $('#apartment-status-chart').highcharts(status_chart);
-  }
-
-  var redrawChart = function () {
-    setTimeout(function(){
-        rooms_filter = getRoomsFilter();
-        objects_filter = getObjectFilter();
-        var chart = $('#apartment-status-chart').highcharts();
-        $.each(chart.series, function(i, series){
-            series.setData(getStatusData(series.name), false)
-        });
-        chart.yAxis[0].setTitle({
-            text: current_status_data['y-axis-label']
-        });
-        chart.redraw();
-    },100);
-  }
-
-  rooms_filter = "";
-  objects_filter = [];
-
-    var getStatusData = function (status){
-      rooms_filter = getRoomsFilter();
-      objects_filter = getObjectFilter();
-      rooms_data = current_status_data[rooms_filter];
-      res = [0,0,0,0,0];
-      $.each(objects_filter, function(i, val){
-          res = addArrays(res, rooms_data[val][status]);
-      })
-      return res;
-    }
-
-    var setNewValues = function () {
-        //console.log($(this).parent().attr("data"))
-        current_status_data = eval($(this).parent().attr("data"))
-        redrawChart();
-    }
-
-  $(function(){
-      //навешиваем обработчики
-      $("#all-objects").on('click', selectAllObjects);
-      $("#objects_filter input").change(redrawChart);
-      $("#rooms_filter input").change(redrawChart);
-      $("#value_filter input").change(setNewValues);
-
-      status_chart={
-          credits:  {
-              enabled: false
-          },
-          title: {
-              text: 'Статусы квартир'
-          },
-          xAxis: {
-              categories: ['Неделя 1', 'Неделя 2', 'Неделя 3', 'Неделя 4', 'Неделя 5']
-          },
-          tooltip: {
-              shared: true,
-              formatter: function() {
-                  var s = '<b>'+ this.x +'</b>';
-
-                  $.each(this.points, function(i, point) {
-                      s += '<br/>'+ point.series.name +': '+
-                              point.y + " " + current_status_data['valueSuffix'];
-                  });
-
-                  return s;
-              }
-//              valueSuffix: 'млн рублей'
-          },
-          series: [{
-              type: 'column',
-              name: 'Забронировано',
-              data: getStatusData("Забронировано")
-          },{
-              type: 'column',
-              name: 'Объявлен аукцион',
-              data: getStatusData('Объявлен аукцион')
-          }, {
-              type: 'column',
-              name: 'Состоялся аукцион',
-              data: getStatusData('Состоялся аукцион')
-          }, {
-              type: 'column',
-              name: 'Подписан ДКП',
-              data: getStatusData('Подписан ДКП')
-          }, {
-              type: 'column',
-              name: 'Передано право собсвтенности',
-              data: getStatusData('Передано право собсвтенности')
-          }]
-      };
-      createChart();
-  });
+    <%= render "apartment/charts/commons_part/common_scripts.js" %>
 </script>
 
 <ul class="nav nav-tabs" role="tablist">
-  <li class="active"><a href="#statuses" role="tab" data-toggle="tab">Изменение статусов квартир</a></li>
-  <li><a href="#avgm2" role="tab" data-toggle="tab">средняя стоимость м<sup>2</sup></a></li>
-  <li><a href="#planfact" role="tab" data-toggle="tab">выполнение плана</a></li>
+  <li class="active"><a href="#statuses" role="tab" data-toggle="tab">Динамика продаж</a></li>
+  <li><a href="#avgm2" role="tab" data-toggle="tab">Cр. стоимость м<sup>2</sup></a></li>
+  <li><a href="#plan_fact" role="tab" data-toggle="tab">Выполнение плана</a></li>
   <li><a href="#addprice" role="tab" data-toggle="tab">Добавочная стоимость</a></li>
   <li><a href="#financerealtor" role="tab" data-toggle="tab">Накопление финансов</a></li>
+  <li><a href="#mortgage" role="tab" data-toggle="tab">Ипотека</a></li>
+  <li><a href="#floorprice" role="tab" data-toggle="tab">Этажность</a></li>
 </ul>
 
-<div class="row">
-    <div class="tab-content col-sm-10">
-        <%= render "apartment/charts/apartment_statuses" %>
-    </div>
-    <div class="col-sm-2" id="objects_filter">
-        <div id="all-objects" class="btn btn-default btn-xs" style="margin-top: 40px">Все объекты</div>
-        <div><input id="nekrasovka1" type="checkbox" checked> Некрасовка 1</div>
-        <div><input id="nekrasovka2" type="checkbox" checked> Некрасовка 2</div>
-        <div><input id="solncevo" type="checkbox" checked> Солнцево</div>
-        <div><input id="basovskaya" type="checkbox" checked> Базовская</div>
-        <div><input id="zelenograd" type="checkbox" checked> Зеленоград</div>
-    </div>
+<div class="row" style="margin-bottom: 100px">
+  <div class="tab-content col-sm-10">
+    <%= render "apartment/charts/apartment_statuses" %>
+    <%= render "apartment/charts/avg_price" %>
+    <%= render "apartment/charts/plan_fact" %>
+    <%= render "apartment/charts/add_price" %>
+    <%= render "apartment/charts/finance" %>
+    <%= render "apartment/charts/mortgage" %>
+    <%= render "apartment/charts/floors_price" %>
+  </div>
+  <div class="col-sm-2" id="objects_filter">
+    <div id="all-objects" class="btn btn-default btn-xs" style="margin-top: 40px">Все объекты</div>
+    <div><input id="nekrasovka1" type="checkbox" checked> Некрасовка 1</div>
+    <div><input id="nekrasovka2" type="checkbox" checked> Некрасовка 2</div>
+    <div><input id="solncevo" type="checkbox" checked> Солнцево</div>
+    <div><input id="basovskaya" type="checkbox" checked> Базовская</div>
+    <div><input id="zelenograd" type="checkbox" checked> Зеленоград</div>
+  </div>
 </div>
+
+<!--<p>Сколько людей покупают квартиры с отделкой</p>-->
+<div  id="percent" class="btn btn-default btn-xs" onclick="changeType('percent')">В процентах</div>
+<div  id="absolute" class="btn btn-default btn-xs" onclick="changeType('normal')">Абсолбтное значение</div>
+<script type="application/javascript">
+    function changeType(type) {
+        var chart = $('#apartment-finishing-sell-chart').highcharts()
+        for (var i =0; i < chart.series.length; i++){
+            chart.series[i].update({
+                stacking: type
+            }, false);
+        }
+        chart.redraw();
+    };
+</script>
+<div id="apartment-finishing-sell-chart" style="width: 1100px; height: 500px;"></div>
+<script type="application/javascript">
+    $(function () {
+        $('#apartment-finishing-sell-chart').highcharts({
+            credits:  {
+                enabled: false
+            },
+            title: {
+                text: 'Продано квартир с отделкой и без'
+            },
+            xAxis: {
+                categories: ['Некрасовка 1', 'Некрасовка 2', 'Солнцево', 'Базовская', 'Зеленоград']
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Количество'
+                },
+                stackLabels: {
+                    enabled: true,
+                    style: {
+                        fontWeight: 'bold',
+                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                    }
+                }
+            },
+            tooltip:{
+                shared: true,
+                useHTML: true,
+                formatter: function() {
+                    var header = "<div style='font-weight: bold'>" + this.x + "</div>"
+                    var body = ""
+                    for (index = 0; index < this.points.length; ++index) {
+                        body += "<div>" +
+                                "<span style=' padding: 0px 3px; border-radius: 5px; background-color: "+
+                                this.points[index].series.color + "'></span>" +
+                                (this.points[index].y) + " " + this.points[index].series.name+ "</div>"
+                    }
+                    if (this.points[1] != undefined)
+                        body += "<div>  Всего: " + (this.points[0].y + this.points[1].y ) + "</div>"
+                    return header+body;
+
+                }
+            },
+            plotOptions: {
+                column: {
+                    stacking: 'percent'
+                }
+            },
+            series: [{
+                type: 'column',
+                name: 'С отделкой',
+                dataLabels: {
+                    enabled: true,
+                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+                    style: {
+                        textShadow: '0 0 3px black, 0 0 3px black'
+                    }
+                },
+                data: [10, 3, 0, 0, 0]
+            }, {
+                type: 'column',
+                name: 'Без отделки',
+                dataLabels: {
+                    enabled: true,
+                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+                    style: {
+                        textShadow: '0 0 3px black, 0 0 3px black'
+                    }
+                },
+                data: [24, 2, 0, 0, 0]
+            }]
+        });
+    });
+</script>
+
+
+
+<div   class="btn btn-default btn-xs" onclick="changeType2('percent')">В процентах</div>
+<div  class="btn btn-default btn-xs" onclick="changeType2('normal')">Абсолбтное значение</div>
+<script type="application/javascript">
+    function changeType2(type) {
+        var chart = $('#apartment-all-sell-status-chart2').highcharts()
+        for (var i =0; i < chart.series.length; i++){
+            chart.series[i].update({
+                stacking: type
+            }, false);
+        }
+        chart.redraw();
+    };
+</script>
+<div id="apartment-all-sell-status-chart2" style="width: 1100px; height: 500px; padding-top: 50px"></div>
+<script type="application/javascript">
+    $(function () {
+        $('#apartment-all-sell-status-chart2').highcharts({
+            credits:  {
+                enabled: false
+            },
+            title: {
+                text: 'Всего продано квартир'
+            },
+            xAxis: {
+                categories: ['Некрасовка 1', 'Некрасовка 2', 'Солнцево', 'Базовская', 'Зеленоград']
+            },
+            tooltip:{
+                shared: true
+            },
+            plotOptions: {
+                column: {
+                    stacking: 'percent'
+                }
+            },
+            chart: {
+                type: 'column'
+            },
+            series: [{
+                name: '1-ком продано',
+                data: [10, 3, 0, 0, 0],
+                stack: "1k"
+            },{
+                name: '1-ком осталось',
+                data: [10, 3, 0, 0, 0],
+                stack: "1k"
+            },{
+                name: '2-ком продано ',
+                data: [24, 2, 0, 0, 0],
+                stack: "2k"
+            },{
+
+                name: '2-ком осталось ',
+                data: [23, 1, 0, 0, 0],
+                stack: "2k"
+            },{
+                name: '3-ком продано',
+                data: [2, 1, 0, 0, 0],
+                stack: "3k"
+            },{
+                name: '3-ком осталось',
+                data: [2, 1, 0, 0, 0],
+                stack: "3k"
+            }]
+        });
+    });
+</script>
+
+
+<script type="application/javascript">
+    $(function(){
+        //навешиваем обработчики
+        $("#all-objects").on('click', selectAllObjects);
+        $("#objects_filter input").change(redrawChart);
+        $("#rooms_filter input").change(redrawChart);
+        $("#value_filter input").change(setNewValues);
+        createChart();
+    });
+</script>

@@ -215,46 +215,7 @@
   </div>
     <div class="tab-pane" id="planfact">
       <div id="apartment-plan"  style="width: 890px; height: 500px; "></div>
-      <script type="application/javascript">
-          $(function () {
-              $('#apartment-plan').highcharts({
-                  chart: {
-                      type: 'column'
-                  },
-                  title: {
-                      text: 'План выполнения продаж'
-                  },
-                  xAxis: {
-                      categories: ['Неделя 1', 'Неделя 2', 'Неделя 3', 'Неделя 4', 'Неделя 5']
-                  },
-                  yAxis: {
-                      min: 0,
-                      title: {
-                          text: 'количество'
-                      }
-                  },
-                  tooltip: {
-                      shared: true,
-                      useHTML: true
-                  },
-                  plotOptions: {
-                      column: {
-                          pointPadding: .1,
-                          borderWidth: 0
-                      }
-                  },
-                  series: [{
-                      name: 'План ',
-                      data: [25, 35, 40, 30, 45]
 
-                  }, {
-                      name: 'Факт',
-                      data: [25, 32, 40, 28, 42]
-
-                  }]
-              });
-          });
-      </script>
     </div>
     <div class="tab-pane" id="addprice">
       <div id="apartment-add-price" style="width: 890px; height: 500px; "></div>
@@ -465,7 +426,6 @@
 
         var colors = Highcharts.getOptions().colors,
                 categories = ['Ипотека', 'Личные средства'],
-                name = 'Browser brands',
                 data = [{
                     y: 55,
                     color: colors[2],
@@ -513,6 +473,9 @@
 
         // Create the chart
         $('#apartment-banks-chart').highcharts({
+            credits:  {
+                enabled: false
+            },
             chart: {
                 type: 'pie'
             },
