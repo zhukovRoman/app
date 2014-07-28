@@ -11,6 +11,7 @@ class ApartmentController < ApplicationController
   end
 
   def index2
-
+    #puts current_user.inspect()
+    authorize! :index, self
   end
 end

@@ -63,3 +63,5 @@ gem 'activerecord-sqlserver-adapter', '~> 4.1.0'
 #    :git => "git://github.com/rails-sqlserver/activerecord-sqlserver-adapter.git"
 
 #gem 'russian', '~> 0.6.0'
+
+gem 'cancan'

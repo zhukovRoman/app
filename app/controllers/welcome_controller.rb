@@ -6,7 +6,7 @@ class WelcomeController < ApplicationController
   end
 
   def index
-    @user = User.new(:email => 'zhrovl@gmail.com', :password => 'pass123', :password_confirmation => 'pass123')
+    @user = User.new(:email => 'ismagilova@kpugs.ru', :password => 'pass123', :password_confirmation => 'pass123')
     #@user.save!
   end
 end

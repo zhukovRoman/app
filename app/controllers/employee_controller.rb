@@ -7,6 +7,7 @@ class EmployeeController < ApplicationController
     @@partName = "КП УГС - Кадры"
   end
 
+
   def rename_XML (path)
     #File.rename(path, path+".c")
     #return path+".c"
@@ -14,6 +15,8 @@ class EmployeeController < ApplicationController
   end
 
   def index
+    authorize! :index, self
+
     @standalone_month_names = ["", "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"]
     @plotXAxis = Array.new
     @plotDataSalary = Array.new
