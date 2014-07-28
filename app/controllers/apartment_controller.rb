@@ -6,12 +6,13 @@ class ApartmentController < ApplicationController
     @@partName = "КП УГС - Продажи"
   end
 
-  def index
+  def index2
 
   end
 
-  def index2
+  def index
     #puts current_user.inspect()
     authorize! :index, self
+    render "index2"
   end
 end
