@@ -1,0 +1,351 @@
+<script src="http://code.highcharts.com/highcharts.js"></script>
+
+<div id="expertiza_chart" style="width: 900px; height: 450px; margin: 0 auto"></div>
+
+<script type="application/javascript">
+    $(function () {
+
+        var colors = Highcharts.getOptions().colors,
+                categories = ['Идет стройка', 'Не идет стройка'],
+                name = 'Browser brands',
+                data = [{
+                    y: 100,
+                    color: colors[0],
+                    drilldown: {
+                        name: 'Идет стройка',
+                        categories: ['Есть экспетриза', 'Нет экспертизы'],
+                        data: [70, 30],
+                        color: colors[0]
+                    }
+                }, {
+                    y: 50,
+                    color: colors[1],
+                    drilldown: {
+                        name: 'Нет стройки',
+                        categories: ['Нет стройки'],
+                        data: [50],
+                        color: colors[1]
+                    }
+                }
+                ];
+
+
+        // Build the data arrays
+        var browserData = [];
+        var versionsData = [];
+        for (var i = 0; i < data.length; i++) {
+
+            // add browser data
+            browserData.push({
+                name: categories[i],
+                y: data[i].y,
+                color: data[i].color
+            });
+
+            // add version data
+            for (var j = 0; j < data[i].drilldown.data.length; j++) {
+                var brightness = 0.2 - (j / data[i].drilldown.data.length) / 5 ;
+                versionsData.push({
+                    name: data[i].drilldown.categories[j],
+                    y: data[i].drilldown.data[j],
+                    color: Highcharts.Color(data[i].color).brighten(brightness).get()
+                });
+            }
+        }
+        versionsData[1]['color'] = colors[5]
+        // Create the chart
+        $('#expertiza_chart').highcharts({
+            credits:  {
+                enabled: false
+            },
+            chart: {
+                type: 'pie'
+            },
+            title: {
+                text: 'Строящиеся объекты без экспертизы'
+            },
+            yAxis: {
+                title: {
+                    text: 'Total percent market share'
+                }
+            },
+            plotOptions: {
+                pie: {
+                    shadow: false,
+                    center: ['50%', '50%']
+                }
+            },
+            tooltip: {
+                valueSuffix: ' объектов'
+            },
+            series: [{
+                name: 'Количество',
+                data: browserData,
+                size: '60%',
+                dataLabels: {
+                    formatter: function() {
+                        return this.y > 5 ? this.point.name : null;
+                    },
+                    color: 'white',
+                    distance: -60
+                }
+            }, {
+                name: 'Количество',
+                data: versionsData,
+                size: '80%',
+                innerSize: '60%',
+                dataLabels: {
+                    formatter: function() {
+                        // display only if larger than 1
+                        return this.y > 1 ? '<b>'+ this.point.name +':</b> '+ this.y +'%'  : null;
+                    }
+                }
+            }]
+        });
+    });
+</script>
+
+<div id="resolution_chart" style="width: 900px; height: 450px; margin: 0 auto"></div>
+
+<script type="application/javascript">
+    $(function () {
+
+        var colors = Highcharts.getOptions().colors,
+                categories = ['Идет стройка', 'Не идет стройка'],
+                name = 'Browser brands',
+                data = [{
+                    y: 100,
+                    color: colors[0],
+                    drilldown: {
+                        name: 'Идет стройка',
+                        categories: ['Есть разрешение', 'Нет разрешения'],
+                        data: [70, 30],
+                        color: colors[0]
+                    }
+                }, {
+                    y: 50,
+                    color: colors[1],
+                    drilldown: {
+                        name: 'Нет стройки',
+                        categories: ['Нет стройки'],
+                        data: [50],
+                        color: colors[1]
+                    }
+                }
+                ];
+
+
+        // Build the data arrays
+        var browserData = [];
+        var versionsData = [];
+        for (var i = 0; i < data.length; i++) {
+
+            // add browser data
+            browserData.push({
+                name: categories[i],
+                y: data[i].y,
+                color: data[i].color
+            });
+
+            // add version data
+            for (var j = 0; j < data[i].drilldown.data.length; j++) {
+                var brightness = 0.2 - (j / data[i].drilldown.data.length) / 5 ;
+                versionsData.push({
+                    name: data[i].drilldown.categories[j],
+                    y: data[i].drilldown.data[j],
+                    color: Highcharts.Color(data[i].color).brighten(brightness).get()
+                });
+            }
+        }
+        versionsData[1]['color'] = colors[5]
+        // Create the chart
+        $('#resolution_chart').highcharts({
+            credits:  {
+                enabled: false
+            },
+            chart: {
+                type: 'pie'
+            },
+            title: {
+                text: 'Строящиеся объекты без разрешения'
+            },
+            yAxis: {
+                title: {
+                    text: 'Total percent market share'
+                }
+            },
+            plotOptions: {
+                pie: {
+                    shadow: false,
+                    center: ['50%', '50%']
+                }
+            },
+            tooltip: {
+                valueSuffix: ' объектов'
+            },
+            series: [{
+                name: 'Количество',
+                data: browserData,
+                size: '60%',
+                dataLabels: {
+                    formatter: function() {
+                        return this.y > 5 ? this.point.name : null;
+                    },
+                    color: 'white',
+                    distance: -60
+                }
+            }, {
+                name: 'Количество',
+                data: versionsData,
+                size: '80%',
+                innerSize: '60%',
+                dataLabels: {
+                    formatter: function() {
+                        // display only if larger than 1
+                        return this.y > 1 ? '<b>'+ this.point.name +':</b> '+ this.y +'%'  : null;
+                    }
+                }
+            }]
+        });
+    });
+</script>
+
+<div id="gpzu_chart" style="width: 900px; height: 450px; margin: 0 auto"></div>
+
+<script type="application/javascript">
+    $(function () {
+        $('#gpzu_chart').highcharts({
+            credits:  {
+                enabled: false
+            },
+            chart: {
+                type: 'column'
+            },
+
+            title: {
+                text: 'ГПЗУ у объектов строительства'
+            },
+
+            xAxis: {
+                categories: ['2014', '2015', '2016', '2017', '2018']
+            },
+
+            yAxis: {
+                allowDecimals: false,
+                min: 0,
+                title: {
+                    text: 'Число объектов'
+                },
+                stackLabels: {
+                    enabled: true,
+                    style: {
+                        fontWeight: 'bold',
+                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                    }
+                }
+            },
+
+            tooltip: {
+                formatter: function() {
+                    return '<b>'+ this.x +'</b><br/>'+
+                            this.series.name +': '+ this.y +'<br/>'+
+                            'Total: '+ this.point.stackTotal;
+                }
+            },
+
+            plotOptions: {
+                column: {
+                    stacking: 'normal',
+                    dataLabels: {
+                        enabled: true,
+                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+                        style: {
+                            textShadow: '0 0 3px black, 0 0 3px black'
+                        }
+                    }
+                }
+            },
+
+            series: [{
+                name: 'Есть ГПЗУ',
+                data: [5, 3, 4, 7, 2],
+                stack: 'with'
+            }, {
+                name: 'Нет ГПЗУ',
+                data: [3, 4, 4, 2, 5],
+                stack: 'without'
+            }, {
+                name: 'Просрочено',
+                data: [2, 5, 6, 2, 1],
+                stack: 'without'
+            }]
+        });
+    });
+</script>
+
+<div id="smr_chart" style="width: 900px; height: 450px; margin: 0 auto"></div>
+<script type="application/javascript">
+    $(function () {
+        $('#smr_chart').highcharts({
+            credits:  {
+                enabled: false
+            },
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Динамика сдачи объектов'
+            },
+
+            xAxis: {
+                categories: [
+                    'Jan',
+                    'Feb',
+                    'Mar',
+                    'Apr',
+                    'May',
+                    'Jun',
+                    'Jul',
+                    'Aug',
+                    'Sep',
+                    'Oct',
+                    'Nov',
+                    'Dec'
+                ]
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Количество объектов'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                        '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [{
+                name: 'Сдано',
+                data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+
+            }, {
+                name: 'СМР 100%',
+                data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5, 106.6, 92.3]
+
+            }]
+        });
+    });
+
+
+</script>
+
+<%= render("map.html") %>

@@ -35,4 +35,27 @@ class Obj < ActiveRecord::Base
     return Obj.group("YEAR(ObjectEnterYearCorrect)").order("YEAR(ObjectEnterYearCorrect)").count(:id)
   end
 
+  def getLatLng
+    require 'net/http'
+    require 'json'
+
+    uri = URI("http://maps.google.com/maps/api/geocode/json?address=#{self.adress}&sensor=false")
+    geo_response = Net::HTTP.get(uri) # => String
+    resp = JSON.parse(geo_response)
+    puts resp;
+    return "[1,1]";
+  end
+
+  def getYearCorrect
+
+    if self.year_correct == nil
+      return "";
+    end
+    parts = self.year_correct.to_s.split
+    if parts==nil
+
+    end
+    return Date.parse(parts[0]).year
+
+  end
 end

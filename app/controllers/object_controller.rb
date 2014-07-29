@@ -10,11 +10,26 @@ class ObjectController < ApplicationController
     authorize! :index, self
     #puts Obj.get_years_enters_plan
     #puts Obj.get_years_enters_fact
+    @objects = Obj.all
+    render "index2"
   end
 
   def finance
     authorize! :index, self
   end
 
+  def view
+    id = params['id']
+    if id == nil
+      raise ActionController::RoutingError.new('Not Found')
+    end
+
+    @object = Obj.find_by id: id
+    if @object == nil
+      raise ActionController::RoutingError.new('Not Found')
+    end
+
+
+  end
 
 end

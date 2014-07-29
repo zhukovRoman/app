@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   devise_for :users
   get 'object/index'
   get 'object/finance'
+  get 'object/view'
 
   get 'employee/vacancies'
   post 'employee/vacancies'
