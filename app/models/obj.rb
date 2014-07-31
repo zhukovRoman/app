@@ -24,8 +24,14 @@ class Obj < ActiveRecord::Base
   alias_attribute "date_of_enter","ObjectDataEnter" #
   alias_attribute "power_measure","PowerEdIzm" #
   alias_attribute "status_name","ObjectStatusName" #
-  alias_attribute "flors","ObjectAmountFloor" #
+  alias_attribute "floors","ObjectAmountFloor" #
   alias_attribute "photo_path","ObjectPhotoPath" #
+  alias_attribute "dataGPZU","DataGPZU" #
+  alias_attribute "plan_dataGPZU","DataPlanGPZU" #
+  alias_attribute "data_razresh_str", "DataRazreshStr"
+  alias_attribute "plan_data_razresh_str", "DataPlanRazreshStr"
+  alias_attribute "data_MGE", "DataMGE"
+  alias_attribute "plan_data_MGE","DataPlanMGE"
 
   def self.get_years_enters_plan
     return Obj.group("ObjectEnterYearPlan").order(:year_plan).count(:id)
@@ -49,7 +55,7 @@ class Obj < ActiveRecord::Base
   def getYearCorrect
 
     if self.year_correct == nil
-      return "";
+      return "----";
     end
     parts = self.year_correct.to_s.split
     if parts==nil
@@ -57,5 +63,70 @@ class Obj < ActiveRecord::Base
     end
     return Date.parse(parts[0]).year
 
+  end
+
+  def getGPZUStatus
+    if self.plan_dataGPZU == nil
+      return "Без ГПЗУ"
+    end
+    if self.dataGPZU != nil
+      return "Получено"
+    end
+    if self.dataGPZU == nil && Date.parse(plan_dataGPZU) >= Date.current
+      return "Без ГПЗУ"
+    end
+    if self.dataGPZU == nil && Date.parse(plan_dataGPZU) < Date.current
+      return "Просрочено"
+    end
+  end
+
+  def getMGEStatus
+    if self.plan_data_MGE == nil
+      return "Без экспертизы"
+    end
+    if self.data_MGE != nil
+      return "Получено"
+    end
+    if self.data_MGE == nil && Date.parse(plan_data_MGE) >= Date.current
+      return "Без экспертизы"
+    end
+    if self.data_MGE == nil && Date.parse(plan_data_MGE) < Date.current
+      return "Просрочено"
+    end
+  end
+
+  def getRazreshStatus
+    if self.plan_data_razresh_str == nil
+      return "Без разрешения"
+    end
+    if self.data_razresh_str != nil
+      return "Получено"
+    end
+    if self.data_razresh_str == nil && Date.parse(plan_data_razresh_str) >= Date.current
+      return "Без разрешения"
+    end
+    if self.data_razresh_str == nil && Date.parse(plan_data_razresh_str) < Date.current
+      return "Просрочено"
+    end
+  end
+
+  def self.getAllDistricts
+    return Obj.where(is_archive: 0, ).select("ObjectRegionName").distinct
+  end
+
+  # todo
+  # сделать выбор правильного года
+  def self.getAllEnterYears
+    res = Array.new
+    Obj.where(is_archive: 0).select("ObjectEnterYearCorrect").each do |o|
+      if (!res.include?(o.getYearCorrect.to_s))
+        res.push(o.getYearCorrect.to_s)
+      end
+    end
+    return res.sort
+  end
+
+  def self.notArchive
+    return Obj.where(is_archive: 0)
   end
 end

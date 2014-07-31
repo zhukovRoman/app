@@ -1,5 +1,6 @@
 <div id="map" style="height: 600px"></div>
 <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+<script src="http://leaflet.github.io/Leaflet.markercluster/dist/leaflet.markercluster-src.js"></script>
 <script>
 
 
@@ -27,13 +28,14 @@
 //        console.log("open pop up");
 //    }
 
-var markers = [];
+var markers = new L.MarkerClusterGroup();;
 var popups = [];
 
 <% @objects.each do |obj| %>
    <%= render "marker.js", obj: obj %>
 <% end %>
 
+map.addLayer(markers);
 for (i=0; i<10; i++) {
 
 //    markers.push(L.marker([lat, lng]));

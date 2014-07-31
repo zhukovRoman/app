@@ -1,0 +1,69 @@
+<div class="form-horizontal teps">
+  <div class="form-group">
+    <label class="col-sm-4 control-label">Общая площадь</label>
+    <div class="col-sm-8">
+      <p class="form-control-static"><%= @object.power || "Неизвестно" %> </p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-4 control-label">Площадь квартир</label>
+    <div class="col-sm-8">
+      <p class="form-control-static"><%= "Неизвестно" %> </p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-4 control-label">Квартирография</label>
+    <div class="col-sm-8">
+      <p class="form-control-static"><%= "1: Неизвестно <br> 2: <br> 3:".html_safe %> </p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-4 control-label">Этажность</label>
+    <div class="col-sm-8">
+      <p class="form-control-static"><%= @object.floors %> </p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-4 control-label">Общая стоимость объекта</label>
+    <div class="col-sm-8">
+      <p class="form-control-static">
+        <%= number_to_currency(@object.budget, unit: "₽", separator: ",", delimiter: " ", format: "%n %u")%></p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-4 control-label">Срок ввода по контракту</label>
+    <div class="col-sm-8">
+      <p class="form-control-static"><%= @object.getYearCorrect %> </p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-4 control-label">Срок ввода по плану</label>
+    <div class="col-sm-8">
+      <p class="form-control-static"><%= @object.year_plan %> </p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-4 control-label">Генподрядчик</label>
+    <div class="col-sm-8">
+      <p class="form-control-static"><%= @object.general_builder %> </p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-4 control-label">Заказчик-застройщик</label>
+    <div class="col-sm-8">
+      <p class="form-control-static"><%= @object.techinikal_customer %> </p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-4 control-label">Проектировщик</label>
+    <div class="col-sm-8">
+      <p class="form-control-static"><%= @object.projector %> </p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-4 control-label">Стройконтроль</label>
+    <div class="col-sm-8">
+      <p class="form-control-static"><%= "" %> </p>
+    </div>
+  </div>
+</div>

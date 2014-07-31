@@ -1,3 +1,32 @@
 // Place all the styles related to the objects controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+.teps{
+  .form-group{
+    margin-bottom: 0px;
+  }
+  .control-label, .form-control-static {
+    padding-top: 0px !important;
+  }
+}
+.ingeener-work-class{
+  font-weight: bold;
+}
+.ingeener-work-label{
+  text-align: right;
+}
+
+.leaflet-cluster-anim .leaflet-marker-icon, .leaflet-cluster-anim .leaflet-marker-shadow {
+  -webkit-transition: -webkit-transform 0.3s ease-out, opacity 0.3s ease-in;
+  -moz-transition: -moz-transform 0.3s ease-out, opacity 0.3s ease-in;
+  -o-transition: -o-transform 0.3s ease-out, opacity 0.3s ease-in;
+  transition: transform 0.3s ease-out, opacity 0.3s ease-in;
+}
+
+
+#year_filter{
+  .active {
+    background-color : #d9534f;
+  }
+}
+

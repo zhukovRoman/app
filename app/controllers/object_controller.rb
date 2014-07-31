@@ -8,10 +8,22 @@ class ObjectController < ApplicationController
 
   def index
     authorize! :index, self
-    #puts Obj.get_years_enters_plan
-    #puts Obj.get_years_enters_fact
-    @objects = Obj.all
-    render "index2"
+    require 'json'
+    @data = Hash.new
+    @data['objects']=Array.new
+    objects = @data['objects']
+    Obj.notArchive.each do |o|
+      object = Hash.new
+      object['okrug']=o.region_name
+      object['GPZU'] = o.getGPZUStatus
+      object['year'] = o.getYearCorrect.to_s
+      object['MGE']=o.getMGEStatus.to_s
+      object['razresh']=o.getRazreshStatus.to_s
+      objects.push(object)
+    end
+    @districts = Obj.getAllDistricts
+    @years = Obj.getAllEnterYears
+    render "index3"
   end
 
   def finance
