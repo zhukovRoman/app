@@ -1,0 +1,23 @@
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th>#</th>
+    <th>Адрес</th>
+    <th>Плановая дата получения</th>
+    <th>Отрасль</th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody>
+  <% i = 0 %>
+  <% @objects.each do |o|  %>
+  <tr>
+    <td><%= "#{ i=i+1 }" %></td>
+    <td><%= "#{ o.adress.slice(0,100)}" %></td>
+    <td><%= "#{ o.plan_dataGPZU}" %></td>
+    <td><%="#{ o.object_finance.appointment_type}" %></td>
+    <td> <a href="/object/view?id=<%= o.id  %>"> --≥ </a> </td>
+  </tr>
+  <% end %>
+  </tbody>
+</table>

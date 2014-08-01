@@ -135,4 +135,8 @@ class Obj < ActiveRecord::Base
   def getFinanceObj
     return ObjectFinance.find(self.id)
   end
+
+  def self.overdueObjects
+    return Obj.where('ObjectArchve = 0 AND DataPlanGPZU < ?', Date.current)
+  end
 end

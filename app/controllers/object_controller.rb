@@ -49,7 +49,7 @@ class ObjectController < ApplicationController
   end
 
   def overdue
-
+    @objects = Obj.overdueObjects
   end
 
 end
