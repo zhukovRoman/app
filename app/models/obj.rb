@@ -4,6 +4,8 @@ class Obj < ActiveRecord::Base
   self.table_name = "vw_ObjectForMobileInfo"
   self.primary_key = "ObjectId"
 
+  has_one :object_finance, foreign_key: "ObjectId"
+
   alias_attribute "series_name", "ObjectSerialName" #
   alias_attribute "region_name", "ObjectRegionName" #
   alias_attribute "general_builder", "OrganizationGenBuilder" #
@@ -127,6 +129,10 @@ class Obj < ActiveRecord::Base
   end
 
   def self.notArchive
-    return Obj.where(is_archive: 0)
+    return Obj.where(is_archive: 0).includes(:object_finance)
+  end
+
+  def getFinanceObj
+    return ObjectFinance.find(self.id)
   end
 end

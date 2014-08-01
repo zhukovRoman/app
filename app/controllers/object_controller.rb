@@ -19,10 +19,16 @@ class ObjectController < ApplicationController
       object['year'] = o.getYearCorrect.to_s
       object['MGE']=o.getMGEStatus.to_s
       object['razresh']=o.getRazreshStatus.to_s
+      object['appointment']=o.object_finance.appointment_type
+      object['payed']=o.object_finance.current_year_payd||0
+      object['limit']=o.object_finance.year_limit||0
+      object['complete']=o.object_finance.complete_work||0
+      object['incomplete']=o.object_finance.incomplete_work||0
       objects.push(object)
     end
     @districts = Obj.getAllDistricts
     @years = Obj.getAllEnterYears
+    @appointments = ObjectFinance.getAllAppointmentType
     render "index3"
   end
 
@@ -40,7 +46,9 @@ class ObjectController < ApplicationController
     if @object == nil
       raise ActionController::RoutingError.new('Not Found')
     end
+  end
 
+  def overdue
 
   end
 

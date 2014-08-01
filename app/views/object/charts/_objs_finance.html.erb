@@ -1,0 +1,106 @@
+<div class="row">
+  <div class="row">
+    <div class="btn-group filter" data-toggle="buttons" id="appointment_filter">
+      <% @appointments.each do |a| %>
+          <label class="btn btn-primary active" id="<%= a.appointment_type  %>">
+            <input type="checkbox"><%= a.appointment_type %>
+          </label>
+      <% end %>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div id="fin_chart" style="width: 900px; height: 500px"></div>
+</div>
+
+<script type="application/javascript">
+  $(function(){
+      $("#appointment_filter label").change(redrawFinanceChart);
+      create_fin_chart();
+  })
+
+  redrawFinanceChart = function () {
+
+      //add some delay for addClass complete
+      setTimeout(function() {
+          filteredObjects = filterData();
+          var data = [
+              ['Остаток оплаты',   0],
+              ['Выполнено работ',       0],
+              ['Осталось выполнить',    0]
+          ];
+          $.each(filteredObjects, function(i,obj){
+             data[0][1]+=(obj.limit-obj.payed)
+             data[1][1]+=obj.complete
+             data[2][1]+=obj.incomplete
+          });
+          fin_chart.series[0].setData(data, true);
+      }, 100)
+
+  }
+
+  getAppointmentFilter = function (){
+      var res = [];
+      $.each($("#appointment_filter label.active"), function() {
+          res.push($(this).attr('id'))
+      })
+      return res;
+  }
+
+  filterData = function(){
+      var appointments = getAppointmentFilter();
+      var res = []
+      objects = data['objects'];
+      $.each(objects, function(i, obj){
+          if ($.inArray( obj.appointment, appointments )!=-1)
+          {
+              res.push(obj);
+          }
+      })
+
+      return res;
+  }
+
+  create_fin_chart = function(){
+      // Build the chart
+      fin_chart = new Highcharts.Chart({
+          credits:  {
+              enabled: false
+          },
+          chart: {
+              renderTo:'fin_chart',
+              plotBackgroundColor: null,
+              plotBorderWidth: null,
+              plotShadow: false
+          },
+          title: {
+              text: 'Финансы по отрослям'
+          },
+          tooltip: {
+              shared: true
+              //pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+          },
+          plotOptions: {
+              pie: {
+                  allowPointSelect: true,
+                  cursor: 'pointer',
+                  dataLabels: {
+                      enabled: false
+                  },
+                  showInLegend: true
+              }
+          },
+          series: [{
+              type: 'pie',
+              name: 'Сумма',
+              data: [
+                  ['Остаток оплаты',   45.0],
+                  ['Выполнено работ',       26.8],
+                  ['Осталось выполнить',    8.5]
+
+              ]
+          }]
+      });
+  }
+
+</script>

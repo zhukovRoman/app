@@ -1,0 +1,192 @@
+<div class="row">
+  <div class="col-sm-2">
+    <ul class="nav nav-pills nav-stacked" id="documents">
+      <li id="GPZU" class="active" data-title="ГПЗУ"><a href="#">ГПЗУ</a></li>
+      <li id="MGE" data-title="экспертизы"><a href="#">Экспертиза</a></li>
+      <li id="razresh" data-title="разрешения"><a href="#">Разрешение</a></li>
+    </ul>
+  </div>
+  <div class="col-sm-8">
+    <div class="col-sm-12" >
+      <div class="btn-group filter" data-toggle="buttons" id="year_filter">
+        <% @years.each do |y| %>
+            <label class="btn btn-primary active" id="<%= y  %>">
+              <input type="checkbox"><%= y %>
+            </label>
+        <% end %>
+      </div>
+    </div>
+    <div class="col-sm-12">
+      <div style="width: 730px; height: 500px" id="chart"></div>
+    </div>
+  </div>
+  <div class="col-sm-2" id="okrug_filter">
+    <div id="all-okrugs" class="btn btn-default btn-xs">Все округа</div>
+    <% @districts.each do |d| %>
+        <div><input id="<%= d.region_name  %>" type="checkbox" checked><%= d.region_name  %></div>
+    <% end %>
+  </div>
+</div>
+
+
+<script type="application/javascript">
+    $(function(){
+        //навешиваем обработчики
+        $("#all-okrugs").on('click', selectAllOkrug);
+        $("#okrug_filter input").change(redrawChart);
+        $("#year_filter label").change(redrawChart);
+        $("#documents li a").click(changeDocument);
+        createChart();
+        redrawChart();
+    });
+
+    changeDocument = function (){
+        $("#documents li.active").removeClass('active');
+        $(this).parent().addClass('active');
+        redrawChart();
+    }
+
+    selectAllOkrug = function (){
+        $.each($("#okrug_filter input"), function(i , val){
+            //console.log(val)
+            $(val).prop('checked', true);
+        });
+    }
+
+    getYearsFilter = function(){
+        var res = [];
+        $.each($("#year_filter label.active"), function() {
+            res.push($(this).attr('id'))
+        })
+        return res;
+
+    }
+
+    getOkrugFilter = function () {
+        var res = Array();
+        $.each($("#okrug_filter input:checked"), function(i , val){
+            res.push($(val).attr("id"))
+        })
+        return res;
+    }
+
+    getCurrentDocument = function (){
+        return $('#documents > li.active').attr('id');
+    }
+
+    redrawChart = function () {
+        //add some delay for addClass complete
+        setTimeout(function() {
+//            console.log(getYearsFilter(), getOkrugFilter())
+            var filteredObjects = filterObjects();
+//            console.log(filteredObjects)
+            var currentDocument = getCurrentDocument()
+            var data = {};
+            $.each(filteredObjects, function(i,obj){
+                data[obj[currentDocument]] = (data[obj[currentDocument]] || 0) + 1
+            });
+            changeChartParams(data,currentDocument);
+            console.log(filteredObjects);
+        }, 100)
+
+    }
+
+    changeChartParams = function (data, currentDocument){
+
+        var series = []
+        var summ = 0;
+        for (variable in data) {
+            series.push([variable, data[variable]])
+            summ += data[variable];
+        }
+        chart.series[0].setData(series, true);
+        allTitle.attr({
+            text: summ
+        });
+        chart.setTitle({ text: 'Наличие '+ $("#"+currentDocument).attr('data-title') })
+    }
+
+    filterObjects = function ()
+    {
+        var res = []
+        var years = getYearsFilter();
+        var okrugs = getOkrugFilter();
+        objects = data['objects'];
+        $.each(objects, function(i, obj){
+            if ($.inArray( obj.year, years )!=-1 &&
+                    $.inArray(obj.okrug, okrugs)!= -1)
+            {
+                res.push(obj);
+            }
+        })
+
+        return res;
+    }
+    createChart = function(){
+        chart = new Highcharts.Chart({
+            credits:  {
+                enabled: false
+            },
+            chart: {
+                renderTo: 'chart',
+                plotBackgroundColor: null,
+                plotBorderWidth: 0,
+                plotShadow: true
+            },
+            title: {
+                text: 'Наличие ГПЗУ'
+            },
+//            labels: {
+//                items: [{
+//                    html: "25",
+//                    style: {
+//
+//                    }
+//                },
+//                    {}
+//                ]
+//            },
+            tooltip: {
+                formatter: function () {
+//                    var s = this.series.name +" "+  this.point.name+"<br>";
+                    var s ="";
+                    $.each(this.series.points, function (i, point) {
+                        s += "<b>"+point.name + '</b> ' + point.y + ' объектов <br/>';
+                    });
+
+                    s += '<a href="/object/overdue?okrugs=['+getOkrugFilter()+']">Список просроченных объектов</a>'
+
+                    return s;
+
+                },
+                shared: true,
+                useHTML: true
+//                pointFormat: '{series.name}: <b>{point.y}</b>'
+            },
+            plotOptions: {
+                pie: {
+                    center: ['50%', '50%']
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: 'Статус получения: ',
+                innerSize: '50%',
+                data: [
+                    ['С ГПЗУ',   45.0],
+                    ['БЕЗ ГПЗУ',       26.8],
+                    ['ПРОСРОЧЕНО', 12.8]
+
+                ]
+            }]
+        });
+        allTitle = chart.renderer.text('0', 320, 280)
+                .css({
+                    color: "black",
+                    "font-size" : "40pt"
+                })
+                .add();
+    }
+    var data = <%= @data.to_json.html_safe %>
+
+</script>
