@@ -73,11 +73,17 @@ class EmployeeController < ApplicationController
     @plotDataDepEmployeeStats['vacancy'] = (Array.new)
     @plotDataDepEmployeeStats['employee_count'] = (Array.new)
 
-    if(EmployeeStatsDepartments.where(month: (Date.current-1.month).at_beginning_of_month..(Date.current-1.month).at_end_of_month).count == 0)
-      EmployeeStatsDepartments.fillCurrentMonth()
+    if(EmployeeStatsDepartments.where(month: (Date.current).at_beginning_of_month..(Date.current).at_end_of_month).count == 0)
+      #EmployeeStatsDepartments.fillCurrentMonth()
     end
 
-    EmployeeStatsDepartments.where(month: (Date.current-1.month).at_beginning_of_month..(Date.current-1.month).at_end_of_month).each do |s|
+
+    interval = (Date.current-1.month).at_beginning_of_month..(Date.current-1.month).at_end_of_month;
+    if (Date.current.day<7)
+      interval = (Date.current-2.month).at_beginning_of_month..(Date.current-2.month).at_end_of_month;
+    end
+
+    EmployeeStatsDepartments.where(month: interval).each do |s|
       dep = Department.find(s.department_id)
       @plotXAxisDep.push(dep.name)
 
@@ -90,10 +96,8 @@ class EmployeeController < ApplicationController
       info['y']=s.vacancy_count
       info['manager']=s.manager
       @plotDataDepEmployeeStats['vacancy'].push(info)
-
-      @drilldownData = EmployeeStatsDepartments.get_data_for_drilldown
     end
-
+    @drilldownData = EmployeeStatsDepartments.get_data_for_drilldown
   end
 
   def editmanagment
