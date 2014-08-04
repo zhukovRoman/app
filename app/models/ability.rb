@@ -5,9 +5,9 @@ class Ability
     user ||= User.new # guest user (not logged in)
 
     puts user
-    can :index, ApartmentController if [1, 2, 3].include? user.id
-    can :index, EmployeeController if [1,2].include? user.id
-    can :index, ObjectController if [1,2].include? user.id
+    can :index, ApartmentController if [1, 2, 3, 4].include? user.id
+    can :index, EmployeeController if [1,2,4].include? user.id
+    can :index, ObjectController if [1,2,4].include? user.id
     # Define abilities for the passed in user here. For example:
     #
     #   user ||= User.new # guest user (not logged in)
