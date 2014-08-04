@@ -1,4 +1,15 @@
 <div class="tab-pane" id="mortgage">
+  <div class="panel panel-default" style="margin-top: 20px">
+    <div class="panel-heading">Список вопросов, на которые отвечает график</div>
+    <div class="panel-body">
+      <ul>
+        <li>Сколько квартир по комнатности продано через ипотеку и за собственные средства по каждому объекту/по всем объектам?</li>
+        <li>Какие банки предоставляют кредиты и какова их доля во всех сделках с ипотекой по комнатности и по объектам?</li>
+      </ul>
+      <i>Примечание: так как данные случайны, то фильтры не будут приводить к изменению графика</i>
+    </div>
+  </div>
+
   <div class="col-sm-12" style="margin-top: 20px">
     <%= render "apartment/charts/commons_part/rooms_filter" %>
   </div>

@@ -3,6 +3,8 @@
     <%= render "apartment/charts/commons_part/common_scripts.js" %>
 </script>
 
+<H3 style="color: red">ВСЕ ДАННЫЕ СЛУЧАЙНЫ</H3>
+
 <ul class="nav nav-tabs" role="tablist">
   <li class="active"><a href="#statuses" role="tab" data-toggle="tab">Динамика продаж</a></li>
   <li><a href="#avgm2" role="tab" data-toggle="tab">Cр. стоимость м<sup>2</sup></a></li>
@@ -34,6 +36,14 @@
 </div>
 
 <!--<p>Сколько людей покупают квартиры с отделкой</p>-->
+<div class="panel panel-default" style="margin-top: 20px">
+  <div class="panel-heading">Список вопросов, на которые отвечает график</div>
+  <div class="panel-body">
+    <ul>
+      <li>Сколько людей покупают квартиры с отделкой и без в абсолютных значениях и в пропорции?</li>
+    </ul>
+  </div>
+</div>
 <div  id="percent" class="btn btn-default btn-xs" onclick="changeType('percent')">В процентах</div>
 <div  id="absolute" class="btn btn-default btn-xs" onclick="changeType('normal')">Абсолбтное значение</div>
 <script type="application/javascript">
@@ -125,6 +135,15 @@
 
 
 
+<div class="panel panel-default" style="margin-top: 20px">
+  <div class="panel-heading">Список вопросов, на которые отвечает график</div>
+  <div class="panel-body">
+    <ul>
+      <li>Сколько и каких кваритр уже продано по каждому объекту в пропорции и в абсолютных значениях?</li>
+      <li>Сколько и каких кваритры еще остались по каждому объекту в пропорции и в абсолютных значениях?</li>
+    </ul>
+  </div>
+</div>
 <div   class="btn btn-default btn-xs" onclick="changeType2('percent')">В процентах</div>
 <div  class="btn btn-default btn-xs" onclick="changeType2('normal')">Абсолбтное значение</div>
 <script type="application/javascript">
