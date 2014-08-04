@@ -30,7 +30,7 @@ class ObjectController < ApplicationController
     @years = Obj.getAllEnterYears
     @appointments = ObjectFinance.getAllAppointmentType
     @objects = Obj.notArchive
-    render "index"
+    render "index3"
   end
 
   def finance
