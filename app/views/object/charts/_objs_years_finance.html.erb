@@ -1,0 +1,92 @@
+<div class="panel panel-default">
+  <div class="panel-heading">Список вопросов, на которые отвечает график</div>
+  <div class="panel-body">
+    <ul>
+      <li>Каков предельный объем инвестиций для объектов разного года ввода?</li>
+      <li>Какова средний объем инвестиций на 1 объект определенного года ввода?</li>
+    </ul>
+  </div>
+</div>
+
+<div id="years_finance" style="width: 900px; height: 500px"></div>
+<script type="application/javascript">
+    var years = [2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018];
+    $(function () {
+        $('#years_finance').highcharts({
+            title: {
+                text: 'Объемы инвестиций'
+            },
+            xAxis: {
+                categories: years
+            },
+            yAxis: [{ // Primary yAxis
+                labels: {
+                    format: '{value} млн руб',
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                },
+                title: {
+                    text: 'Объем инвестиций',
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                }
+            }, { // Secondary yAxis
+                title: {
+                    text: 'Средний объем инвестиций',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                labels: {
+                    format: '{value} млн руб',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                opposite: true
+            }],
+            labels: {
+                items: [{
+                    html: '',
+                    style: {
+                        left: '50px',
+                        top: '18px',
+                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+                    }
+                }]
+            },
+            series: [{
+                type: 'column',
+                name: 'Объем инвестиций',
+                data: [39,
+                    2144,
+                    9295,
+                    44017,
+                    18375,
+                    3106,
+                    6027,
+                    356]
+            },  {
+                type: 'spline',
+                name: 'Средний объем инвестиций на 1 объект',
+                data: [39.00,
+                    38,
+                    120,
+                    349,
+                    208,
+                    81,
+                    2009,
+                    89],
+                marker: {
+                    lineWidth: 2,
+                    lineColor: Highcharts.getOptions().colors[3],
+                    fillColor: 'white'
+                },
+                yAxis: 1
+            }]
+        });
+    });
+
+</script>

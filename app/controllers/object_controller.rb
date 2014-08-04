@@ -29,7 +29,8 @@ class ObjectController < ApplicationController
     @districts = Obj.getAllDistricts
     @years = Obj.getAllEnterYears
     @appointments = ObjectFinance.getAllAppointmentType
-    render "index3"
+    @objects = Obj.notArchive
+    render "index"
   end
 
   def finance
