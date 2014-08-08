@@ -64,4 +64,6 @@ gem 'activerecord-sqlserver-adapter', '~> 4.1.0'
 
 #gem 'russian', '~> 0.6.0'
 
+gem 'slim-rails', '~> 2.1.5'
+
 gem 'cancan'
