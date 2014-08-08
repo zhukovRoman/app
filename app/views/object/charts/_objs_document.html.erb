@@ -33,7 +33,7 @@
   <div class="col-sm-2" id="okrug_filter">
     <div id="all-okrugs" class="btn btn-default btn-xs">Все округа</div>
     <% @districts.each do |d| %>
-        <div><input id="<%= d.region_name  %>" type="checkbox" checked><%= d.region_name  %></div>
+        <div><input id="<%= d.region||"---"  %>" type="checkbox" checked><%= d.region||"---"  %></div>
     <% end %>
   </div>
 </div>
@@ -61,6 +61,7 @@
             //console.log(val)
             $(val).prop('checked', true);
         });
+        redrawChart();
     }
 
     getYearsFilter = function(){
@@ -87,6 +88,7 @@
     redrawChart = function () {
         //add some delay for addClass complete
         setTimeout(function() {
+            console.log('redraw');
 //            console.log(getYearsFilter(), getOkrugFilter())
             var filteredObjects = filterObjects();
 //            console.log(filteredObjects)

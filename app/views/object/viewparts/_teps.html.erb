@@ -2,7 +2,7 @@
   <div class="form-group">
     <label class="col-sm-4 control-label">Общая площадь</label>
     <div class="col-sm-8">
-      <p class="form-control-static"><%= @object.power || "Неизвестно" %> </p>
+      <p class="form-control-static"><%= @object.power || "Неизвестно" %> <%= @object.power_measure || "" %></p>
     </div>
   </div>
   <div class="form-group">
@@ -14,13 +14,16 @@
   <div class="form-group">
     <label class="col-sm-4 control-label">Квартирография</label>
     <div class="col-sm-8">
-      <p class="form-control-static"><%= "1: Неизвестно <br> 2: <br> 3:".html_safe %> </p>
+      <p class="form-control-static"><%="1: #{@object.Q1Rooms||"-"} <br>".html_safe+
+                                        "2: #{@object.Q2Rooms||"-"} <br>".html_safe+
+                                        "3: #{@object.Q3Rooms||"-"} <br>".html_safe+
+                                        "4: #{@object.Q4Rooms||"-"}".html_safe %> </p>
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-4 control-label">Этажность</label>
     <div class="col-sm-8">
-      <p class="form-control-static"><%= @object.floors %> </p>
+      <p class="form-control-static"><%= @object.floors||'-' %> </p>
     </div>
   </div>
   <div class="form-group">
@@ -43,9 +46,9 @@
     </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-4 control-label">Генподрядчик</label>
+    <label class="col-sm-4 control-label">Проектировщик</label>
     <div class="col-sm-8">
-      <p class="form-control-static"><%= @object.general_builder %> </p>
+      <p class="form-control-static"><%= @object.projector %> </p>
     </div>
   </div>
   <div class="form-group">
@@ -55,15 +58,10 @@
     </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-4 control-label">Проектировщик</label>
+    <label class="col-sm-4 control-label">Генподрядчик</label>
     <div class="col-sm-8">
-      <p class="form-control-static"><%= @object.projector %> </p>
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-4 control-label">Стройконтроль</label>
-    <div class="col-sm-8">
-      <p class="form-control-static"><%= "" %> </p>
+      <p class="form-control-static"><%= @object.general_builder %> </p>
     </div>
   </div>
 </div>
+

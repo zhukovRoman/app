@@ -1,0 +1,119 @@
+#accordion.panel-group
+  .panel.panel-default
+    .panel-heading
+      h4.panel-title
+        a data-parent="#accordion" data-toggle="collapse" href="#collapseOne"
+          | Освобождение площадки от сетей
+    #collapseOne.panel-collapse.collapse
+      .panel-body
+        .col-sm-4.ingeener-work-label Соглашение о компенсации потерь заключено
+        .col-sm-8 =@object.object_prepare.destroy_net_compensation_document||'-'
+        .col-sm-4.ingeener-work-label Компенсация оплачена
+        .col-sm-8 =@object.object_prepare.destroy_net_compensation_payed||'-'
+        .col-sm-4.ingeener-work-label Работы по выносу (ликвидации) выполнены
+        .col-sm-8 =@object.object_prepare.destroy_net_work_complete||'-'
+
+
+  .panel.panel-default
+    .panel-heading
+      h4.panel-title
+        a data-parent="#accordion" data-toggle="collapse" href="#collapseTwo"
+          | Перекладка инженерных коммуникаций
+    #collapseTwo.panel-collapse.collapse
+      .panel-body
+        .col-sm-4.ingeener-work-label Соглашение о компенсации потерь заключено
+        .col-sm-8 =@object.object_prepare.replace_engineer_compensation_document||'-'
+        .col-sm-4.ingeener-work-label Компенсация оплачена
+        .col-sm-8 =@object.object_prepare.replace_engineer_compensation_payed||'-'
+        .col-sm-4.ingeener-work-label Работы по перекладке выполнены
+        .col-sm-8 =@object.object_prepare.replace_engineer_work_complete||'-'
+
+  .panel.panel-default
+    .panel-heading
+      h4.panel-title
+        a data-parent="#accordion" data-toggle="collapse" href="#collapseThree"
+          | Электроснабжение
+    #collapseThree.panel-collapse.collapse
+      .panel-body
+        .col-sm-4.ingeener-work-label Договор на технологическое присоединение
+        .col-sm-8 =@object.object_prepare.electro_techo_dogovor||'-'
+        .col-sm-4.ingeener-work-label Строительство ТП, прокладка КЛ (%)
+        .col-sm-8 =@object.object_prepare.electro_build_percent||'-'
+        .col-sm-4.ingeener-work-label Акт технологического присоединения
+        .col-sm-8 =@object.object_prepare.electro_techo_act||'-'
+        .col-sm-4.ingeener-work-label Включение постоянного электроснабжения
+        .col-sm-8 =@object.object_prepare.electro_techo_complete||'-'
+
+  .panel.panel-default
+    .panel-heading
+      h4.panel-title
+        a data-parent="#accordion" data-toggle="collapse" href="#collapseFour"
+          | Теплоснабжение
+    #collapseFour.panel-collapse.collapse
+      .panel-body
+        .col-sm-4.ingeener-work-label Выдана согласованная РД
+        .col-sm-8 =@object.object_prepare.warm_get_RD||'-'
+        .col-sm-4.ingeener-work-label Строительство сетей (%)
+        .col-sm-8 =@object.object_prepare.warm_build_net_percent||'-'
+        .col-sm-4.ingeener-work-label Монтаж ИТП, ЦТП (%)
+        .col-sm-8 =@object.object_prepare.warm_installation_ITP_percent||'-'
+        .col-sm-4.ingeener-work-label Подача тепла по временному договору
+        .col-sm-8 =@object.object_prepare.warm_temporary_document||'-'
+        .col-sm-4.ingeener-work-label Постоянное теплоснабжение
+        .col-sm-8 =@object.object_prepare.warm_complete||'-'
+
+  .panel.panel-default
+    .panel-heading
+      h4.panel-title
+        a data-parent="#accordion" data-toggle="collapse" href="#collapseFive"
+          | Водоснабжение
+    #collapseFive.panel-collapse.collapse
+      .panel-body
+        .col-sm-4.ingeener-work-label Выдана согласованная РД
+        .col-sm-8 =@object.object_prepare.water_get_RD||'-'
+        .col-sm-4.ingeener-work-label Прокладка сетей (%)
+        .col-sm-8 =@object.object_prepare.water_build_net_percent||'-'
+        .col-sm-4.ingeener-work-label Акт технической приемки
+        .col-sm-8 =@object.object_prepare.water_act_get||'-'
+
+  .panel.panel-default
+    .panel-heading
+      h4.panel-title
+        a data-parent="#accordion" data-toggle="collapse" href="#collapseSix"
+          | Канализация
+    #collapseSix.panel-collapse.collapse
+      .panel-body
+        .col-sm-4.ingeener-work-label Выдана согласованная РД
+        .col-sm-8 =@object.object_prepare.sewage_get_RD||'-'
+        .col-sm-4.ingeener-work-label Прокладка сетей (%)
+        .col-sm-8 =@object.object_prepare.sewage_build_net_percent||'-'
+        .col-sm-4.ingeener-work-label Акт технической приемки
+        .col-sm-8 =@object.object_prepare.sewage_act_get||'-'
+
+  .panel.panel-default
+    .panel-heading
+      h4.panel-title
+        a data-parent="#accordion" data-toggle="collapse" href="#collapseSeven"
+          | Водосток
+    #collapseSeven.panel-collapse.collapse
+      .panel-body
+        .col-sm-4.ingeener-work-label Выдана согласованная РД
+        .col-sm-8 =@object.object_prepare.drain_get_RD||'-'
+        .col-sm-4.ingeener-work-label Прокладка сетей (%)
+        .col-sm-8 =@object.object_prepare.drain_build_net_percent||'-'
+        .col-sm-4.ingeener-work-label Акт технической приемки
+        .col-sm-8 =@object.object_prepare.drain_act_get||'-'
+
+  .panel.panel-default
+    .panel-heading
+      h4.panel-title
+        a data-parent="#accordion" data-toggle="collapse" href="#collapseEight"
+          | Сети связи
+    #collapseEight.panel-collapse.collapse
+      .panel-body
+        .col-sm-4.ingeener-work-label Выдана согласованная РД
+        .col-sm-8 =@object.object_prepare.link_get_RD||'-'
+        .col-sm-4.ingeener-work-label Прокладка сетей (%)
+        .col-sm-8 =@object.object_prepare.link_build_net_percent||'-'
+        .col-sm-4.ingeener-work-label Акт технической приемки
+        .col-sm-8 =@object.object_prepare.link_act_get||'-'

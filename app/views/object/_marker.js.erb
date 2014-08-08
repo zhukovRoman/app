@@ -1,7 +1,0 @@
-var lat = 55.75+getRandomArbitary(-0.17, 0.17);
-var lng =37.609+getRandomArbitary(-0.25, 0.25);
-var popup = L.popup({maxWidth:500})
-        .setLatLng([lat,lng])
-        .setContent(getPopupContent(<%= "'#{obj.id}', '#{obj.adress}', '#{obj.power}',
-                                        '#{obj.power_measure}', '#{obj.year_plan}', '#{obj.getYearCorrect}', 100".html_safe %> ));
-markers.addLayer(L.marker([lat,lng]).bindPopup(popup));

@@ -14,7 +14,7 @@
 
 
 
-    var map = L.map('map').setView([55.75,37.609], 10);
+    var map = L.map('map',{scrollWheelZoom: false,touchZoom: true}).setView([55.75,37.609], 10);
 
     L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
         maxZoom: 18,
@@ -25,46 +25,38 @@
     }).addTo(map);
 
 
-
-    //    var popup = L.popup({maxWidth:500})
-    //            .setLatLng([55.8,37.609])
-    //            .setContent("fdfadsfa");
-    //    marker = L.marker([55.683,37.929]).addTo(map)
-    //            .bindPopup(popup);
-    //    marker.on('click', onObjectClicked);
-    //
-    //    function onObjectClicked(){
-    //        console.log("open pop up");
-    //    }
-
     var markers = new L.MarkerClusterGroup();;
     var popups = [];
 
-    <% @objects.each do |obj| %>
-    <%= render "marker.js", obj: obj %>
-    <% end %>
 
-    map.addLayer(markers);
-    for (i=0; i<10; i++) {
 
-//    markers.push(L.marker([lat, lng]));
-//    popups = L.popup({maxWidth:500})
-//            .setLatLng([lat,lng])
-//            .setContent("Объект");
+    addMarker = function (object){
+        if (object.lat == null || object.lng == null)
+        return;
+
+        var popup = L.popup({maxWidth:500})
+                .setLatLng([object.lat,object.lng])
+                .setContent(getPopupContent(object.id, object.adress, object.power,
+                        object.power_measure, object.year_plan ));
+        markers.addLayer(L.marker([object.lat,object.lng]).bindPopup(popup));
     }
 
-    //for (i=0; i<markers.length; i++){
-    //    markers[i].addTo(map).bindPopup(popups[i]);
-    //}
+    $.each(data['objects'], function(i, val){
+
+        addMarker(val);
+    })
 
     function getPopupContent(id, adr, power, edIzm, AIP, kontrakt, invest)
     {
         return "<div><a href='/object/view?id="+id+"'>"+adr+"</a></div>"+
                 "<div> <b> Мощность: </b>"+power+" "+edIzm+"</div>"+
-                "<div> <b> Срок ввода по АИП: </b>"+AIP+"</div>"+
-                "<div> <b> Срок ввода по контракту: </b>"+kontrakt+"</div>"+
-                "<div> <b> Предельный объем инвестиций: </b>"+invest+" млн </div>"
+                "<div> <b> Срок ввода по АИП: </b>"+AIP+"</div>"
+                //"<div> <b> Срок ввода по контракту: </b>"+kontrakt+"</div>"+
+                //"<div> <b> Предельный объем инвестиций: </b>"+invest+" млн </div>"
     }
+
+    map.addLayer(markers);
+
 
     function getRandomArbitary(min, max)
     {

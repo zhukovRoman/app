@@ -1,0 +1,113 @@
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<div class="row">
+  <div class="col-sm-12" style="text-align: center">
+  <div id ="smr_chart" style="width: 500px; height: 500px; float: left"></div>
+  <div id ="other_chart" style="width: 500px; height: 500px; float: left"></div>
+  </div>
+</div>
+<script type="application/javascript">
+    $(function () {
+        smr_chart = new Highcharts.Chart({
+            credits:  {
+                enabled: false
+            },
+            chart: {
+                renderTo:'smr_chart',
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false
+            },
+            title: {
+                text: 'Финансы по СМР'
+            },
+            subtitle: {
+              text: '<%= @object.get_object_finance_by_type(1).take.organization_name %> ' +
+                      'по договору '+
+                      '<%= @object.get_object_finance_by_type(1).take.document_number %>'
+            },
+            tooltip: {
+                formatter: function () {
+                    var s ="";
+                    $.each(this.series.points, function (i, point) {
+                        s += "<b>"+point.name + '</b> ' + point.y + ' рублей <br/>';
+                    });
+                    return s;
+                },
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                pie: {
+                    center: ['50%', '50%'],
+                    dataLabels: {
+                        enabled: false
+                    },
+                    showInLegend: true
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: 'Сумма',
+                innerSize: '0%',
+                data: [
+                    ['Остаток оплаты',  <%= @object.get_object_finance_by_type(1).take.residue_summ %>],
+                    ['Выполнено работ', <%= @object.get_object_finance_by_type(1).take.work_comlete.round %>],
+                    ['Осталось выполнить', <%= @object.get_object_finance_by_type(1).take.work_left %>]
+
+                ]
+            }]
+        });
+
+        other_chart = new Highcharts.Chart({
+            credits:  {
+                enabled: false
+            },
+            chart: {
+                renderTo:'other_chart',
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false
+            },
+            title: {
+                text: 'Финансы по другим работам'
+            },
+//            subtitle: {
+//                text: '<%= @object.get_object_finance_by_type(1).take.organization_name %> ' +
+//                        'по договору '+
+//                        '<%= @object.get_object_finance_by_type(1).take.document_number %>'
+//            },
+            tooltip: {
+                formatter: function () {
+                    var s ="";
+                    $.each(this.series.points, function (i, point) {
+                        s += "<b>"+point.name + '</b> ' + point.y + ' рублей <br/>';
+                    });
+                    return s;
+                },
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                pie: {
+                    center: ['50%', '50%'],
+                    dataLabels: {
+                        enabled: false
+                    },
+                    showInLegend: true
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: 'Сумма',
+                innerSize: '0%',
+                data: [
+                    ['Остаток оплаты',  <%= @object.get_object_finance_by_type(2).sum('SummaRabot-PayFact').values[0].round||0 %>],
+                    ['Выполнено работ', <%= @object.get_object_finance_by_type(2).sum('VipolnenoRabot').values[0]||0 %>],
+                    ['Осталось выполнить', <%= @object.get_object_finance_by_type(2).sum('PayFact-VipolnenoRabot').values[0].round||0 %>]
+
+                ]
+            }]
+        });
+    })
+
+</script>

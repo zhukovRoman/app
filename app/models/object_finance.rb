@@ -6,16 +6,17 @@ class ObjectFinance < ActiveRecord::Base
 
   has_one :obj, foreign_key: "ObjectId"
 
-  alias_attribute "appointment_type","ObjectAppointmentType"
-  alias_attribute "current_year_payd","PayTekYear"
   alias_attribute "year_limit", "TitulTekYear"
+  alias_attribute "pay_current_year","PayTekYear"
+  alias_attribute "in_contract", "SumRabot"
+  alias_attribute "contract_payed", "SumPayRabot"
+  alias_attribute "prepayment_take","AvansVidano"
+  alias_attribute "prepayment_complite","AvansPogasheno"
   alias_attribute "complete_work", "WorkVipilneno"
+  alias_attribute "sumAIP", "SumAIP"
 
-  def self.getAllAppointmentType
-     return ObjectFinance.select("appointment_type").distinct
-  end
 
   def incomplete_work
-    return self.current_year_payd||0-self.complete_work||0
+    return self.pay_current_year||0-self.complete_work||0
   end
 end

@@ -9,27 +9,36 @@ class ObjectController < ApplicationController
   def index
     authorize! :index, self
     require 'json'
+    @objects = Obj.notArchive
     @data = Hash.new
     @data['objects']=Array.new
     objects = @data['objects']
-    Obj.notArchive.each do |o|
+    @objects.each do |o|
       object = Hash.new
-      object['okrug']=o.region_name
+      object['okrug']=o.region
       object['GPZU'] = o.getGPZUStatus
       object['year'] = o.getYearCorrect.to_s
       object['MGE']=o.getMGEStatus.to_s
       object['razresh']=o.getRazreshStatus.to_s
-      object['appointment']=o.object_finance.appointment_type
-      object['payed']=o.object_finance.current_year_payd||0
+      object['appointment']=o.appointment
+      object['payed']=o.object_finance.pay_current_year||0
       object['limit']=o.object_finance.year_limit||0
       object['complete']=o.object_finance.complete_work||0
       object['incomplete']=o.object_finance.incomplete_work||0
+      object['lat']=o.lat
+      object['lng']=o.lng
+      object['id']=o.id
+      object['adress']=o.adress
+      object['power']=o.power
+      object['power_measure']=o.power_measure
+      object['year_plan']=object['year']
+
       objects.push(object)
     end
     @districts = Obj.getAllDistricts
     @years = Obj.getAllEnterYears
-    @appointments = ObjectFinance.getAllAppointmentType
-    @objects = Obj.notArchive
+    @appointments = Obj.getAllAppointmentType
+
     render "index3"
   end
 

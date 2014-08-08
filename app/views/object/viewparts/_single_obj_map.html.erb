@@ -3,13 +3,19 @@
 <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
 	<script>
 
-        var map = L.map('map').setView([55.75,37.609], 13);
+        var map = L.map('map',{
+            dragging: false,
+            touchZoom: false,
+            scrollWheelZoom: false,
+            doubleClickZoom: false,
+            zoomControl: false
+        }).setView([<%= @object.lat %>, <%= @object.lng %> ], 13);
 
         L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
             maxZoom: 18,
             attribution: '',
             id: 'examples.map-i86knfo3'
         }).addTo(map);
-		L.marker([55.75,37.609]).addTo(map)
+		L.marker([<%= @object.lat %>, <%= @object.lng %> ]).addTo(map)
 
 	</script>

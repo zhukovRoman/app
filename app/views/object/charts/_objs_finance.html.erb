@@ -5,15 +5,15 @@
       <li>Какая сумма по отрасли уже оплачена и осталось оплатить?</li>
       <li>На какую по отрасли сумму работы уже выполнены и еще осталось выполнить?</li>
     </ul>
-    <i style="color: red">Данные реальные</i>
+    <i style="color: red">Данные НЕ реальные</i>
   </div>
 </div>
 <div class="row">
   <div class="row">
     <div class="btn-group filter" data-toggle="buttons" id="appointment_filter">
       <% @appointments.each do |a| %>
-          <label class="btn btn-primary active" id="<%= a.appointment_type  %>">
-            <input type="checkbox"><%= a.appointment_type %>
+          <label class="btn btn-primary active" id="<%= a.appointment  %>">
+            <input type="checkbox"><%= a.appointment %>
           </label>
       <% end %>
     </div>
@@ -87,22 +87,25 @@
               text: 'Финансы по отрослям'
           },
           tooltip: {
-              shared: true
-              //pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+              formatter: function () {
+                  var s ="";
+                  $.each(this.series.points, function (i, point) {
+                      s += "<b>"+point.name + '</b> ' + point.y + ' млн рублей <br/>';
+                  });
+                  return s;
+              },
+              shared: true,
+              useHTML: true
           },
           plotOptions: {
               pie: {
-                  allowPointSelect: true,
-                  cursor: 'pointer',
-                  dataLabels: {
-                      enabled: false
-                  },
-                  showInLegend: true
+                  center: ['50%', '50%']
               }
           },
           series: [{
               type: 'pie',
               name: 'Сумма',
+              innerSize: '0%',
               data: [
                   ['Остаток оплаты',   45.0],
                   ['Выполнено работ',       26.8],
