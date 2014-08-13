@@ -14,9 +14,9 @@
   <tr>
     <td><%= "#{ i=i+1 }" %></td>
     <td><%= "#{ o.adress.slice(0,100)}" %></td>
-    <td><%= "#{ o.plan_dataGPZU}" %></td>
-    <td><%="#{ o.object_finance.appointment_type}" %></td>
-    <td> <a href="/object/view?id=<%= o.id  %>"> --≥ </a> </td>
+    <td><%= "#{ o.object_document.GPZU_plan}" %></td>
+    <td><%="#{ o.appointment}" %></td>
+    <td> <a href="/object/view?id=<%= o.id  %>"> --> </a> </td>
   </tr>
   <% end %>
   </tbody>

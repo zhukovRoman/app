@@ -1,21 +1,18 @@
+<script src="http://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 <div id="map" style="width: 350px; height: 350px"></div>
 
-<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+<!--<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>-->
 	<script>
 
-        var map = L.map('map',{
-            dragging: false,
-            touchZoom: false,
-            scrollWheelZoom: false,
-            doubleClickZoom: false,
-            zoomControl: false
-        }).setView([<%= @object.lat %>, <%= @object.lng %> ], 13);
-
-        L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
-            maxZoom: 18,
-            attribution: '',
-            id: 'examples.map-i86knfo3'
-        }).addTo(map);
-		L.marker([<%= @object.lat %>, <%= @object.lng %> ]).addTo(map)
+        var map, marker;
+        init_map = function (){
+          map = new ymaps.Map("map", {
+              center: [<%= @object.lat %>, <%= @object.lng %> ],
+              zoom: 13
+          });
+          marker = new ymaps.Placemark([<%= @object.lat %>, <%= @object.lng %> ]);
+          map.geoObjects.add(marker);
+        };
+        ymaps.ready(init_map);
 
 	</script>

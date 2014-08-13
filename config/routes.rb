@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   get 'object/finance'
   get 'object/view'
   get 'object/overdue'
+  get 'object/organizations'
 
   get 'employee/vacancies'
   post 'employee/vacancies'

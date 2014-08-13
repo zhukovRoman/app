@@ -10,6 +10,25 @@
 
 <div id="years_finance" style="width: 900px; height: 500px"></div>
 <script type="application/javascript">
+
+    years_finance_prepare_data = function (){
+        var res = {};
+        var years = [];
+        var avg = {};
+        $.each(data.objects, function(i,val){
+            if (isNaN(res[val.year])) res[val.year]=0;
+            if (isNaN(avg[val.year])) avg[val.year]=0;
+            res[val.year] += val.AIP;
+            avg[val.year] ++;
+        });
+        $.each(res, function(i,val){
+            years.push(i)
+            avg[i] = res[i]/avg[i]
+        });
+        res =  $.map(res, function(el) { return el/1000000; })
+        avg =  $.map(avg, function(el) { return el/1000000; })
+        return [years,res,avg];
+    }
     var years = [2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018];
     $(function () {
         $('#years_finance').highcharts({
@@ -17,7 +36,7 @@
                 text: 'Объемы инвестиций'
             },
             xAxis: {
-                categories: years
+                categories: years_finance_prepare_data()[0]
             },
             yAxis: [{ // Primary yAxis
                 labels: {
@@ -60,25 +79,11 @@
             series: [{
                 type: 'column',
                 name: 'Объем инвестиций',
-                data: [39,
-                    2144,
-                    9295,
-                    44017,
-                    18375,
-                    3106,
-                    6027,
-                    356]
+                data: years_finance_prepare_data()[1]
             },  {
                 type: 'spline',
                 name: 'Средний объем инвестиций на 1 объект',
-                data: [39.00,
-                    38,
-                    120,
-                    349,
-                    208,
-                    81,
-                    2009,
-                    89],
+                data: years_finance_prepare_data()[2],
                 marker: {
                     lineWidth: 2,
                     lineColor: Highcharts.getOptions().colors[3],

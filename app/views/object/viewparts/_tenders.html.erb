@@ -1,0 +1,36 @@
+<% if(@object.tenders.count == 0) %>
+    Торги не проводились
+<% end %>
+
+
+<table class="table table-condensed">
+  <thead>
+  <tr>
+    <th>Тип</th>
+    <th>Статус</th>
+    <th>Дата начала</th>
+    <th>Дата завершения</th>
+    <th>НМЦК</th>
+    <th>Итогвоая цена</th>
+    <th>%</th>
+    <th>Заявок подано/одобрено</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @object.tenders.each do |t| %>
+      <tr <% if t.status == 'проведен' %>
+            class="success"
+            <% end %>
+      >
+        <td><%= t.type %></td>
+        <td><%= t.status %></td>
+        <td><%= ObjectTender.frendly_date (t.date_start) %></td>
+        <td><%= ObjectTender.frendly_date (t.date_finish) %></td>
+        <td><%= t.price_begin %></td>
+        <td><%= t.price_end %></td>
+        <td><%= (t.percent_decline).round 2 %></td>
+        <td><%= t.bid_all %> / <%= t.bid_accept %></td>
+      </tr>
+  <% end %>
+  </tbody>
+</table>

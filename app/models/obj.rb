@@ -7,7 +7,9 @@ class Obj < ActiveRecord::Base
   has_one :object_finance, foreign_key: 'ObjectId'
   has_one :object_document, foreign_key: 'ObjectId'
   has_one :object_prepare, foreign_key: 'ObjectId'
+  has_one :organization, foreign_key: 'OrganizationGenBuilder_ID'
   has_many :object_finance_by_work_types, foreign_key: 'ObjectId'
+  #has_many :object_tenders, class_name:'ObjectTender', foreign_key: 'ObjectId'
 
   alias_attribute 'id','ObjectId' #
   #АДрес
@@ -107,6 +109,13 @@ class Obj < ActiveRecord::Base
     return Obj.where(is_archive: 0).select('region').distinct
   end
 
+  def organization
+    return Organization.find_by(name: self.general_builder)
+  end
+
+  def tenders
+    return ObjectTender.where(object_id: self.id)
+  end
   # todo
   # сделать выбор правильного года
   def self.getAllEnterYears
@@ -133,7 +142,7 @@ class Obj < ActiveRecord::Base
   end
 
   def self.overdueObjects
-    return Obj.where('ObjectArchve = 0 AND DataPlanGPZU < ?', Date.current)
+    return Obj.where('ObjectArchve = 0').includes(:object_document)#.where("DataPlanGPZU < ?", Date.current )
   end
 
   def self.getAllAppointmentType
