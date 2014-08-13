@@ -8,43 +8,103 @@
   </div>
 </div>
 <div id="map" style="height: 600px"></div>
-<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-<script src="http://leaflet.github.io/Leaflet.markercluster/dist/leaflet.markercluster-src.js"></script>
+<script src="http://api-maps.yandex.ru/2.0.18/?load=package.standard,package.clusters&lang=ru-RU" type="text/javascript"></script>
+<!--<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>-->
+<!--<script src="http://leaflet.github.io/Leaflet.markercluster/dist/leaflet.markercluster-src.js"></script>-->
 <script>
 
 
+//    var map, marker, cluster;
+//    var markers = [];
+//    init_map = function (){
+//        map = new ymaps.Map("map", {
+//            center: [55.75,37.609],
+//            zoom: 10,
+//            controls: ['smallMapDefaultSet']
+//        });
+//        map.controls.remove('fullscreenControl');
+//        map.controls.remove('geolocationControl');
+//        map.controls.remove('searchControl');
+//        map.controls.remove('typeSelector');
+//        cluster = new ymaps.Clusterer();
+//        $.each(data['objects'], function(i, val){
+//            addMarker(val);
+//        })
+//        cluster.add(markers);
+//        map.geoObjects.add(cluster);
+//    };
 
-    var map = L.map('map',{scrollWheelZoom: false,touchZoom: true}).setView([55.75,37.609], 10);
-
-    L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-                '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-                'Imagery © <a href="http://mapbox.com">Mapbox</a>',
-        id: 'examples.map-i86knfo3'
-    }).addTo(map);
 
 
-    var markers = new L.MarkerClusterGroup();;
-    var popups = [];
+
+ymaps.ready(function () {
+    yamaps_ready_function();
+    points = [];
+    $.each(data['objects'], function(i, val){
+        console.log(val.appointment);
+        if (val.lat != null && val.lng != null)
+            points.push(new ymaps.Placemark([val.lat,val.lng], {
+                name: "Объект №012-0896",
+                clusterCaption: 'Объект №012-0896',
+                balloonContentBody: "<div><a href='/object/view?id="+val.id+"'>"+val.adress+"</a></div>"+
+                        "<div> <b> Мощность: </b>"+val.power+" "+val.power_measure+"</div>"+
+                        "<div> <b> Срок ввода по АИП: </b>"+val.year+"</div>",
+                balloonContentFooter: 'Карточка объекта: <a target="_blank" href="/object/view?id='+val.id+'">открыть</a>'
+            },	{
+                preset: MarkersApointmentColours[val.appointment]
+            }))
+        })
+
+});
+
+
+
+ymaps.ready(init_map_all_object);
+
+
+
+
+//    var map = L.map('map',{scrollWheelZoom: false,touchZoom: true}).setView([55.75,37.609], 10);
+//
+//    L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
+//        maxZoom: 18,
+//        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+//                '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+//                'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+//        id: 'examples.map-i86knfo3'
+//    }).addTo(map);
+//
+//
+//    var markers = new L.MarkerClusterGroup();;
+//    var popups = [];
 
 
 
     addMarker = function (object){
         if (object.lat == null || object.lng == null)
         return;
+        var marker = new ymaps.GeoObject({
 
-        var popup = L.popup({maxWidth:500})
-                .setLatLng([object.lat,object.lng])
-                .setContent(getPopupContent(object.id, object.adress, object.power,
-                        object.power_measure, object.year_plan ));
-        markers.addLayer(L.marker([object.lat,object.lng]).bindPopup(popup));
+            geometry: {
+                type: "Point",
+                coordinates: [object.lat,object.lng],
+                options:{
+                    preset: 'islands#redIcon'
+                }
+            }
+        });
+
+        marker.options.preset = 'islands#redIcon'
+        markers.push(marker);
+        console.log(marker);
+//        var popup = L.popup({maxWidth:500})
+//                .setLatLng([object.lat,object.lng])
+//                .setContent(getPopupContent(object.id, object.adress, object.power,
+//                        object.power_measure, object.year_plan ));
+//        markers.addLayer(L.marker([object.lat,object.lng]).bindPopup(popup));
     }
 
-    $.each(data['objects'], function(i, val){
 
-        addMarker(val);
-    })
 
     function getPopupContent(id, adr, power, edIzm, AIP, kontrakt, invest)
     {
@@ -55,12 +115,6 @@
                 //"<div> <b> Предельный объем инвестиций: </b>"+invest+" млн </div>"
     }
 
-    map.addLayer(markers);
 
-
-    function getRandomArbitary(min, max)
-    {
-        return Math.random() * (max - min) + min;
-    }
 
 </script>

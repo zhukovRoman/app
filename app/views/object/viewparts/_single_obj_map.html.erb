@@ -8,8 +8,13 @@
         init_map = function (){
           map = new ymaps.Map("map", {
               center: [<%= @object.lat %>, <%= @object.lng %> ],
-              zoom: 13
+              zoom: 13,
+              controls: ['smallMapDefaultSet']
           });
+          map.controls.remove('fullscreenControl');
+          map.controls.remove('geolocationControl');
+          map.controls.remove('searchControl');
+          map.controls.remove('typeSelector');
           marker = new ymaps.Placemark([<%= @object.lat %>, <%= @object.lng %> ]);
           map.geoObjects.add(marker);
         };
