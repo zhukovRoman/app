@@ -1,0 +1,165 @@
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<select id="organization_select" style="width: 350px">
+  <option></option>
+</select>
+<h3>Объекты</h3>
+<table class="table table-condensed">
+  <thead>
+  <tr>
+    <th rowspan="2">#</th>
+    <th rowspan="2">Округ</th>
+    <th rowspan="2">Год ввода</th>
+    <th rowspan="2">Адрес</th>
+    <th colspan="3" style="text-align: center">Динамика</th>
+  </tr>
+  <tr>
+    <th>Сети</th>
+    <th>СМР</th>
+    <th>Отделка</th>
+  </tr>
+  </thead>
+  <tbody id="body_table">
+
+  </tbody>
+</table>
+<div id="fin_chart" style="width: 1000px; height: 500px"></div>
+
+
+<h3>Торги</h3>
+<table class="table table-condensed">
+  <thead>
+  <tr>
+    <th>Тип</th>
+    <th>Дата окончания</th>
+    <th>Цена начальная</th>
+    <th>Цена конечная</th>
+    <th>%</th>
+    <th>Заявок подано/допущено</th>
+  </tr>
+  </thead>
+  <tbody id="body_table_tenders">
+
+  </tbody>
+</table>
+
+<script type="application/javascript">
+
+    current_organization = null;
+    organization_selected = function (evt, p)
+    {
+        //console.log($(this), evt, p);
+        current_organization = organization_find(p.selected);
+        console.log(current_organization);
+        bind_tables();
+        create_fin_chart(current_organization.payed_left, current_organization.work_complete, current_organization.work_incomplete);
+    };
+
+    organization_find = function (id){
+        var res = null;
+        $.each(organizations, function(i, val){
+            if (val.id+"" == id){res = val}
+        });
+        return res;
+    }
+
+    bind_tables = function(){
+        var table = document.getElementById('body_table');
+        $(table).html('');
+        num = 0;
+        $.each(current_organization.objects, function(i, val){
+            var row = document.createElement('tr');
+            if (val.internal_delay!=0 || val.constructive_delay!=0 || val.network_delay!=0)
+                $(row).addClass('danger');
+            row.innerHTML = "<td>"+i+"</td><td>"+val.region+"</td>"+
+                    "<td>"+val.year+"</td>"+
+                    "<td>"+get_url_for_object_view(val.id, val.address)+"</td>"+
+                    "<td>"+val.network+'/'+val.network_delay+"</td>"+
+                    "<td>"+val.constructive+'/'+val.constructive_delay+"</td>"+
+                    "<td>"+val.internal+'/'+val.internal_delay+"</td>";
+            table.appendChild(row);
+        })
+        var tenders_table = document.getElementById('body_table_tenders');
+        $(tenders_table).html('');
+        $.each(current_organization.tenders, function(i, val){
+            var row = document.createElement('tr');
+            date = new Date(val.DataFinish);
+            row.innerHTML = "<td>"+val.TenderSName+"</td>"+
+                    "<td>"+date.getDate()+"-"+date.getMonth()+"-"+date.getFullYear()+"</td>"+
+                    "<td>"+val.TenderPriceBegin+"</td>"+
+                    "<td>"+val.TenderPriceEnd+"</td>"+
+                    "<td>"+val.TenderProcentDecline.toFixed(2)+"</td>"+
+                    "<td>"+val.TenderQtyPresent+"/"+val.TenderQtyAccept+"</td>";
+            tenders_table.appendChild(row);
+        })
+    }
+
+    get_url_for_object_view = function (id, adr){
+        return "<a href='view?id="+id+"' >"+adr+"</a>"
+    }
+    insert_organizations_in_select = function ()
+    {
+        select = document.getElementById('organization_select');
+        $.each(organizations, function(i, val){
+            var opt = document.createElement('option');
+            opt.value = val.id;
+            opt.innerHTML = val.name;
+            select.appendChild(opt);
+        });
+    }
+
+    $(function () {
+
+        insert_organizations_in_select();
+        $("#organization_select").chosen({no_results_text: "Ой, ничего не найдено!", placeholder_text_single: "Выберите организацию"});
+        $("#organization_select").chosen().change(organization_selected);
+    });
+
+
+
+    organizations = <%= @organizations.to_json.html_safe %>
+            create_fin_chart = function(payed_left, work_complete, work_incomplete ){
+                // Build the chart
+                fin_chart = new Highcharts.Chart({
+                    credits:  {
+                        enabled: false
+                    },
+                    chart: {
+                        renderTo:'fin_chart',
+                        plotBackgroundColor: null,
+                        plotBorderWidth: null,
+                        plotShadow: false
+                    },
+                    title: {
+                        text: 'Финансы по контрагенту'
+                    },
+                    tooltip: {
+                        formatter: function () {
+                            var s ="";
+                            $.each(this.series.points, function (i, point) {
+                                s += "<b>"+point.name + '</b> ' + point.y + ' млн рублей <br/>';
+                            });
+                            return s;
+                        },
+                        shared: true,
+                        useHTML: true
+                    },
+                    plotOptions: {
+                        pie: {
+                            center: ['50%', '50%']
+                        }
+                    },
+                    series: [{
+                        type: 'pie',
+                        name: 'Сумма',
+                        innerSize: '0%',
+                        data: [
+                            ['Остаток оплаты',   payed_left],
+                            ['Выполнено работ',       work_complete],
+                            ['Осталось выполнить',    work_incomplete]
+
+                        ]
+                    }]
+                });
+            }
+
+</script>
