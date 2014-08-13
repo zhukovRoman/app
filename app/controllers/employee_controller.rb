@@ -79,7 +79,7 @@ class EmployeeController < ApplicationController
 
 
     interval = (Date.current-1.month).at_beginning_of_month..(Date.current-1.month).at_end_of_month;
-    if (Date.current.day<7)
+    if (Date.current.day<8)
       interval = (Date.current-2.month).at_beginning_of_month..(Date.current-2.month).at_end_of_month;
     end
 

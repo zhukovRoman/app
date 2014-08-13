@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140622110003) do
+ActiveRecord::Schema.define(version: 20140809082319) do
 
   create_table "departments", force: true do |t|
     t.string   "out_number"
@@ -70,6 +70,7 @@ ActiveRecord::Schema.define(version: 20140622110003) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "department_id"
+    t.integer  "is_delete",                 default: 0
   end
 
   create_table "personal_flows", force: true do |t|

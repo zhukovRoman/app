@@ -31,7 +31,7 @@ class Employee < ActiveRecord::Base
   end
 
   def self.get_real_count_of_employees
-    return  Employee.where("stavka > 0 and FIO not like '#{OUTPOST}'").count
+    return  Employee.where("stavka > 0 and FIO not like '#{OUTPOST}' and is_delete = 0").count
   end
 
   def self.get_managers_count
@@ -39,7 +39,7 @@ class Employee < ActiveRecord::Base
   end
 
   def self.get_managers
-    return Employee.joins("JOIN departments ON departments.id = employees.department_id and "+
+    return Employee.where(is_delete: 0).joins("JOIN departments ON departments.id = employees.department_id and "+
                               "departments.parent_id ISNULL AND "+QueryStringManagersAndAlternate)
     #return Employee.where(QueryStringManagersAndAlternate)
   end
@@ -66,6 +66,8 @@ class Employee < ActiveRecord::Base
     else
       empl_id = empl.id
       department_id = empl.department_id
+      #empl.is_delete = 1
+      #empl.save
       empl.destroy
     end
     PersonalFlow.create(operation_type: FLOWDISMISSTYPE,
@@ -78,7 +80,7 @@ class Employee < ActiveRecord::Base
 
   def self.add_employee (fio, tab_number, new_post, stavka, new_dep_out_id, date_of_operation, departmentNode)
     logger = Logger.new("#{Rails.root}/log/employee_transfer_#{Date.current.year}_#{Date.current.month}.log")
-    empl = Employee.find_by tab_number: tab_number
+    empl = Employee.find_by tab_number: tab_number, is_delete: 0
     department_id = nil
     if empl != nil
       logger.warn "СОТРУДНИК С ТАБЕЛЬНЫМ НОМЕРОМ #{tab_number} УЖЕ СУЩЕСТВУЕТ! НЕВОЗМОЖНО ПРИНЯТЬ НА РАБОТУ"
