@@ -26,4 +26,16 @@ class ObjectFinanceByWorkType < ActiveRecord::Base
   def work_left
     return (self.pay_fact-self.work_comlete).round
   end
+
+  def payed_for_work
+    return (self.pay_fact-self.avans_vidano).round
+  end
+
+  def in_avance_work
+    return (self.avans_vidano - self.avans_pogasheno).round
+  end
+
+  def work_with_avance
+    return (self.work_comlete - (self.avans_vidano - self.avans_pogasheno)).round
+  end
 end

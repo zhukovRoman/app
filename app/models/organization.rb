@@ -38,6 +38,14 @@ class Organization < ActiveRecord::Base
     return ObjectFinanceByWorkType.where(organization_name: self.name).sum('PayFact-VipolnenoRabot')||0
   end
 
+  def payed_for_work_for_all_objects
+    return ObjectFinanceByWorkType.where(organization_name: self.name).sum('PayFact-AvansVidano')||0
+  end
+
+  def avans_vidano_for_all_objects
+    return ObjectFinanceByWorkType.where(organization_name: self.name).sum('AvansVidano')||0
+  end
+
   def get_tenders
     return ObjectTender.where(organization_id: self.id)
   end

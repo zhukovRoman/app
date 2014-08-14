@@ -28,9 +28,12 @@
             tooltip: {
                 formatter: function () {
                     var s ="";
+                    sum = 0;
                     $.each(this.series.points, function (i, point) {
                         s += "<b>"+point.name + '</b> ' + point.y + ' рублей <br/>';
+                        sum += point.y;
                     });
+                    s += "<b>Стоимость по договору </b>" + sum + ' рублей <br/>'
                     return s;
                 },
                 shared: true,
@@ -50,9 +53,9 @@
                 name: 'Сумма',
                 innerSize: '0%',
                 data: [
-                    ['Остаток оплаты',  <%= @object.get_object_finance_by_type(1).take.residue_summ %>],
-                    ['Выполнено работ', <%= @object.get_object_finance_by_type(1).take.work_comlete.round %>],
-                    ['Осталось выполнить', <%= @object.get_object_finance_by_type(1).take.work_left %>]
+                    ['Осталось оплатить',  <%= @object.get_object_finance_by_type(1).take.residue_summ %>],
+                    ['Оплачено за работу', <%= @object.get_object_finance_by_type(1).take.payed_for_work %>],
+                    ['Выдано авансов', <%= @object.get_object_finance_by_type(1).take.avans_vidano.round %>]
 
                 ]
             }]
@@ -69,19 +72,22 @@
                 plotShadow: false
             },
             title: {
-                text: 'Финансы по другим работам'
+                text: 'Выполнение СМР'
             },
-//            subtitle: {
-//                text: '<%= @object.get_object_finance_by_type(1).take.organization_name %> ' +
-//                        'по договору '+
-//                        '<%= @object.get_object_finance_by_type(1).take.document_number %>'
-//            },
+            subtitle: {
+                text: '<%= @object.get_object_finance_by_type(1).take.organization_name %> ' +
+                        'по договору '+
+                        '<%= @object.get_object_finance_by_type(1).take.document_number %>'
+            },
             tooltip: {
                 formatter: function () {
                     var s ="";
+                    sum = 0;
                     $.each(this.series.points, function (i, point) {
                         s += "<b>"+point.name + '</b> ' + point.y + ' рублей <br/>';
+                        sum += point.y;
                     });
+                    //s += "<b>Стоимость по договору </b>" + sum + ' рублей <br/>'
                     return s;
                 },
                 shared: true,
@@ -101,9 +107,9 @@
                 name: 'Сумма',
                 innerSize: '0%',
                 data: [
-                    ['Остаток оплаты',  <%= @object.get_object_finance_by_type(2).sum('SummaRabot-PayFact').values[0].round||0 %>],
-                    ['Выполнено работ', <%= @object.get_object_finance_by_type(2).sum('VipolnenoRabot').values[0]||0 %>],
-                    ['Осталось выполнить', <%= @object.get_object_finance_by_type(2).sum('PayFact-VipolnenoRabot').values[0].round||0 %>]
+                    ['Осталось оплатить',  <%= @object.get_object_finance_by_type(1).take.residue_summ||0 %>],
+                    ['В счет авансов', <%= @object.get_object_finance_by_type(1).take.in_avance_work||0 %>],
+                    ['Работ выполнено и оплачено', <%= @object.get_object_finance_by_type(1).take.work_with_avance||0 %>]
 
                 ]
             }]

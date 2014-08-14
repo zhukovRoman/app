@@ -10,6 +10,7 @@
     <th rowspan="2">Округ</th>
     <th rowspan="2">Год ввода</th>
     <th rowspan="2">Адрес</th>
+    <th rowspan="2">Сумма контракта</th>
     <th colspan="3" style="text-align: center">Динамика</th>
   </tr>
   <tr>
@@ -73,6 +74,7 @@
             row.innerHTML = "<td>"+i+"</td><td>"+val.region+"</td>"+
                     "<td>"+val.year+"</td>"+
                     "<td>"+get_url_for_object_view(val.id, val.address)+"</td>"+
+                    "<td>"+val.contract_sum+"</td>"+
                     "<td>"+val.network+'/'+val.network_delay+"</td>"+
                     "<td>"+val.constructive+'/'+val.constructive_delay+"</td>"+
                     "<td>"+val.internal+'/'+val.internal_delay+"</td>";
@@ -117,7 +119,7 @@
 
 
     organizations = <%= @organizations.to_json.html_safe %>
-            create_fin_chart = function(payed_left, work_complete, work_incomplete ){
+    create_fin_chart = function(payed_left, work_complete, work_incomplete ){
                 // Build the chart
                 fin_chart = new Highcharts.Chart({
                     credits:  {
@@ -145,7 +147,11 @@
                     },
                     plotOptions: {
                         pie: {
-                            center: ['50%', '50%']
+                            center: ['50%', '50%'],
+                            dataLabels: {
+                                enabled: true
+                            },
+                            showInLegend: true
                         }
                     },
                     series: [{
@@ -153,9 +159,9 @@
                         name: 'Сумма',
                         innerSize: '0%',
                         data: [
-                            ['Остаток оплаты',   payed_left],
-                            ['Выполнено работ',       work_complete],
-                            ['Осталось выполнить',    work_incomplete]
+                            ['Осталось оплатить', payed_left],
+                            ['Оплачено за работу', work_complete],
+                            ['Выдано авансов', work_incomplete]
 
                         ]
                     }]

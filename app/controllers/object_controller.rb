@@ -60,8 +60,8 @@ class ObjectController < ApplicationController
       temporary_obj['name']=org.name
       temporary_obj['id']=org.id
       temporary_obj['payed_left']=(org.residue_summ_for_all_objects/1000000).round
-      temporary_obj['work_complete']=(org.work_complete_summ_for_all_objects/1000000).round
-      temporary_obj['work_incomplete']=(org.work_left_summ_for_all_objects/1000000).round
+      temporary_obj['work_complete']=(org.payed_for_work_for_all_objects/1000000).round
+      temporary_obj['work_incomplete']=(org.avans_vidano_for_all_objects/1000000).round
       org_objects = Array.new
       org.objs.each do |o|
         obj = Hash.new
@@ -76,6 +76,8 @@ class ObjectController < ApplicationController
         obj['constructive_delay']=o.SMR_constructive_delay||0
         obj['internal']=o.SMR_internal||'-'
         obj['internal_delay']=o.SMR_internal_delay||0
+        finance = o.get_object_finance_by_type(1).take
+        obj['contract_sum']=finance == nil ? 0 : finance.work_summ
         org_objects.push(obj)
       end
       temporary_obj['objects']=org_objects
