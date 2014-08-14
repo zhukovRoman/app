@@ -82,7 +82,7 @@ class Obj < ActiveRecord::Base
 
 
   def getYearCorrect
-
+    return self.year_correct
     if self.year_correct == nil
       return '----';
     end
@@ -120,12 +120,16 @@ class Obj < ActiveRecord::Base
   # сделать выбор правильного года
   def self.getAllEnterYears
     res = Array.new
-    Obj.where(is_archive: 0).select('ObjectEnterYearCorrect').each do |o|
-      if (!res.include?(o.getYearCorrect.to_s))
-        res.push(o.getYearCorrect.to_s)
-      end
+    #Obj.where(is_archive: 0).select('ObjectEnterYearCorrect').each do |o|
+    #  if (!res.include?(o.getYearCorrect.to_s))
+    #    res.push(o.getYearCorrect.to_s)
+    #  end
+    #end
+
+    Obj.where(is_archive: 0).select('ObjectEnterYearCorrect').distinct.each do |o|
+      res.push(o.year_correct||'----')
     end
-    return res.sort
+    return res
   end
 
   def self.notArchive
