@@ -33,6 +33,7 @@ Rails.application.routes.draw do
   get 'apartment/index2'
   get 'api/getchart'
 
+  get 'apartment/crm'
 
   get 'object/index'
   # The priority is based upon order of creation: first created -> highest priority.
