@@ -8,6 +8,15 @@
     <i style="color: red">Данные реальные</i>
   </div>
 </div>
+<div class="row" style="margin-bottom: 20px">
+    <div class="btn-group filter" data-toggle="buttons" id="appointment_filter" style="margin-left: 100px">
+      <% @appointments.each do |a| %>
+          <label class="btn btn-primary active" id="<%= a.appointment  %>">
+            <input type="checkbox"><%= a.appointment %>
+          </label>
+      <% end %>
+    </div>
+</div>
 <div class="row">
   <div class="col-sm-2">
     <ul class="nav nav-pills nav-stacked" id="documents">
@@ -18,7 +27,7 @@
   </div>
   <div class="col-sm-8">
     <div class="col-sm-12" >
-      <div class="btn-group filter" data-toggle="buttons" id="year_filter">
+      <div class="btn-group filter" data-toggle="buttons" id="year_filter" >
         <% @years.each do |y| %>
             <label class="btn btn-primary active" id="<%= y  %>">
               <input type="checkbox"><%= y %>
@@ -40,29 +49,18 @@
 
 
 <script type="application/javascript">
-    $(function(){
-        //навешиваем обработчики
-        $("#all-okrugs").on('click', selectAllOkrug);
-        $("#okrug_filter input").change(redrawChart);
-        $("#year_filter label").change(redrawChart);
-        $("#documents li a").click(changeDocument);
-        createChart();
-        redrawChart();
-    });
-
-    changeDocument = function (){
-        $("#documents li.active").removeClass('active');
-        $(this).parent().addClass('active');
-        redrawChart();
-    }
 
     selectAllOkrug = function (){
         $.each($("#okrug_filter input"), function(i , val){
-            //console.log(val)
             $(val).prop('checked', true);
         });
-        redrawChart();
+        redrawCharts();
     }
+
+    getCurrentDocument = function (){
+        return $('#documents > li.active').attr('id');
+    }
+
 
     getYearsFilter = function(){
         var res = [];
@@ -70,7 +68,6 @@
             res.push($(this).attr('id'))
         })
         return res;
-
     }
 
     getOkrugFilter = function () {
@@ -81,24 +78,73 @@
         return res;
     }
 
-    getCurrentDocument = function (){
-        return $('#documents > li.active').attr('id');
+    getAppointmentFilter = function (){
+        var res = [];
+        $.each($("#appointment_filter label.active"), function() {
+            res.push($(this).attr('id'))
+        })
+        //console.log(res)
+        return res;
     }
 
-    redrawChart = function () {
+    $(function(){
+        //навешиваем обработчики
+        $("#all-okrugs").on('click', selectAllOkrug);
+        $("#okrug_filter input").change(redrawCharts);
+        $("#year_filter label").change(redrawCharts);
+        $("#documents li a").click(changeDocument);
+        $("#appointment_filter label").change(redrawCharts);
+        createDocumentChart();
+        createFinChart();
+        redrawCharts();
+    });
+
+    changeDocument = function (){
+        $("#documents li.active").removeClass('active');
+        $(this).parent().addClass('active');
+        redrawDocumentChart();
+    }
+
+    redrawCharts = function () {
         //add some delay for addClass complete
         setTimeout(function() {
-            console.log('redraw');
-//            console.log(getYearsFilter(), getOkrugFilter())
-            var filteredObjects = filterObjects();
-//            console.log(filteredObjects)
-            var currentDocument = getCurrentDocument()
-            var data = {};
+//          console.log(getYearsFilter(), getOkrugFilter())
+            filterObjects();
+            redrawDocumentChart();
+            redrawFinanceChart();
+            if (myMap != undefined)
+            {
+                filter_map_points();
+                rebind_markers();
+            }
+        }, 100)
+    }
+
+    redrawDocumentChart = function(){
+        var filteredObjects = window.filteredObjects;
+        var currentDocument = getCurrentDocument()
+        var data = {};
+        $.each(filteredObjects, function(i,obj){
+            data[obj[currentDocument]] = (data[obj[currentDocument]] || 0) + 1
+        });
+        changeChartParams(data,currentDocument);
+    }
+
+    redrawFinanceChart = function () {
+        //add some delay for addClass complete
+        setTimeout(function() {
+            var filteredObjects = window.filteredObjects;
+            var data = [
+                ['Остаток оплаты',   0],
+                ['Выполнено работ',       0],
+                ['Осталось выполнить',    0]
+            ];
             $.each(filteredObjects, function(i,obj){
-                data[obj[currentDocument]] = (data[obj[currentDocument]] || 0) + 1
+                data[0][1]+=(obj.limit-obj.payed)
+                data[1][1]+=obj.complete
+                data[2][1]+=obj.incomplete
             });
-            changeChartParams(data,currentDocument);
-            console.log(filteredObjects);
+            fin_chart.series[0].setData(data, true);
         }, 100)
 
     }
@@ -118,23 +164,71 @@
         chart.setTitle({ text: 'Наличие '+ $("#"+currentDocument).attr('data-title') })
     }
 
+    createFinChart = function(){
+        // Build the chart
+        fin_chart = new Highcharts.Chart({
+            credits:  {
+                enabled: false
+            },
+            chart: {
+                renderTo:'fin_chart',
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false
+            },
+            title: {
+                text: 'Финансы по отрослям'
+            },
+            tooltip: {
+                formatter: function () {
+                    var s ="";
+                    $.each(this.series.points, function (i, point) {
+                        s += "<b>"+point.name + '</b> ' + point.y + ' млн рублей <br/>';
+                    });
+                    return s;
+                },
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                pie: {
+                    center: ['50%', '50%']
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: 'Сумма',
+                innerSize: '0%',
+                data: [
+                    ['Остаток оплаты',   45.0],
+                    ['Выполнено работ',       26.8],
+                    ['Осталось выполнить',    8.5]
+
+                ]
+            }]
+        });
+    }
+
     filterObjects = function ()
     {
-        var res = []
+        //var res = []
         var years = getYearsFilter();
         var okrugs = getOkrugFilter();
+        var appointments = getAppointmentFilter();
+
         objects = data['objects'];
+        window.filteredObjects.length=0;
         $.each(objects, function(i, obj){
             if ($.inArray( obj.year, years )!=-1 &&
-                    $.inArray(obj.okrug, okrugs)!= -1)
+                    $.inArray(obj.okrug, okrugs)!= -1 &&
+                    $.inArray(obj.appointment, appointments) != -1)
             {
-                res.push(obj);
+                window.filteredObjects.push(obj);
             }
         })
-
-        return res;
     }
-    createChart = function(){
+
+    createDocumentChart = function(){
         chart = new Highcharts.Chart({
             credits:  {
                 enabled: false
@@ -148,16 +242,6 @@
             title: {
                 text: 'Наличие ГПЗУ'
             },
-//            labels: {
-//                items: [{
-//                    html: "25",
-//                    style: {
-//
-//                    }
-//                },
-//                    {}
-//                ]
-//            },
             tooltip: {
                 formatter: function () {
 //                    var s = this.series.name +" "+  this.point.name+"<br>";
@@ -185,9 +269,9 @@
                 name: 'Статус получения: ',
                 innerSize: '50%',
                 data: [
-                    ['С ГПЗУ',   45.0],
-                    ['БЕЗ ГПЗУ',       26.8],
-                    ['ПРОСРОЧЕНО', 12.8]
+                    ['С ГПЗУ',   0],
+                    ['БЕЗ ГПЗУ',  0],
+                    ['ПРОСРОЧЕНО', 0]
 
                 ]
             }]
@@ -199,6 +283,11 @@
                 })
                 .add();
     }
-    var data = <%= @data.to_json.html_safe %>
+    data = <%= @data.to_json.html_safe %>
 
+    filteredObjects = [];
+
+    $.each(data['objects'], function(i, val){
+        window.filteredObjects.push(val);
+    })
 </script>

@@ -268,12 +268,21 @@ yamaps_ready_function = function(){
     });
 };
 
+rebind_markers = function(){
+    clusterer.removeAll();
+    clusterer.add(points);
+    // А сам кластеризатор добавим на карту.
 
+    myMap.geoObjects.add(clusterer);
+    myMap.controls.add('zoomControl', {left : '5px'});
+    // Выбор типа карты
+    myMap.controls.add(new ymaps.control.TypeSelector());
+}
 
 function init_map_all_object() {
     console.log("yamaps init");
-    var center = [55.76954, 37.621587],
-        myMap = new ymaps.Map('map', {
+    var center = [55.76954, 37.621587];
+    myMap = new ymaps.Map('map', {
             center: center,
             zoom: 10,
             behaviors: ["default", "scrollZoom"]
@@ -349,7 +358,7 @@ function init_map_all_object() {
 
     // Создадим кластеризатор и выставим ему созданные макеты
     // через опции.
-        clusterer = new ymaps.Clusterer({
+    clusterer = new ymaps.Clusterer({
             // Поскольку опции задаются для кластеров, а не для всего
             // кластеризатора, им нужно приписать префикс 'cluster'.
             clusterDisableClickZoom: true
@@ -361,15 +370,12 @@ function init_map_all_object() {
 //            clusterBalloonSidebarWidth: 100,
             // и ширину балуна целиком.
 //            clusterBalloonWidth: 300
-        }),
+        })
 
     // Добавим полученные геообъекты в кластеризатор.
     clusterer = new PieChartClusterer();
-    clusterer.add(points);
-    // А сам кластеризатор добавим на карту.
-    myMap.geoObjects.add(clusterer);
-    myMap.controls.add('zoomControl', {left : '5px'});
-    // Выбор типа карты
-    myMap.controls.add(new ymaps.control.TypeSelector());
+
+    rebind_markers();
 
 }
+
