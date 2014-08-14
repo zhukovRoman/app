@@ -82,7 +82,7 @@ class Obj < ActiveRecord::Base
 
 
   def getYearCorrect
-    return self.year_correct
+    return self.year_correct||'----'
     if self.year_correct == nil
       return '----';
     end
