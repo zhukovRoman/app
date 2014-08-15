@@ -20,6 +20,11 @@ class ObjectController < ApplicationController
       object['year'] = o.getYearCorrect.to_s
       object['MGE']=o.getMGEStatus.to_s
       object['razresh']=o.getRazreshStatus.to_s
+      plansdate = Hash.new
+      plansdate['GPZU']=o.object_document.GPZU_plan.to_s
+      plansdate['MGE']=o.object_document.MGE_plan.to_s
+      plansdate['razresh']=o.object_document.razrezh_build_plan.to_s
+      object['plansDates']=plansdate
       object['appointment']=o.appointment
       object['payed']=o.object_finance.pay_current_year||0
       object['limit']=o.object_finance.year_limit||0
@@ -33,12 +38,14 @@ class ObjectController < ApplicationController
       object['power_measure']=o.power_measure
       object['year_plan']=object['year']
       object['AIP']=o.object_finance.sumAIP
+      object['manager']=o.manager
+
       objects.push(object)
     end
     @districts = Obj.getAllDistricts
     @years = Obj.getAllEnterYears
     @appointments = Obj.getAllAppointmentType
-    puts Obj.where(general_builder: '315 УНР').take.organization.inspect
+    #puts Obj.where(general_builder: '315 УНР').take.organization.inspect
     render "index3"
   end
 

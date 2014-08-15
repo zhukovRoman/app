@@ -5,9 +5,27 @@
       <li>Сколько объектов определенного года ввода имеют и округа имеют документ?</li>
       <li>Сколько объектов определенного года ввода имеют и округа не имеют документ и сколько просрочили его получение?</li>
     </ul>
-    <i style="color: red">Данные реальные</i>
+    <!--<i style="color: red">Данные реальные</i>-->
   </div>
 </div>
+
+<div class="row" style="margin-bottom: 20px">
+  <div class="btn-group filter" data-toggle="buttons" id="appointment_filter_top" style="margin-left: 100px">
+        <label class="btn btn-primary active" id="live" data-childs="['жилье', 'инженерия']">
+          <input type="checkbox">Жилище
+        </label>
+        <label class="btn btn-primary active" id="edu" data-childs="['БНК', 'ДОУ', 'Спорт - ФОК', 'ФОК' ,'школа' ]">
+          <input type="checkbox">Образование
+        </label>
+        <label class="btn btn-primary active" id="medi" data-childs="['Поликлиника']">
+          <input type="checkbox">Здравоохранение
+        </label>
+        <label class="btn btn-primary active" id="other" data-childs="['Прочие объекты', 'переход', 'Дороги']">
+          <input type="checkbox">Прочее
+        </label>
+  </div>
+</div>
+
 <div class="row" style="margin-bottom: 20px">
     <div class="btn-group filter" data-toggle="buttons" id="appointment_filter" style="margin-left: 100px">
       <% @appointments.each do |a| %>
@@ -24,6 +42,8 @@
       <li id="MGE" data-title="экспертизы"><a href="#">Экспертиза</a></li>
       <li id="razresh" data-title="разрешения"><a href="#">Разрешение</a></li>
     </ul>
+    <button type="button" class="btn btn-danger" style="margin-top: 20px" id="overdue_link">Список просроченных</button>
+
   </div>
   <div class="col-sm-8">
     <div class="col-sm-12" >
@@ -38,6 +58,9 @@
     <div class="col-sm-12">
       <div style="width: 730px; height: 500px" id="chart"></div>
     </div>
+    <div class="col-sm-12" id="table_div">
+
+    </div>
   </div>
   <div class="col-sm-2" id="okrug_filter">
     <div id="all-okrugs" class="btn btn-default btn-xs">Все округа</div>
@@ -45,6 +68,21 @@
         <div><input id="<%= d.region||"---"  %>" type="checkbox" checked><%= d.region||"---"  %></div>
     <% end %>
   </div>
+</div>
+<div class="row" id="overdue_table_row" style="display: none">
+  <table class="table table-condensed">
+    <thead>
+    <tr>
+      <th>#</th>
+      <th>Адрес</th>
+      <th>Плановая дата получения</th>
+      <th>Менеджер</th>
+    </tr>
+    </thead>
+    <tbody id="overdue_table_body">
+
+    </tbody>
+  </table>
 </div>
 
 
@@ -87,6 +125,50 @@
         return res;
     }
 
+    appointment_group_select = function(){
+        //console.log($("#appointment_filter label.active"));
+        $.each($("#appointment_filter label"), function() {
+            $(this).removeClass('active');
+        })
+        setTimeout(function() {
+            $.each($("#appointment_filter_top label.active"), function() {
+                arr = eval($(this).attr('data-childs'))
+                $.each(arr, function(i, val){
+                    $("label[id='"+val+"'").addClass('active')
+                })
+            })
+            redrawCharts();
+        }, 100)
+
+
+    }
+
+    showOverdueObjects = function(){
+        var document = getCurrentDocument();
+        var overdues_objects = [];
+        $.each(filteredObjects, function(i,val){
+           if (val[document]=='Просрочено')
+            overdues_objects.push(val);
+        });
+        bindOverdueObjects(document, overdues_objects);
+        $("#overdue_table_row").show();
+        console.log(overdues_objects);
+    }
+
+    bindOverdueObjects = function(doc, objs){
+        var overdueTable = document.getElementById('overdue_table_body');
+        $(overdueTable).html('');
+        $.each(objs, function(i, val){
+            var row = document.createElement('tr');
+            row.innerHTML = "<td>"+i+"</td>"+
+                            "<td><a href='view?id="+val.id+"'>"+val.adress+"</a></td>"+
+                            "<td>"+val.plansDates[doc]+"</td>"+
+                            "<td>"+val.manager+"</td>";
+            overdueTable.appendChild(row);
+        });
+    }
+
+
     $(function(){
         //навешиваем обработчики
         $("#all-okrugs").on('click', selectAllOkrug);
@@ -94,6 +176,8 @@
         $("#year_filter label").change(redrawCharts);
         $("#documents li a").click(changeDocument);
         $("#appointment_filter label").change(redrawCharts);
+        $("#appointment_filter_top label").change(appointment_group_select);
+        $("#overdue_link").click(showOverdueObjects);
         createDocumentChart();
         createFinChart();
         redrawCharts();
@@ -102,6 +186,7 @@
     changeDocument = function (){
         $("#documents li.active").removeClass('active');
         $(this).parent().addClass('active');
+        $("#overdue_table_row").hide();
         redrawDocumentChart();
     }
 
@@ -109,6 +194,7 @@
         //add some delay for addClass complete
         setTimeout(function() {
 //          console.log(getYearsFilter(), getOkrugFilter())
+            $("#overdue_table_row").hide();
             filterObjects();
             redrawDocumentChart();
             redrawFinanceChart();
