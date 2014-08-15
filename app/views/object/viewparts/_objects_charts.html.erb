@@ -1,0 +1,21 @@
+<% if @object.get_object_finance_by_type(1).take!=nil %>
+
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<div class="row">
+  <div class="col-sm-12" style="text-align: center">
+  <div id ="smr_chart" style="width: 500px; height: 500px; float: left"></div>
+  <div id ="other_chart" style="width: 500px; height: 500px; float: left"></div>
+  </div>
+</div>
+
+
+<script type="application/javascript">
+  <%= render "object/viewparts/objects_charts.js" %>
+</script>
+<% else %>
+<div class="row">
+  <div class="col-sm-12" style="text-align: center">
+    <h4>Данные не найдены</h4>
+  </div>
+</div>
+<% end %>

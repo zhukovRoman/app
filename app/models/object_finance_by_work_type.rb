@@ -20,7 +20,9 @@ class ObjectFinanceByWorkType < ActiveRecord::Base
   alias_attribute 'object_id', 'ObjectId'
 
   def residue_summ
-    return ((self.work_summ - self.pay_fact)||0).round
+    ws = self.work_summ||0
+    pf = self.pay_fact||0
+    return ((ws-pf)||0).round
   end
 
   def work_left
@@ -28,15 +30,21 @@ class ObjectFinanceByWorkType < ActiveRecord::Base
   end
 
   def payed_for_work
-    return ((self.pay_fact||0-self.avans_vidano||0)||0).round
+    pf = self.pay_fact||0
+    av = self.avans_vidano||0
+    return ((pf - av)||0).round
   end
 
   def in_avance_work
-    #return 0
-    return ((self.avans_vidano||0) - (self.avans_pogasheno||0)).round
+    av = self.avans_vidano||0
+    ap = (self.avans_pogasheno||0)
+    return (av - ap).round
   end
 
   def work_with_avance
-    return ((self.work_comlete||0 - (self.avans_vidano||0 - self.avans_pogasheno||0))||0).round
+    wc = self.work_comlete||0
+    av = self.avans_vidano||0
+    ap = self.avans_pogasheno||0
+    return ((wc - ( av - ap))||0).round
   end
 end
