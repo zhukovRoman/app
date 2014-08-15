@@ -4,8 +4,8 @@ class ObjectTender < ActiveRecord::Base
   self.table_name = 'vw_ObjectForMobileInfoTenders'
   self.primary_key = 'TenderId'
 
-  #belongs_to :obj, foreign_key: 'ObjectId'
-  #has_one :organization, foreign_key: 'OrganizationId'
+  belongs_to :obj, foreign_key: 'ObjectId'
+  has_one :organization, foreign_key: 'OrganizationId'
 
   alias_attribute 'object_id','ObjectId'
   alias_attribute 'status','TenderStatus'

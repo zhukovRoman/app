@@ -4,7 +4,7 @@ class ObjectFinanceByWorkType < ActiveRecord::Base
   self.table_name = 'vw_ObjectForMobileInfoFinanceVidRabot'
   self.primary_key = 'ID_ObjectDDS'
 
-  #belongs_to :obj, foreign_key: 'ObjectId'
+  belongs_to :obj, foreign_key: 'ObjectId'
 
   alias_attribute 'work_type','NameVidRabot'
   alias_attribute 'organization_name','Organization'

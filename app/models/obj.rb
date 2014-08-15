@@ -8,8 +8,8 @@ class Obj < ActiveRecord::Base
   has_one :object_document, foreign_key: 'ObjectId'
   has_one :object_prepare, foreign_key: 'ObjectId'
   has_one :organization, foreign_key: 'OrganizationGenBuilder_ID'
-  has_many :object_finance_by_work_types, foreign_key: 'ObjectId'
-  #has_many :object_tenders, class_name:'ObjectTender', foreign_key: 'ObjectId'
+  has_many :object_finance_by_work_types, foreign_key: 'ObjectID'
+  has_many :object_tenders, foreign_key: 'ObjectID'
 
   alias_attribute 'id','ObjectId' #
   #АДрес

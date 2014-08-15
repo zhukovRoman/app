@@ -59,7 +59,7 @@ class ObjectController < ApplicationController
 
     @organizations = Array.new
     #temp = Organization.includes(:objs)
-    Organization.includes(:objs, objs: :object_finance).where(vw_ObjectForMobileInfo_NEW: {ObjectArchve: 0}).each do |org|
+    Organization.includes(:objs, :object_tenders, objs: :object_finance).where(vw_ObjectForMobileInfo_NEW: {ObjectArchve: 0}).each do |org|
       if (org.objs.count==0)
         next
       end
