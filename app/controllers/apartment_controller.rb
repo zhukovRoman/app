@@ -21,7 +21,53 @@ class ApartmentController < ApplicationController
     file.close
     require 'json'
     data = JSON.parse(data)
-    puts data['GetBuildingGroupsResult']['date']
+
+    #finance_status_data = Hash.new
+    #finance_status_data['valueSuffix']='млн руб';
+    #finance_status_data['y-axis-label']='Млн рублей';
+    #finance_status_data['all-rooms']=Hash.new
+    #finance_status_data['1-rooms']=Hash.new
+    #finance_status_data['2-rooms']=Hash.new
+    #finance_status_data['3-rooms']=Hash.new
+    finish = Hash.new;
+    notFinish = Hash.new;
+
+    rooms = Hash.new
+
+    data['GetBuildingGroupsResult']['buildinggroups'].each do |pro|
+      finish[pro['name']] = 0
+      notFinish[pro['name']] = 0
+      rooms[pro['name']] = Hash.new
+
+      pro['buildings'].each do |b|
+        b['sections'].each do |s|
+          s['apartments'].each do |a|
+            if (a['status']=='ПС' || a['status']=='ДКП')
+              finish[pro['name']] += a['finishingLevel']==true ? 1 : 0
+              notFinish[pro['name']] += a['finishingLevel']==true ? 0 : 1
+            end
+
+            if rooms[pro['name']][a['rooms']]==nil
+              rooms[pro['name']][a['rooms']] = Hash.new
+              rooms[pro['name']][a['rooms']]['sell'] = 0
+              rooms[pro['name']][a['rooms']]['notsell'] = 0;
+            end
+
+            if (a['status']=='ДКП' || a['status']=='ПС' || a['status']=='Аукцион' )
+              rooms[pro['name']][a['rooms']]['sell'] += 1
+            else
+              rooms[pro['name']][a['rooms']]['notsell'] += 1
+            end
+
+
+          end
+        end
+      end
+    end
+
+    puts finish
+    puts notFinish
+    puts rooms
     render "index2"
   end
 
