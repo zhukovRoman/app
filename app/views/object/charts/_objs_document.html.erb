@@ -10,52 +10,52 @@
   </div>
 </div>
 
-<div class="row" style="margin-bottom: 20px">
-  <div class="btn-group filter" data-toggle="buttons" id="appointment_filter_top" style="margin-left: 100px">
-        <label class="btn btn-primary active" id="live" data-childs="['жилье', 'инженерия']">
-          <input type="checkbox">Жилище
-        </label>
-        <label class="btn btn-primary active" id="edu" data-childs="['БНК', 'ДОУ', 'Спорт - ФОК', 'ФОК' ,'школа' ]">
-          <input type="checkbox">Образование
-        </label>
-        <label class="btn btn-primary active" id="medi" data-childs="['Поликлиника']">
-          <input type="checkbox">Здравоохранение
-        </label>
-        <label class="btn btn-primary active" id="other" data-childs="['Прочие объекты', 'переход', 'Дороги']">
-          <input type="checkbox">Прочее
-        </label>
-  </div>
-</div>
-
-<div class="row" style="margin-bottom: 20px">
-    <div class="btn-group filter" data-toggle="buttons" id="appointment_filter" style="margin-left: 100px">
-      <% @appointments.each do |a| %>
-          <label class="btn btn-primary active" id="<%= a.appointment  %>">
-            <input type="checkbox"><%= a.appointment %>
-          </label>
-      <% end %>
-    </div>
-</div>
 <div class="row">
-  <div class="col-sm-2">
-    <ul class="nav nav-pills nav-stacked" id="documents">
+  <div class="col-sm-12" >
+    <ul class="nav nav-pills" id="documents" style=" float: left; margin-left: 300px;">
       <li id="GPZU" class="active" data-title="ГПЗУ"><a href="#">ГПЗУ</a></li>
       <li id="MGE" data-title="экспертизы"><a href="#">Экспертиза</a></li>
       <li id="razresh" data-title="разрешения"><a href="#">Разрешение</a></li>
     </ul>
-    <button type="button" class="btn btn-danger" style="margin-top: 20px" id="overdue_link">Список просроченных</button>
+    <button type="button" class="btn btn-danger" style="float: left; margin-top: 3px; margin-left: 35px;" id="overdue_link">Список просроченных</button>
+  </div>
+  <div class="col-sm-2" style="padding-top: 20px">
+    <div class="btn-group-vertical">
+      <div class="btn btn-default parent_appointment selected" data-childs="['жилье', 'инженерия']">
+        <div style="text-align: left;">Жилище</div>
+        <div class="btn-group-vertical childs-appointment">
+          <button type="button" class="btn btn-default child-appointment selected">жилье</button>
+          <button type="button" class="btn btn-default child-appointment selected">инженерия</button>
+        </div>
+      </div>
+      <div class="btn btn-default parent_appointment selected" data-childs="['БНК', 'ДОУ', 'Спорт - ФОК', 'ФОК' ,'школа' ]">
+        <div style="text-align: left;">Образование</div>
+        <div class="btn-group-vertical childs-appointment">
+          <button type="button" class="btn btn-default child-appointment selected">БНК</button>
+          <button type="button" class="btn btn-default child-appointment selected">ДОУ</button>
+          <button type="button" class="btn btn-default child-appointment selected">Спорт - ФОК</button>
+          <button type="button" class="btn btn-default child-appointment selected">ФОК</button>
+          <button type="button" class="btn btn-default child-appointment selected">школа</button>
+        </div>
+      </div>
+      <div class="btn btn-default parent_appointment selected" data-childs="['Поликлиника']">
+        <div style="text-align: left;">Здравоохранение</div>
+        <div class="btn-group-vertical childs-appointment">
+          <button type="button" class="btn btn-default child-appointment selected">Поликлиника</button>
+        </div>
+      </div>
+      <div class="btn btn-default parent_appointment selected" data-childs="['Прочие объекты', 'переход', 'Дороги']">
+        <div style="text-align: left;">Прочее</div>
+        <div class="btn-group-vertical childs-appointment">
+          <button type="button" class="btn btn-default child-appointment selected">Дороги</button>
+          <button type="button" class="btn btn-default child-appointment selected">переход</button>
+          <button type="button" class="btn btn-default child-appointment selected">Прочие объекты</button>
+        </div>
+      </div>
+    </div>
 
   </div>
   <div class="col-sm-8">
-    <div class="col-sm-12" >
-      <div class="btn-group filter" data-toggle="buttons" id="year_filter" >
-        <% @years.each do |y| %>
-            <label class="btn btn-primary active" id="<%= y  %>">
-              <input type="checkbox"><%= y %>
-            </label>
-        <% end %>
-      </div>
-    </div>
     <div class="col-sm-12">
       <div style="width: 730px; height: 500px" id="chart"></div>
     </div>
@@ -64,10 +64,25 @@
     </div>
   </div>
   <div class="col-sm-2" id="okrug_filter">
-    <div id="all-okrugs" class="btn btn-default btn-xs">Все округа</div>
-    <% @districts.each do |d| %>
-        <div><input id="<%= d.region||"---"  %>" type="checkbox" checked><%= d.region||"---"  %></div>
-    <% end %>
+    <div class="btn btn-default selected" onclick="selectAllOkrug()">
+      <div style="text-align: left;">Все округа</div>
+      <div class="btn-group-vertical">
+        <% @districts.each do |d| %>
+            <button type="button" class="btn btn-default okrug selected"><%= d.region||"---"  %></button>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-8 col-sm-offset-3" style="margin-bottom: 20px">
+    <div class="btn-group filter" data-toggle="buttons" id="year_filter" >
+      <% @years.each do |y| %>
+          <label class="btn btn-primary active" id="<%= y  %>">
+            <input type="checkbox"><%= y %>
+          </label>
+      <% end %>
+    </div>
   </div>
 </div>
 <div class="row" id="overdue_table_row" style="display: none">
@@ -90,9 +105,9 @@
 <script type="application/javascript">
 
     selectAllOkrug = function (){
-        $.each($("#okrug_filter input"), function(i , val){
-            $(val).prop('checked', true);
-        });
+        $.each($('.okrug'), function(i,val){
+            $(val).addClass('selected');
+        })
         redrawCharts();
     }
 
@@ -111,18 +126,20 @@
 
     getOkrugFilter = function () {
         var res = Array();
-        $.each($("#okrug_filter input:checked"), function(i , val){
-            res.push($(val).attr("id"))
+        $.each($(".okrug.selected"), function(i , val){
+            res.push($(val).text())
         })
+
+        console.log(res);
         return res;
     }
 
     getAppointmentFilter = function (){
         var res = [];
-        $.each($("#appointment_filter label.active"), function() {
-            res.push($(this).attr('id'))
+        $.each($(".child-appointment.selected"), function() {
+            res.push($(this).text())
         })
-        //console.log(res)
+        console.log(res)
         return res;
     }
 
@@ -168,7 +185,74 @@
             overdueTable.appendChild(row);
         });
     }
+    appointment_select = function(){
 
+        event.cancelBubble = true;
+        //add_class
+        if($(this).hasClass('selected')){
+            $(this).removeClass('selected');
+        }
+        else {
+            $(this).addClass('selected');
+        }
+        parent = $(this).parent()
+
+        var all = true;
+        $.each (parent.children('button'), function(i,val){
+          if (!$(val).hasClass('selected')){
+              all = false;
+          }
+        })
+        if (all)
+            $(this).parent().parent().addClass('selected');
+        else
+            $(this).parent().parent().removeClass('selected');
+
+        redrawCharts();
+    }
+
+    parent_appointment_select = function(){
+        //add_class
+        if($(this).hasClass('selected')){
+            $(this).removeClass('selected');
+        }
+        else {
+            $(this).addClass('selected');
+        }
+        var all = true;
+        buttons = $(this).children('.childs-appointment').children('button')
+        $.each (buttons, function(i,val){
+            if (!$(val).hasClass('selected')){
+                all = false;
+            }
+            console.log(val, all)
+        })
+
+        if (all){
+            $.each (buttons, function(i,val){
+                console.log("delete")
+                $(val).removeClass('selected')
+            })
+        }
+        else
+            $.each (buttons, function(i,val){
+                console.log("add")
+                $(val).addClass('selected')
+            })
+        redrawCharts();
+    }
+
+    okrug_select = function(){
+        event.cancelBubble = true;
+        //add_class
+        if($(this).hasClass('selected')){
+            $(this).removeClass('selected');
+        }
+        else {
+            $(this).addClass('selected');
+        }
+        redrawCharts();
+    }
 
     $(function(){
         //навешиваем обработчики
@@ -178,6 +262,9 @@
         $("#documents li a").click(changeDocument);
         $("#appointment_filter label").change(redrawCharts);
         $("#appointment_filter_top label").change(appointment_group_select);
+        $('.child-appointment').click(appointment_select);
+        $('.parent_appointment').click(parent_appointment_select);
+        $('.okrug').click(okrug_select);
         $("#overdue_link").click(showOverdueObjects);
         createDocumentChart();
         createFinChart();
