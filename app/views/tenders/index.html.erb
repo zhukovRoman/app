@@ -1,0 +1,50 @@
+<script src="http://code.highcharts.com/highcharts.js"></script>
+
+
+<div class="panel panel-default" style="margin-top: 20px">
+  <div class="panel-heading">Список вопросов, на которые отвечает график</div>
+  <div class="panel-body">
+    <ul>
+      <li>какова сумма всех конкурсов за определенный год?</li>
+      <li>каково среднее снижение стоимости в % за определенный год?</li>
+    </ul>
+  </div>
+</div>
+<div id="prices_chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+<div class="panel panel-default" style="margin-top: 20px">
+  <div class="panel-heading">Список вопросов, на которые отвечает график</div>
+  <div class="panel-body">
+    <ul>
+      <li>Как изменяется средняя цена за м2 по годам?</li>
+    </ul>
+  </div>
+</div>
+<div id="m2_chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+<div class="panel panel-default" style="margin-top: 20px">
+  <div class="panel-heading">Список вопросов, на которые отвечает график</div>
+  <div class="panel-body">
+    <ul>
+      <li>Какие типы конкурсов какую долю составляют в общем числе?</li>
+    </ul>
+  </div>
+</div>
+<div id="types_chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+<div class="panel panel-default" style="margin-top: 20px">
+  <div class="panel-heading">Список вопросов, на которые отвечает график</div>
+  <div class="panel-body">
+    <ul>
+      <li>Сколько конкурсов имеет определенное число поданны и допущенных заявок?</li>
+    </ul>
+  </div>
+</div>
+<div id="qty_chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+<script type="application/javascript">
+    <%= render "tenders/tenders_scripts.js" %>
+</script>
+<script type="application/javascript">
+  data = <%= @result.to_json.html_safe %>
+</script>

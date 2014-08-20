@@ -1,0 +1,284 @@
+
+
+$(function () {
+    prices_chart = new Highcharts.Chart({
+        credits:  {
+            enabled: false
+        },
+        chart: {
+            type: 'column',
+            renderTo:'prices_chart'
+        },
+        title: {
+            text: 'Общая стоимость конкурсов'
+        },
+        xAxis: {
+            categories: data.years
+        },
+        yAxis: [{
+            min: 0,
+            title: {
+                text: 'Сумма конкурсов (млн рублей)'
+            },
+            stackLabels: {
+                enabled: true,
+                style: {
+                    fontWeight: 'bold',
+                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                }
+            }
+        },{
+            min: 0,
+            opposite: true,
+            title: {
+                text: 'среднее снижение цены (%)'
+            },
+            stackLabels: {
+                enabled: true,
+                style: {
+                    fontWeight: 'bold',
+                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                }
+            }
+        }],
+        plotOptions: {
+            column: {
+                dataLabels: {
+                    enabled: true,
+                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+                    style: {
+                        textShadow: '0 0 3px black, 0 0 3px black'
+                    }
+                }
+            }
+        },
+        series: [{
+            name: 'Начальная сумма',
+            data: [5, 3, 4]
+        }, {
+            name: 'Итоговая сумма',
+            data: [2, 2, 3]
+        },{
+            type: 'spline',
+            name: 'Среднее снижение стоимости',
+            color: Highcharts.getOptions().colors[3],
+            data: [3, 2.67, 3],
+            yAxis: 1,
+            marker: {
+                lineWidth: 2,
+                lineColor: Highcharts.getOptions().colors[3],
+                fillColor: 'white'
+            }
+        }]
+    });
+
+    qty_chart = new Highcharts.Chart({
+        credits:  {
+            enabled: false
+        },
+        chart: {
+            type: 'column',
+            renderTo:'qty_chart'
+        },
+        title: {
+            text: 'число поданных и принятых заявок'
+        },
+        xAxis: {
+            categories: [,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8]
+        },
+        yAxis: [{
+            min: 0,
+            title: {
+                text: 'Число конкурсов'
+            },
+            stackLabels: {
+                enabled: true,
+                style: {
+                    fontWeight: 'bold',
+                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                }
+            }
+        }],
+        plotOptions: {
+            column: {
+                dataLabels: {
+                    enabled: true,
+                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+                    style: {
+                        textShadow: '0 0 3px black, 0 0 3px black'
+                    }
+                }
+            }
+        },
+        series: [{
+            name: 'Подано заявок',
+            data: [11,
+                258,
+                244,
+                113,
+                87,
+                30,
+                9,
+                6,
+                1]
+        }, {
+            name: 'Принято заявок',
+            data: [11,
+                288,
+                298,
+                100,
+                48,
+                12,
+                1,
+                1]
+        }]
+    });
+
+
+    m2_chart = new Highcharts.Chart({
+        credits:  {
+            enabled: false
+        },
+        chart: {
+            type: 'column',
+            renderTo:'m2_chart'
+        },
+        title: {
+            text: 'Стоимость м2 по конкурсам'
+        },
+        xAxis: {
+            categories: data.years
+        },
+        yAxis: [{
+            min: 0,
+            title: {
+                text: 'Стоимость м2 по конкурсам'
+            },
+            stackLabels: {
+                enabled: true,
+                style: {
+                    fontWeight: 'bold',
+                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                }
+            }
+        }],
+        plotOptions: {
+            column: {
+                dataLabels: {
+                    enabled: true,
+                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+                    style: {
+                        textShadow: '0 0 3px black, 0 0 3px black'
+                    }
+                }
+            }
+        },
+        series: [{
+            type: 'spline',
+            name: 'Среднее стоимость м2',
+            color: Highcharts.getOptions().colors[3],
+            data: [3, 2.67, 3],
+            yAxis: 0,
+            marker: {
+                lineWidth: 2,
+                lineColor: Highcharts.getOptions().colors[3],
+                fillColor: 'white'
+            }
+        }]
+    });
+
+});
+$(function () {
+    types_chart = new Highcharts.Chart({
+        credits:  {
+            enabled: false
+        },
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: 0,
+            plotShadow: false,
+            renderTo:'types_chart'
+        },
+        title: {
+            text: 'Суммы конкурсов по типу конкурса'
+//            align: 'center',
+//            verticalAlign: 'middle',
+//            y: 50
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.value:.1f}</b>'
+        },
+        plotOptions: {
+            pie: {
+//                dataLabels: {
+//                    enabled: true,
+//                    distance: -50,
+//                    style: {
+//                        fontWeight: 'bold',
+//                        color: 'white',
+//                        textShadow: '0px 1px 2px black'
+//                    }
+//                },
+//                startAngle: -90,
+//                endAngle: 90,
+                center: ['50%', '50%']
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Browser share',
+            innerSize: '50%',
+            data: data.types_chart_data
+        }]
+    });
+});
+
+
+    $(function () {
+    console.log(prices_chart,data);
+    var series = getChartData();
+    prices_chart.series[0].setData(series[0], false);
+    prices_chart.series[1].setData(series[1], false);
+    prices_chart.series[2].setData(series[2]);
+    m2_chart.series[0].setData(series[5]);
+
+})
+
+getChartData = function (){
+
+    var res =[];
+    res[0] = [];
+    res[1] = [];
+    res[2] = [];
+    res[3] = [];
+    res[4] = [];
+    res[5] = [];
+
+    $.each (data.prices_begin, function (i,val){
+        res[0].push(toFixedAndParse(data.prices_begin[i]/1000000))
+        res[1].push(toFixedAndParse(data.prices_end[i]/1000000));
+        res[2].push(toFixedAndParse(data.prices_percent[i]/data.count[i],2));
+        res[3].push(toFixedAndParse(data.one_start[i],2))
+        res[4].push(toFixedAndParse(data.one_end[i],2))
+        res[5].push(toFixedAndParse(data.one_end[i]/data.count[i],2))
+    })
+    console.log(res);
+    return res;
+
+}
+
+toFixedAndParse = function (value, dec){
+    dec |= 0
+    console.log(value)
+    return parseFloat ((value).toFixed(dec))
+}
+
+
