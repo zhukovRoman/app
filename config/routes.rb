@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'tenders/index'
+
   get 'api/getchart'
 
   get 'apartment/index'
@@ -36,6 +38,9 @@ Rails.application.routes.draw do
   get 'apartment/crm'
 
   get 'object/index'
+
+
+  get 'tenders/index'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
