@@ -17,3 +17,7 @@
 /tmp/cache
 /.idea
 /exportXML/*/*
+
+.idea/workspace.xml
+
+.idea/app.iml
