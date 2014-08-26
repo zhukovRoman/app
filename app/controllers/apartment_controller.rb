@@ -45,6 +45,15 @@ class ApartmentController < ApplicationController
             if (a['status']=='ПС' || a['status']=='ДКП')
               finish[pro['name']] += a['finishingLevel']==true ? 1 : 0
               notFinish[pro['name']] += a['finishingLevel']==true ? 0 : 1
+
+              times = Hash.new
+              times['reserveFactData']=a['reserveFactData']
+              times['auctionEndFactDate']=a['auctionEndFactDate']
+              times['dpDateForRegistration']=a['dpDateForRegistration']
+              times['dpDateForRegistrationPlanned']=a['dpDateForRegistrationPlanned']
+              times['ownCertificateDateOfIssue']=a['ownCertificateDateOfIssue']
+              times['sertificateDateOfIssue']=a['certificateDateOfIssue']
+              puts times
             end
 
             if rooms[pro['name']][a['rooms']]==nil
@@ -65,9 +74,9 @@ class ApartmentController < ApplicationController
       end
     end
 
-    puts finish
-    puts notFinish
-    puts rooms
+    #puts finish
+    #puts notFinish
+    #puts rooms
     render "index2"
   end
 
@@ -77,7 +86,11 @@ class ApartmentController < ApplicationController
       render plain: 'error (get_token)'
     else
       data = ApartmentController.get_apartments_json(token)
-      File.open('test.json', 'w') { |file| file.write(data.to_s) }
+      puts data.to_json
+      File.open('test.json', 'w') { |file| file.write(data.to_json) }
+      data['GetBuildingGroupsResult']['buildinggroups'].each do |pro|
+        Buildinggroup.create_or_update_from_json pro
+      end
       render plain: "ok"
     end
   end
@@ -97,10 +110,14 @@ class ApartmentController < ApplicationController
   end
 
   def self.get_apartments_json (token)
+    require 'net/http'
+    require 'json'
+
     url_path = 'http://172.20.10.10:91/BuildingGroupService.svc/GetBuildingGroups?oauth_consumer_key=test&hash_key='+token.to_s
     uri = URI(url_path)
     resp = Net::HTTP.get(uri) # => String
     result = JSON.parse(resp)
+
     if result == nil
       return nil
     end
