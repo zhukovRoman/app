@@ -11,7 +11,59 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140809082319) do
+ActiveRecord::Schema.define(version: 20140821082855) do
+
+  create_table "apartments", force: true do |t|
+    t.string   "out_id",                limit: 500
+    t.integer  "floor"
+    t.integer  "rooms"
+    t.integer  "balcony_сount"
+    t.integer  "loggia_сount"
+    t.integer  "before_bti_number"
+    t.float    "spaces_bti_wo_balcony"
+    t.float    "total_plot_area"
+    t.float    "space_wo_balcony"
+    t.float    "dp_cost"
+    t.float    "summ"
+    t.float    "finish_summ"
+    t.boolean  "is_hypothec"
+    t.string   "bank_name"
+    t.boolean  "finishing"
+    t.string   "realtor",               limit: 500
+    t.float    "realtor_fee"
+    t.string   "status",                limit: 200
+    t.integer  "section_id"
+    t.string   "not_sale_date",         limit: 200
+    t.string   "free_date",             limit: 200
+    t.string   "has_qty_date",          limit: 200
+    t.string   "auction_date",          limit: 200
+    t.string   "dkp_date",              limit: 200
+    t.string   "ps_date",               limit: 200
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "buildinggroups", force: true do |t|
+    t.string   "out_id",           limit: 500
+    t.string   "name",             limit: 500
+    t.string   "address",          limit: 1000
+    t.string   "start_build_date", limit: 150
+    t.string   "end_build_date",   limit: 150
+    t.string   "end_sales_date",   limit: 150
+    t.float    "square"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "buildings", force: true do |t|
+    t.string   "out_id",           limit: 500
+    t.string   "name",             limit: 500
+    t.string   "address",          limit: 1000
+    t.string   "building_type",    limit: 150
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "buildinggroup_id"
+  end
 
   create_table "departments", force: true do |t|
     t.string   "out_number"
@@ -97,6 +149,16 @@ ActiveRecord::Schema.define(version: 20140809082319) do
     t.float    "NDFL"
     t.float    "insurance"
     t.float    "retention"
+  end
+
+  create_table "sections", force: true do |t|
+    t.string   "out_id",              limit: 500
+    t.integer  "number"
+    t.integer  "floors"
+    t.integer  "apartments_on_floor"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "building_id"
   end
 
   create_table "users", force: true do |t|
