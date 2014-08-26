@@ -15,3 +15,7 @@
 <%= render "object/viewparts/objects_charts" %>
 <h3>Торги</h3>
 <%= render "object/viewparts/tenders" %>
+
+<% @object.getVisitsInfo.each do |info| %>
+    <%= info.parametr_name %>
+<% end %>

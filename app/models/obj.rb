@@ -10,6 +10,7 @@ class Obj < ActiveRecord::Base
   has_one :organization, foreign_key: 'OrganizationGenBuilder_ID'
   has_many :object_finance_by_work_types, foreign_key: 'ObjectID'
   has_many :object_tenders, foreign_key: 'ObjectID'
+  has_many :visit_infos, foreign_key: 'ObjectId'
 
   alias_attribute 'id','ObjectId' #
   #АДрес
@@ -91,6 +92,10 @@ class Obj < ActiveRecord::Base
     end
     return Date.parse(parts[0]).year
 
+  end
+
+  def getVisitsInfo
+    return VisitInfo.where(object_id: self.id).order(:object_id, :sort1, :sort2)
   end
 
   def getGPZUStatus
