@@ -1,7 +1,7 @@
 - @object.getVisitsInfo.each do |info|
   .row
     .col-sm-4
-      =info.parametr_name
+      =info.get_parametr_name.html_safe
     .col-sm-8
       - if info.percent!=nil
         .progress
