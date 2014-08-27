@@ -15,7 +15,6 @@ class VisitInfo < ActiveRecord::Base
   alias_attribute "max_data", "MaxData"
 
   def get_parametr_name
-    puts self.parametr_name
     return self.parametr_name.gsub(' ','&nbsp;')
   end
 end
