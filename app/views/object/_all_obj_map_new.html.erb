@@ -7,32 +7,16 @@
   </div>
 </div>
 <div id="map" style="height: 600px"></div>
+<div id="legend">
+    <div class="row"><div style="height:10px; width:20px; background:#158B02; float: left; margin-top: 5px;"></div><div>Жилой дом</div></div>
+    <div class="row"><div style="height:10px; width:20px; background:#A41DE2; float: left; margin-top: 5px;"></div><div>Дошкольное образовательное учреждение</div></div>
+    <div class="row"><div style="height:10px; width:20px; background:#E666DD; float: left; margin-top: 5px;"></div><div>Блок начальных классов</div></div>
+    <div class="row"><div style="height:10px; width:20px; background:#E03632; float: left; margin-top: 5px;"></div><div>Школа</div></div>
+    <div class="row"><div style="height:10px; width:20px; background:#0A6CC8; float: left; margin-top: 5px;"></div><div>Физкультурно-оздоровительный комплекс</div></div>
+    <div class="row"><div style="height:10px; width:20px; background:#143A6B; float: left; margin-top: 5px;"></div><div>Переход</div></div>
+</div>
 <script src="http://api-maps.yandex.ru/2.0.18/?load=package.standard,package.clusters&lang=ru-RU" type="text/javascript"></script>
-<!--<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>-->
-<!--<script src="http://leaflet.github.io/Leaflet.markercluster/dist/leaflet.markercluster-src.js"></script>-->
 <script>
-
-
-//    var map, marker, cluster;
-//    var markers = [];
-//    init_map = function (){
-//        map = new ymaps.Map("map", {
-//            center: [55.75,37.609],
-//            zoom: 10,
-//            controls: ['smallMapDefaultSet']
-//        });
-//        map.controls.remove('fullscreenControl');
-//        map.controls.remove('geolocationControl');
-//        map.controls.remove('searchControl');
-//        map.controls.remove('typeSelector');
-//        cluster = new ymaps.Clusterer();
-//        $.each(data['objects'], function(i, val){
-//            addMarker(val);
-//        })
-//        cluster.add(markers);
-//        map.geoObjects.add(cluster);
-//    };
-
 
 
 points = [];
@@ -40,7 +24,6 @@ var myMap;
 ymaps.ready(function () {
     yamaps_ready_function();
     filter_map_points();
-
 });
 ymaps.ready(init_map_all_object);
 

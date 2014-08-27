@@ -19,6 +19,7 @@ MarkersApointmentColours["Дороги"]='twirl#violetIcon';
 MarkersApointmentColours["ФОК"]='twirl#darkblueIcon';
 MarkersApointmentColours["Прочие объекты"]='twirl#greyIcon';
 MarkersApointmentColours["Спорт - ФОК"]='twirl#darkblueIcon';
+MarkersApointmentColours["школа"]='twirl#redIcon';
 
 
 function PieChartClusterer(options) {
