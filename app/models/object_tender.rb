@@ -4,10 +4,10 @@ class ObjectTender < ActiveRecord::Base
   self.table_name = 'vw_ObjectForMobileInfoTenders'
   self.primary_key = 'TenderId'
 
-  belongs_to :obj, foreign_key: 'ObjectId'
+  belongs_to :obj, foreign_key: 'ObjectID'
   has_one :organization, foreign_key: 'OrganizationId'
 
-  alias_attribute 'object_id','ObjectId'
+  alias_attribute 'object_id','ObjectID'
   alias_attribute 'status','TenderStatus'
   alias_attribute 'date_declaration','DataDeclaration'
   alias_attribute 'date_start','DataStart'
@@ -22,9 +22,110 @@ class ObjectTender < ActiveRecord::Base
   alias_attribute 'bid_all','TenderQtyPresent'
   alias_attribute 'bid_accept','TenderQtyAccept'
 
+  #def obj
+  #  return Obj.where(object_id = self.object_id)
+  #end
+
   def self.frendly_date (date)
     date =  Date.parse(date.to_s(:db))
     return date.year.to_s+"-"+date.month.to_s+"-"+date.day.to_s
+  end
+
+  def self.get_qty_tenders_count
+    res=Array.new
+    item = Hash.new
+    item['name']='1 заявка'
+    item['data']=Array.new
+    ObjectTender.group('Year(DataDeclaration)').where('TenderQtyAccept=1').count(:object_id).each do |k,v|
+      item['data'].push(v)
+    end
+    res.push(item)
+
+    item = Hash.new
+    item['name']='2 заявки'
+    item['data']=Array.new
+    ObjectTender.group('Year(DataDeclaration)').where('TenderQtyAccept=2').count(:object_id).each do |k,v|
+      item['data'].push(v)
+    end
+    res.push(item)
+
+    item = Hash.new
+    item['name']='3 заявки'
+    item['data']=Array.new
+    ObjectTender.group('Year(DataDeclaration)').where('TenderQtyAccept=3').count(:object_id).each do |k,v|
+      item['data'].push(v)
+    end
+    res.push(item)
+
+    item = Hash.new
+    item['name']='4 заявки и более'
+    item['data']=Array.new
+    ObjectTender.group('Year(DataDeclaration)').where('TenderQtyAccept>3').count(:object_id).each do |k,v|
+      item['data'].push(v)
+    end
+    res.push(item)
+
+    return res.reverse
+  end
+
+  def self.get_qty_tenders_sum
+    res=Array.new
+    item = Hash.new
+    item['name']='1 заявка'
+    item['data']=Array.new
+    ObjectTender.group('Year(DataDeclaration)').where('TenderQtyAccept=1').sum(:price_end).each do |k,v|
+      item['data'].push((v/(1000*1000*1000)).round 3)
+    end
+    res.push(item)
+
+    item = Hash.new
+    item['name']='2 заявки'
+    item['data']=Array.new
+    ObjectTender.group('Year(DataDeclaration)').where('TenderQtyAccept=2').sum(:price_end).each do |k,v|
+      item['data'].push((v/(1000*1000*1000)).round 3)
+    end
+    res.push(item)
+
+    item = Hash.new
+    item['name']='3 заявки'
+    item['data']=Array.new
+    ObjectTender.group('Year(DataDeclaration)').where('TenderQtyAccept=3').sum(:price_end).each do |k,v|
+      item['data'].push((v/(1000*1000*1000)).round 3)
+    end
+    res.push(item)
+
+    item = Hash.new
+    item['name']='4 заявки и более'
+    item['data']=Array.new
+    ObjectTender.group('Year(DataDeclaration)').where('TenderQtyAccept>3').sum(:price_end).each do |k,v|
+      item['data'].push((v/(1000*1000*1000)).round(3))
+    end
+    res.push(item)
+
+    return res.reverse
+  end
+
+  def self.uk_m2_price
+    res = Array.new
+    ObjectTender.select('AVG (TenderPriceEndOne) as avg').where("TenderSName = 'управляющая компания'").group('YEAR (DataFinish)').each do |v|
+      res.push v.avg/(1000)
+    end
+    return res
+  end
+  def self.uk_m2_price
+    res = Array.new
+    ObjectTender.select('AVG (TenderPriceEndOne) as avg').where("TenderSName = 'управляющая компания'").group('YEAR (DataFinish)').each do |v|
+      res.push v.avg/(1000)
+    end
+    return res
+  end
+
+  def self.gen_m2_price
+    res = Array.new
+    ObjectTender.select('AVG (TenderPriceEndOne) as avg').where("TenderSName = 'генподрядчик'").group('YEAR (DataFinish)').each do |v|
+      res.push v.avg/(1000)
+    end
+    return res
   end
 
 end
