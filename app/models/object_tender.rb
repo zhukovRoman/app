@@ -108,14 +108,14 @@ class ObjectTender < ActiveRecord::Base
   def self.uk_m2_price
     res = Array.new
     ObjectTender.select('AVG (TenderPriceEndOne) as avg').where("TenderSName = 'управляющая компания'").group('YEAR (DataFinish)').each do |v|
-      res.push v.avg/(1000)
+      res.push (v.avg/1000).round
     end
     return res
   end
   def self.uk_m2_price
     res = Array.new
     ObjectTender.select('AVG (TenderPriceEndOne) as avg').where("TenderSName = 'управляющая компания'").group('YEAR (DataFinish)').each do |v|
-      res.push v.avg/(1000)
+      res.push (v.avg/1000).round
     end
     return res
   end
@@ -123,7 +123,7 @@ class ObjectTender < ActiveRecord::Base
   def self.gen_m2_price
     res = Array.new
     ObjectTender.select('AVG (TenderPriceEndOne) as avg').where("TenderSName = 'генподрядчик'").group('YEAR (DataFinish)').each do |v|
-      res.push v.avg/(1000)
+      res.push (v.avg/1000).round
     end
     return res
   end

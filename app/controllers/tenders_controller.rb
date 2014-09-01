@@ -35,7 +35,7 @@ class TendersController < ApplicationController
     ObjectTender.group('TenderSName').sum(:price_end).each do |k, v|
       tmp = Array.new
       tmp.push (k)
-      tmp.push(v.round)
+      tmp.push(v/1000000.round)
       @result['types_chart_data'].push(tmp)
     end
 

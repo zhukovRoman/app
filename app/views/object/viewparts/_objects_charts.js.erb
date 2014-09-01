@@ -22,10 +22,10 @@ $(function () {
                 var s ="";
                 sum = 0;
                 $.each(this.series.points, function (i, point) {
-                    s += "<b>"+point.name + '</b> ' + point.y + ' рублей <br/>';
+                    s += "<b>"+point.name + '</b> ' + (point.y/1000000).toFixed(3) + ' млн рублей <br/>';
                     sum += point.y;
                 });
-                s += "<b>Стоимость по договору </b>" + sum + ' рублей <br/>'
+                s += "<b>Стоимость по договору </b>" + (sum/1000000).toFixed(3) + ' млн рублей <br/>'
                 return s;
             },
             shared: true,
@@ -76,7 +76,7 @@ $(function () {
                 var s ="";
                 sum = 0;
                 $.each(this.series.points, function (i, point) {
-                    s += "<b>"+point.name + '</b> ' + point.y + ' рублей <br/>';
+                    s += "<b>"+point.name + '</b> ' + (point.y/1000000).toFixed(3) + ' млн рублей <br/>';
                     sum += point.y;
                 });
                 //s += "<b>Стоимость по договору </b>" + sum + ' рублей <br/>'

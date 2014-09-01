@@ -266,14 +266,15 @@
             },
             labels: {
                 formatter: function () {
-                    return this.value + 'руб';
+                    return this.value/1000 + ' тыс. руб';
                 }
             },
             min: 0
         },
         tooltip: {
             crosshairs: true,
-            shared: true
+            valueSuffix: ' тыс. руб'
+
         },
         plotOptions: {
             spline: {
@@ -397,7 +398,7 @@
             tmp_res[val.year_finish]['count'] ++;
         })
         $.each(tmp_res, function(i,val){
-            res.push( parseFloat((val.m2/val.count).toFixed(2)))
+            res.push( parseFloat((val.m2/val.count).toFixed(0)))
         })
         return res
     }

@@ -351,13 +351,13 @@
                 plotShadow: false
             },
             title: {
-                text: 'Финансы по отрослям'
+                text: 'Финансы '
             },
             tooltip: {
                 formatter: function () {
                     var s ="";
                     $.each(this.series.points, function (i, point) {
-                        s += "<b>"+point.name + '</b> ' + point.y + ' млн рублей <br/>';
+                        s += "<b>"+point.name + '</b> ' + (point.y/1000000).toFixed(3) + ' млн рублей <br/>';
                     });
                     return s;
                 },

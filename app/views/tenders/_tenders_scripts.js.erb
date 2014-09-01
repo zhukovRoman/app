@@ -25,11 +25,9 @@ $(function () {
             title: {
                 text: 'Сумма конкурсов (млн рублей)'
             },
-            stackLabels: {
-                enabled: true,
-                style: {
-                    fontWeight: 'bold',
-                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+            labels: {
+                formatter: function () {
+                    return this.value + ' млн. руб';
                 }
             }
         },{
@@ -37,13 +35,6 @@ $(function () {
             opposite: true,
             title: {
                 text: 'среднее снижение цены (%)'
-            },
-            stackLabels: {
-                enabled: true,
-                style: {
-                    fontWeight: 'bold',
-                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
-                }
             }
         }],
         plotOptions: {
@@ -57,18 +48,30 @@ $(function () {
                 }
             }
         },
+        tooltip:{
+            shared: true
+        },
         series: [{
             name: 'Начальная цена',
-            data: [5, 3, 4]
+            data: [5, 3, 4],
+            tooltip: {
+                valueSuffix: ' млн. руб'
+            }
         }, {
             name: 'Итоговая цена',
-            data: [2, 2, 3]
+            data: [2, 2, 3],
+            tooltip: {
+                valueSuffix: ' млн. руб'
+            }
         },{
             type: 'spline',
             name: 'Среднее снижение',
             color: Highcharts.getOptions().colors[3],
             data: [3, 2.67, 3],
             yAxis: 1,
+            tooltip: {
+                valueSuffix: ' %'
+            },
             marker: {
                 lineWidth: 2,
                 lineColor: Highcharts.getOptions().colors[3],
@@ -115,14 +118,23 @@ $(function () {
                 }
             }
         },
+        tooltip:{
+          shared: true
+        },
         series: [{
             type: 'spline',
             name: 'УК',
-            data: data.uk_m2_price
+            data: data.uk_m2_price,
+            tooltip: {
+                valueSuffix: ' тыс. руб'
+            }
         },{
             type: 'spline',
             name: 'Генподряд',
-            data: data.gen_m2_price
+            data: data.gen_m2_price,
+            tooltip: {
+                valueSuffix: ' тыс. руб'
+            }
         }]
     });
 
@@ -144,33 +156,23 @@ $(function () {
 //            verticalAlign: 'middle',
 //            y: 50
         },
-//        tooltip: {
-//            pointFormat: '{series.name}: <b>{point.value:.1f}</b>'
-//        },
+        tooltip: {
+            valueDecimals: 0
+        },
         plotOptions: {
-            pie: {
-//                dataLabels: {
-//                    enabled: true,
-//                    distance: -50,
-//                    style: {
-//                        fontWeight: 'bold',
-//                        color: 'white',
-//                        textShadow: '0px 1px 2px black'
-//                    }
-//                },
-//                startAngle: -90,
-//                endAngle: 90,
-                center: ['50%', '50%']
-            }
+
         },
         series: [{
             type: 'pie',
             name: 'Сумма конкурсов',
             innerSize: '40%',
             data: data.types_chart_data,
+            tooltip: {
+                valueSuffix: ' млн. руб'
+            },
             dataLabels: {
                 formatter: function () {
-                    return this.y > 1 ? '<b>' + this.point.name + ':</b> ' + toFixedAndParse(this.y/(1000*1000*1000), 3) + ' млрд'  : null;
+                    return this.y > 1 ? '<b>' + this.point.name + ':</b> ' + toFixedAndParse(this.y/1000, 3) + ' млрд'  : null;
                 }
             }
         }]
