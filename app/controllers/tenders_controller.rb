@@ -1,4 +1,10 @@
 class TendersController < ApplicationController
+  before_action :change_partName
+
+  def change_partName
+    @@partName = "КП УГС - Конкурсы"
+  end
+
   def index
     authorize! :index, self
     require 'json'
@@ -11,6 +17,7 @@ class TendersController < ApplicationController
     @result['one_end']=Hash.new
     @result['one_start']=Hash.new
     @result['count']=Hash.new
+
      ObjectTender.all.each do |t|
       date = Date.parse(t.date_start.to_s)
       if (!years.include? date.year)
@@ -22,7 +29,6 @@ class TendersController < ApplicationController
       @result['one_end'][date.year] = (@result['one_end'][date.year]||0) + (t.price_m2_end||0)
       @result['one_start'][date.year] = (@result['one_start'][date.year]||0) + (t.price_m2_start||0)
       @result['prices_percent'][date.year] = (@result['prices_percent'][date.year]||0) + (t.percent_decline||0)
-
     end
     @result['years']=years
     @result['types_chart_data']=Array.new
@@ -32,6 +38,48 @@ class TendersController < ApplicationController
       tmp.push(v.round)
       @result['types_chart_data'].push(tmp)
     end
+
+    @result['types_chart_count_data']=Array.new
+    ObjectTender.group('TenderSName').count(:object_id).each do |k, v|
+      tmp = Array.new
+      tmp.push (k)
+      tmp.push(v.round)
+      @result['types_chart_count_data'].push(tmp)
+    end
+
+    @result['qty']=ObjectTender.get_qty_tenders_count
+    @result['qty_sum']=ObjectTender.get_qty_tenders_sum
+    @result['qty_years'] = Array.new
+    ObjectTender.select('YEAR(DataDeclaration) as year').distinct.each do |y|
+      @result['qty_years'].push y.year
+    end
+
+    @result['uk_m2_price']=ObjectTender.uk_m2_price
+    @result['gen_m2_price']=ObjectTender.gen_m2_price
+
+    @tenders = Array.new
+    ObjectTender.where('ObjectId IS NOT NULL').includes(:obj).each do |t|
+      tender = Hash.new
+      tender['status']=t.status
+      tender['id']=t.id
+      tender['year_finish']=t.date_finish.year
+      tender['month_finish']=t.date_finish.month
+      tender['type']=t.type
+      tender['percent']=t.percent_decline
+      tender['price_m2_end']=t.price_m2_end
+      tender['price_m2_start']=t.price_m2_start
+      tender['price_end']=t.price_end
+      tender['price_start']=t.price_begin
+      tender['bid_all']=t.bid_all||0
+      tender['bid_accept']=t.bid_accept||0
+      tender['bid_reject']=(t.bid_all||0)-(t.bid_accept||0)
+      if t.obj != nil
+        tender['appointment']=t.obj.appointment
+        @tenders.push tender
+      end
+
+    end
+
 
 
     #@result[]

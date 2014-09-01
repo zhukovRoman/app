@@ -1,5 +1,9 @@
 <script src="http://code.highcharts.com/highcharts.js"></script>
+<script type="application/javascript">
+    data = <%= @result.to_json.html_safe %>
+</script>
 
+<%= render "tenders/index2.html" %>
 
 <div class="panel panel-default" style="margin-top: 20px">
   <div class="panel-heading">Список вопросов, на которые отвечает график</div>
@@ -16,11 +20,11 @@
   <div class="panel-heading">Список вопросов, на которые отвечает график</div>
   <div class="panel-body">
     <ul>
-      <li>Как изменяется средняя цена за м2 по годам?</li>
+      <li>Как изменяется средняя цена за м2 по конкурсным процедурам разного типа по годам?</li>
     </ul>
   </div>
 </div>
-<div id="m2_chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+<div id="m2_chart_type" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
 <div class="panel panel-default" style="margin-top: 20px">
   <div class="panel-heading">Список вопросов, на которые отвечает график</div>
@@ -30,21 +34,32 @@
     </ul>
   </div>
 </div>
-<div id="types_chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+<div id="types_chart_summ" style="min-width: 310px; height: 500px; "></div>
+<div id="types_chart_count" style="min-width: 310px; height: 500px; "></div>
+
+<!--<div class="panel panel-default" style="margin-top: 20px">-->
+  <!--<div class="panel-heading">Список вопросов, на которые отвечает график</div>-->
+  <!--<div class="panel-body">-->
+    <!--<ul>-->
+      <!--<li>Сколько конкурсов имеет определенное число поданны и допущенных заявок?</li>-->
+    <!--</ul>-->
+  <!--</div>-->
+<!--</div>-->
+<!--<div id="qty_chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>-->
 
 <div class="panel panel-default" style="margin-top: 20px">
   <div class="panel-heading">Список вопросов, на которые отвечает график</div>
   <div class="panel-body">
     <ul>
-      <li>Сколько конкурсов имеет определенное число поданны и допущенных заявок?</li>
+      <li>Сколько конкурсов в определенном году имело имело опреленное число заявок?</li>
     </ul>
   </div>
 </div>
+
+<button type="button" id="qty_count_button" class="col-sm-1 btn btn-primary">Число</button>
+<button type="button" id="qty_sum_button" class="col-sm-1 btn btn-primary">Сумма</button>
 <div id="qty_chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
 <script type="application/javascript">
     <%= render "tenders/tenders_scripts.js" %>
-</script>
-<script type="application/javascript">
-  data = <%= @result.to_json.html_safe %>
 </script>

@@ -1,0 +1,446 @@
+<script type="application/javascript">
+  tenders = <%= @tenders.to_json.html_safe %>
+</script>
+
+<div class="row">
+  <div class="col-sm-2" style="padding-top: 20px">
+    <div class="btn-group-vertical">
+      <div class="btn btn-default parent_appointment selected" data-childs="['жилье', 'инженерия']">
+        <div style="text-align: left;">Жилище</div>
+        <div class="btn-group-vertical childs-appointment">
+          <button type="button" class="btn btn-default child-appointment selected">жилье</button>
+          <button type="button" class="btn btn-default child-appointment selected">инженерия</button>
+        </div>
+      </div>
+      <div class="btn btn-default parent_appointment selected" data-childs="['БНК', 'ДОУ', 'Спорт - ФОК', 'ФОК' ,'школа' ]">
+        <div style="text-align: left;">Образование</div>
+        <div class="btn-group-vertical childs-appointment">
+          <button type="button" class="btn btn-default child-appointment selected">БНК</button>
+          <button type="button" class="btn btn-default child-appointment selected">ДОУ</button>
+          <button type="button" class="btn btn-default child-appointment selected">Спорт - ФОК</button>
+          <button type="button" class="btn btn-default child-appointment selected">ФОК</button>
+          <button type="button" class="btn btn-default child-appointment selected">школа</button>
+        </div>
+      </div>
+      <div class="btn btn-default parent_appointment selected" data-childs="['Поликлиника']">
+        <div style="text-align: left;">Здравоохранение</div>
+        <div class="btn-group-vertical childs-appointment">
+          <button type="button" class="btn btn-default child-appointment selected">Поликлиника</button>
+        </div>
+      </div>
+      <div class="btn btn-default parent_appointment selected" data-childs="['Прочие объекты', 'переход', 'Дороги']">
+        <div style="text-align: left;">Прочее</div>
+        <div class="btn-group-vertical childs-appointment">
+          <button type="button" class="btn btn-default child-appointment selected">Дороги</button>
+          <button type="button" class="btn btn-default child-appointment selected">переход</button>
+          <button type="button" class="btn btn-default child-appointment selected">Прочие объекты</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="col-sm-8">
+    <div class="col-sm-12">
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="active"><a href="#m2_price_tab" role="tab" data-toggle="tab">Стоимость кв м</a></li>
+        <li><a href="#price_percent_tab" role="tab" data-toggle="tab">Среднее снижение стоимости</a></li>
+        <li><a href="#qty_tab" role="tab" data-toggle="tab">Число заявок</a></li>
+
+      </ul>
+
+      <!-- Tab panes -->
+      <div class="tab-content">
+        <div class="tab-pane active" id="m2_price_tab">
+          <div class="panel panel-default" style="margin-top: 20px">
+            <div class="panel-heading">Список вопросов, на которые отвечает график</div>
+            <div class="panel-body">
+              <ul>
+                <li>Как изменяется средняя цена за м2 по годам?</li>
+              </ul>
+            </div>
+          </div>
+          <div id="m2_price_chart" style="width: 750px; height: 500px"></div>
+        </div>
+        <div class="tab-pane" id="price_percent_tab">
+          <div class="panel panel-default" style="margin-top: 20px">
+            <div class="panel-heading">Список вопросов, на которые отвечает график</div>
+            <div class="panel-body">
+              <ul>
+                <li>Насколько в среднем понижается НМЦК при проведении конкурса по годам?</li>
+              </ul>
+            </div>
+          </div>
+          <div id="price_percent_chart" style="width: 750px; height: 500px"></div>
+        </div>
+        <div class="tab-pane" id="qty_tab">
+          <div class="panel panel-default" style="margin-top: 20px">
+            <div class="panel-heading">Список вопросов, на которые отвечает график</div>
+            <div class="panel-body">
+              <ul>
+                <li>Какое среднее число заявок подается на конкурс? </li>
+                <li>Сколько заявок в среднем допускается? </li>
+              </ul>
+            </div>
+          </div>
+          <div id="qty_line_chart" style="width: 750px; height: 500px"></div>
+        </div>
+
+      </div>
+
+    </div>
+    <div class="col-sm-12">
+      <!--<div class="btn-group tenders_years">-->
+        <!--<button type="button" class="btn btn-default selected">2011</button>-->
+        <!--<button type="button" class="btn btn-default selected">2012</button>-->
+        <!--<button type="button" class="btn btn-default selected">2013</button>-->
+        <!--<button type="button" class="btn btn-default selected">2014</button>-->
+      <!--</div>-->
+    </div>
+  </div>
+  <div class="col-sm-2">
+    <div class="btn-group-vertical tenders_types">
+      <button type="button" class="btn btn-default selected">генподрядчик</button>
+      <button type="button" class="btn btn-default selected">генпроектировщик</button>
+      <button type="button" class="btn btn-default selected">перепроектирование</button>
+      <button type="button" class="btn btn-default selected">Страхование СМР</button>
+      <button type="button" class="btn btn-default selected">ТЗ ПИР и СМР</button>
+      <button type="button" class="btn btn-default selected">ТЗ СМР</button>
+      <button type="button" class="btn btn-default selected">управляющая компания</button>
+    </div>
+  </div>
+</div>
+
+<script type="application/javascript">
+
+    type_select = function(){
+
+        //add_class
+        if($(this).hasClass('selected')){
+            $(this).removeClass('selected');
+        }
+        else {
+            $(this).addClass('selected');
+        }
+        redrawCharts();
+    }
+
+    getAppointmentFilter = function (){
+        var res = [];
+        $.each($(".child-appointment.selected"), function() {
+            res.push($(this).text())
+        })
+        return res;
+    }
+
+    getTypeFilter = function() {
+        var res = [];
+        $.each($(".tenders_types button.selected"), function() {
+            res.push($(this).text())
+        })
+        return res;
+    }
+
+    appointment_group_select = function(){
+        $.each($("#appointment_filter label"), function() {
+            $(this).removeClass('active');
+        })
+        setTimeout(function() {
+            $.each($("#appointment_filter_top label.active"), function() {
+                arr = eval($(this).attr('data-childs'))
+                $.each(arr, function(i, val){
+                    $("label[id='"+val+"'").addClass('active')
+                })
+            })
+           redrawCharts();
+        }, 100)
+    }
+
+    appointment_select = function(){
+        event.cancelBubble = true;
+        //add_class
+        if($(this).hasClass('selected')){
+            $(this).removeClass('selected');
+        }
+        else {
+            $(this).addClass('selected');
+        }
+        parent = $(this).parent()
+
+        var all = true;
+        $.each (parent.children('button'), function(i,val){
+            if (!$(val).hasClass('selected')){
+                all = false;
+            }
+        })
+        if (all)
+            $(this).parent().parent().addClass('selected');
+        else
+            $(this).parent().parent().removeClass('selected');
+
+        redrawCharts();
+    }
+
+    parent_appointment_select = function(){
+        //add_class
+        if($(this).hasClass('selected')){
+            $(this).removeClass('selected');
+        }
+        else {
+            $(this).addClass('selected');
+        }
+        var all = true;
+        buttons = $(this).children('.childs-appointment').children('button')
+        $.each (buttons, function(i,val){
+            if (!$(val).hasClass('selected')){
+                all = false;
+            }
+            console.log(val, all)
+        })
+
+        if (all){
+            $.each (buttons, function(i,val){
+               // console.log("delete")
+                $(val).removeClass('selected')
+            })
+        }
+        else
+            $.each (buttons, function(i,val){
+                //console.log("add")
+                $(val).addClass('selected')
+            })
+        redrawCharts();
+    }
+
+    $(function(){
+        //$("#appointment_filter label").change(redrawCharts);
+        $("#appointment_filter_top label").change(appointment_group_select);
+        $('.child-appointment').click(appointment_select);
+        $('.parent_appointment').click(parent_appointment_select);
+        $('.tenders_types button').click(type_select);
+        redrawCharts();
+    })
+
+    filtered_tenders = [];
+
+    redrawCharts = function(){
+        filter_tenders();
+        m2_price_chart.series[0].setData(getDataForM2PriceChart())
+        price_percent_chart.series[0].setData(getDataForPricePercentChart())
+        qty_line_chart.series[0].setData(getDataForQtyLineChart()[0])
+        qty_line_chart.series[1].setData(getDataForQtyLineChart()[1])
+    }
+
+    filter_tenders = function(){
+        types = getTypeFilter();
+        appointments = getAppointmentFilter();
+        filtered_tenders.length=0;
+        $.each(tenders, function(i,t){
+            if ($.inArray( t.type, types )!=-1 &&
+                    $.inArray(t.appointment, appointments)!= -1)
+            {
+                filtered_tenders.push(t);
+            }
+        })
+        console.log(filtered_tenders.length)
+    }
+
+
+
+    m2_price_chart = new Highcharts.Chart({
+        credits:  {
+            enabled: false
+        },
+        chart: {
+            type: 'spline',
+            renderTo:'m2_price_chart'
+        },
+        title: {
+            text: 'Изменение средней стоимости кв. м. '
+        },
+        xAxis: {
+            categories: data.years
+        },
+        yAxis: {
+            title: {
+                text: 'Средняя стоимость кв. м.'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + 'руб';
+                }
+            },
+            min: 0
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        series: [{
+            name: 'средняя стоимость кв. м.',
+            data: [{y: 0}]
+        }]
+    });
+
+    price_percent_chart = new Highcharts.Chart({
+        credits:  {
+            enabled: false
+        },
+        chart: {
+            type: 'spline',
+            renderTo:'price_percent_chart'
+        },
+        title: {
+            text: 'Среднее снижение цены от НМЦК'
+        },
+        xAxis: {
+            categories: data.years
+        },
+        yAxis: {
+            title: {
+                text: 'Среднее снижение цены (%)'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '%';
+                }
+            },
+            min: 0
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true,
+            valueSuffix: '%'
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        series: [{
+            name: 'Снижение цены',
+            data: [{y: 0}]
+        }]
+    });
+
+    qty_line_chart = new Highcharts.Chart({
+        credits:  {
+            enabled: false
+        },
+        chart: {
+            type: 'spline',
+            renderTo:'qty_line_chart'
+        },
+        title: {
+            text: 'Среднее число заявок'
+        },
+        xAxis: {
+            categories: data.years
+        },
+        yAxis: {
+            title: {
+                text: 'Число заявок'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            },
+            min: 0
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true,
+            valueSuffix: ' шт'
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        series: [{
+            name: 'Среднее число поданных заявок',
+            data: [{y: 0}]
+        },
+        {
+            name: 'Среднее число допущенных заявок',
+            data: [{y: 0}]
+        }]
+    });
+
+
+    getDataForM2PriceChart = function()
+    {
+        var res = []
+        var tmp_res = {};
+        $.each(filtered_tenders, function(i,val){
+           if (tmp_res[val.year_finish]==null)
+            tmp_res[val.year_finish]={m2:0, count:0}
+
+            tmp_res[val.year_finish]['m2'] += val.price_m2_end;
+            tmp_res[val.year_finish]['count'] ++;
+        })
+        $.each(tmp_res, function(i,val){
+            res.push( parseFloat((val.m2/val.count).toFixed(2)))
+        })
+        return res
+    }
+
+    getDataForPricePercentChart = function()
+    {
+        var res = []
+        var tmp_res = {};
+        $.each(filtered_tenders, function(i,val){
+            if (tmp_res[val.year_finish]==null)
+                tmp_res[val.year_finish]={percent:0, count:0}
+
+            tmp_res[val.year_finish]['percent'] += val.percent;
+            tmp_res[val.year_finish]['count'] ++;
+        })
+        $.each(tmp_res, function(i,val){
+            var t = parseFloat((val.percent/val.count).toFixed(3))
+            res.push(t);
+        })
+        return res
+    }
+
+    getDataForQtyLineChart = function()
+    {
+        var res_all = [];
+        var res_accept = [];
+        var tmp_res = {};
+        $.each(filtered_tenders, function(i,val){
+            if (tmp_res[val.year_finish]==null)
+                tmp_res[val.year_finish]={all:0, count:0, accept:0}
+
+            tmp_res[val.year_finish]['all'] += val.bid_all;
+            tmp_res[val.year_finish]['accept'] += val.bid_accept;
+            tmp_res[val.year_finish]['count'] ++;
+        });
+
+        $.each(tmp_res, function(i,val){
+            res_all.push(parseFloat((val.all/val.count).toFixed(3)));
+            res_accept.push(parseFloat((val.accept/val.count).toFixed(3)));
+        });
+
+        return [res_all, res_accept];
+    }
+
+
+</script>
