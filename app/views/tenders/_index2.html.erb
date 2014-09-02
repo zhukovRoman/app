@@ -1,6 +1,7 @@
 <script type="application/javascript">
   tenders = <%= @tenders.to_json.html_safe %>
 </script>
+<script src="http://code.highcharts.com/modules/drilldown.js"></script>
 
 <div class="row">
   <div class="col-sm-2" style="padding-top: 20px">
@@ -228,6 +229,8 @@
         price_percent_chart.series[0].setData(getDataForPricePercentChart())
         qty_line_chart.series[0].setData(getDataForQtyLineChart()[0])
         qty_line_chart.series[1].setData(getDataForQtyLineChart()[1])
+
+        //console.log(m2_price_chart.drilldown.series[0])
     }
 
     filter_tenders = function(){
@@ -252,13 +255,29 @@
         },
         chart: {
             type: 'spline',
-            renderTo:'m2_price_chart'
+            renderTo:'m2_price_chart',
+            events: {
+                drilldown: function (e) {
+                    if (!e.seriesOptions) {
+                        var chart = this,
+                        drilldowns = getDrillDownDataForM2Price()[0],
+                        series = drilldowns[e.point.name];
+                        chart.addSeriesAsDrilldown(e.point, series);
+                    }
+                },
+                drillup: function(e){
+                    setTimeout(function(){
+                        m2_price_chart.series[0].setData(getDataForM2PriceChart())
+                    }, 10)
+                }
+            }
         },
         title: {
             text: 'Изменение средней стоимости кв. м. '
         },
         xAxis: {
-            categories: data.years
+            type: 'category'
+//            categories: data.years
         },
         yAxis: {
             title: {
@@ -286,9 +305,12 @@
             }
         },
         series: [{
-            name: 'средняя стоимость кв. м.',
+            name: 'средняя стоимость кв. м по годам',
             data: [{y: 0}]
-        }]
+        }],
+        drilldown: {
+            series: []
+        }
     });
 
     price_percent_chart = new Highcharts.Chart({
@@ -297,7 +319,22 @@
         },
         chart: {
             type: 'spline',
-            renderTo:'price_percent_chart'
+            renderTo:'price_percent_chart',
+            events: {
+                drilldown: function (e) {
+                    if (!e.seriesOptions) {
+                        var chart = this,
+                                drilldowns = getDrillDownDataForM2Price()[1],
+                                series = drilldowns[e.point.name];
+                        chart.addSeriesAsDrilldown(e.point, series);
+                    }
+                },
+                drillup: function(e){
+                    setTimeout(function(){
+                        price_percent_chart.series[0].setData(getDataForPricePercentChart())
+                    }, 10)
+                }
+            }
         },
         title: {
             text: 'Среднее снижение цены от НМЦК'
@@ -333,7 +370,10 @@
         series: [{
             name: 'Снижение цены',
             data: [{y: 0}]
-        }]
+        }],
+        drilldown: {
+            series: []
+        }
     });
 
     qty_line_chart = new Highcharts.Chart({
@@ -372,6 +412,39 @@
                     radius: 4,
                     lineColor: '#666666',
                     lineWidth: 1
+                },
+                point: {
+                    events: {
+                        click: function () {
+                            console.log(this);
+                            var drilldown = this.drilldown;
+                            var chart = qty_line_chart;
+                            console.log(drilldown)
+                            if (drilldown) {
+
+                                        var drilldowns = getDrillDownDataForM2Price()[2],
+                                        series = drilldowns[this.name];
+                                console.log(series, drilldowns);
+                                chart.xAxis[0].setCategories(months);
+
+                                while (chart.series.length > 0) {
+                                    chart.series[0].remove(true);
+                                }
+                                chart.addSeries({name: 'Среднее число поданных заявок', data: series['data_all'] })
+                                chart.addSeries({name: 'Среднее число допущенных заявок', data: series['data_accept'] })
+                            }
+                            else {
+
+//                                while (chart.series.length > 0) {
+//                                    chart.series[0].remove(true);
+//                                }
+                                chart.xAxis[0].setCategories(data.years);
+                                chart.series[0].setData(getDataForQtyLineChart()[0], false)
+                                chart.series[1].setData(getDataForQtyLineChart()[1])
+
+                            }
+                        }
+                    }
                 }
             }
         },
@@ -383,6 +456,7 @@
             name: 'Среднее число допущенных заявок',
             data: [{y: 0}]
         }]
+
     });
 
 
@@ -396,11 +470,11 @@
 
             tmp_res[val.year_finish]['m2'] += val.price_m2_end;
             tmp_res[val.year_finish]['count'] ++;
-        })
+        });
         $.each(tmp_res, function(i,val){
-            res.push( parseFloat((val.m2/val.count).toFixed(0)))
+            res.push({y:parseFloat((val.m2/val.count).toFixed(0)), name: i, drilldown:true});
         })
-        return res
+        return res;
     }
 
     getDataForPricePercentChart = function()
@@ -415,8 +489,7 @@
             tmp_res[val.year_finish]['count'] ++;
         })
         $.each(tmp_res, function(i,val){
-            var t = parseFloat((val.percent/val.count).toFixed(3))
-            res.push(t);
+            res.push({y:parseFloat((val.percent/val.count).toFixed(0)), name: i, drilldown:true});
         })
         return res
     }
@@ -436,12 +509,75 @@
         });
 
         $.each(tmp_res, function(i,val){
-            res_all.push(parseFloat((val.all/val.count).toFixed(3)));
-            res_accept.push(parseFloat((val.accept/val.count).toFixed(3)));
+            //res_all.push(parseFloat((val.all/val.count).toFixed(3)));
+            //res_accept.push(parseFloat((val.accept/val.count).toFixed(3)));
+            res_all.push({y:parseFloat((val.all/val.count).toFixed(3)), name: i, drilldown:true});
+            res_accept.push({y:parseFloat((val.accept/val.count).toFixed(3)), name: i, drilldown:true});
         });
 
         return [res_all, res_accept];
     }
+
+    months = ['Янв', 'Фев', 'Март', 'Апр', 'Май', 'Июнь', 'Июль', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек']
+    drillDownMonthsCategories = [
+        ['Янв',0],['Фев',0],['Март',0],['Апр',0],['Май',0],['Июнь',0],['Июль',0],['Авг',0],['Сен',0],['Окт',0],['Ноя',0],['Дек',0]
+    ]
+    getDrillDownDataForM2Price = function (){
+        res={};
+        avgs = {};
+        percents_data={};
+        qty_data={};
+
+        $.each(filtered_tenders, function(i,val){
+          if (avgs[val.year_finish]==null)
+            avgs[val.year_finish] = {}
+
+          if (avgs[val.year_finish][val.month_finish]==null)
+            avgs[val.year_finish][val.month_finish]={m2: 0, count:0, percent: 0, qty_all: 0, qty_accept:0}
+
+            avgs[val.year_finish][val.month_finish]['m2']+=val.price_m2_end
+            avgs[val.year_finish][val.month_finish]['percent']+=val.percent
+            avgs[val.year_finish][val.month_finish]['qty_all']+=val.bid_all
+            avgs[val.year_finish][val.month_finish]['qty_accept']+=val.bid_accept
+            avgs[val.year_finish][val.month_finish]['count']++;
+
+        })
+
+
+
+        $.each (avgs, function(year,val){
+            if(res[val.year_finish]==null)
+                res[year]={name: year+'', data:[
+                    ['Янв',0],['Фев',0],['Март',0],['Апр',0],['Май',0],['Июнь',0],['Июль',0],['Авг',0],['Сен',0],['Окт',0],['Ноя',0],['Дек',0]
+                ]}
+            $.each(val, function(month, month_data){
+                res[year]['data'][month-1][1]=  parseFloat((month_data.m2/(month_data['count'])).toFixed(3))
+            })
+        })
+
+        $.each (avgs, function(year,val){
+            if(percents_data[val.year_finish]==null)
+                percents_data[year]={name: year+'', data:[
+                    ['Янв',0],['Фев',0],['Март',0],['Апр',0],['Май',0],['Июнь',0],['Июль',0],['Авг',0],['Сен',0],['Окт',0],['Ноя',0],['Дек',0]
+                ]}
+            $.each(val, function(month, month_data){
+                percents_data[year]['data'][month-1][1]=parseFloat((month_data.percent/(month_data['count'])).toFixed(3))
+            })
+        })
+
+        $.each (avgs, function(year,val){
+            if(qty_data[val.year_finish]==null)
+                qty_data[year]={name: year+'', data_all:[], data_accept:[]}
+            $.each(val, function(month, month_data){
+                qty_data[year]['data_all'][month-1]=parseFloat((month_data.qty_all/(month_data['count'])).toFixed(3))
+                qty_data[year]['data_accept'][month-1]=parseFloat((month_data.qty_accept/(month_data['count'])).toFixed(3))
+            })
+        })
+
+
+        return [res,percents_data, qty_data];
+    }
+
 
 
 </script>

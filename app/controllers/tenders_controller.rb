@@ -65,11 +65,11 @@ class TendersController < ApplicationController
       tender['year_finish']=t.date_finish.year
       tender['month_finish']=t.date_finish.month
       tender['type']=t.type
-      tender['percent']=t.percent_decline
-      tender['price_m2_end']=t.price_m2_end
-      tender['price_m2_start']=t.price_m2_start
-      tender['price_end']=t.price_end
-      tender['price_start']=t.price_begin
+      tender['percent']=t.percent_decline||0
+      tender['price_m2_end']=t.price_m2_end||0
+      tender['price_m2_start']=t.price_m2_start||0
+      tender['price_end']=t.price_end||0
+      tender['price_start']=t.price_begin||0
       tender['bid_all']=t.bid_all||0
       tender['bid_accept']=t.bid_accept||0
       tender['bid_reject']=(t.bid_all||0)-(t.bid_accept||0)
