@@ -30,12 +30,6 @@ $(function () {
                     return this.value + ' млн. руб';
                 }
             }
-        },{
-            min: 0,
-            opposite: true,
-            title: {
-                text: 'среднее снижение цены (%)'
-            }
         }],
         plotOptions: {
             column: {
@@ -49,11 +43,27 @@ $(function () {
             }
         },
         tooltip:{
-            shared: true
+            formatter: function() {
+                var result = '<b>' + this.x + '</b>';
+                $.each(this.points, function(i, datum) {
+                    console.log(datum)
+                    result += '<br /> <i style="color: '+datum.point.series.color+'">' + datum.series.name + '</i>: ' + datum.y + ' человек';
+
+                });
+                //console.log(this.points)
+                result += '<br />Среднее снижение цены ' + this.points[0].point.percent + '%'
+
+                return result;
+            },
+            //headerFormat: '<div style="font-size:13px">{point.key}</div>',
+            //pointFormat: '<div><b>{series.name}</b>: ' + '{point.y} человек</div>' ,
+            //footerFormat: '',
+            shared: true,
+            useHTML: true
         },
         series: [{
             name: 'Начальная цена',
-            data: [5, 3, 4],
+            data: [{y: 5},{y: 3},{y: 4}],
             tooltip: {
                 valueSuffix: ' млн. руб'
             }
@@ -62,20 +72,6 @@ $(function () {
             data: [2, 2, 3],
             tooltip: {
                 valueSuffix: ' млн. руб'
-            }
-        },{
-            type: 'spline',
-            name: 'Среднее снижение',
-            color: Highcharts.getOptions().colors[3],
-            data: [3, 2.67, 3],
-            yAxis: 1,
-            tooltip: {
-                valueSuffix: ' %'
-            },
-            marker: {
-                lineWidth: 2,
-                lineColor: Highcharts.getOptions().colors[3],
-                fillColor: 'white'
             }
         }]
     });
@@ -237,7 +233,7 @@ $(function() {
             renderTo:'qty_chart'
         },
         title: {
-            text: 'Число конкурсов по числу допущенных заявок'
+            text: 'Конкурсы по числу допущенных заявок'
         },
         xAxis: {
             categories: data.qty_years
@@ -256,8 +252,9 @@ $(function() {
             }
         }],
         tooltip: {
-            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
+            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y} </b> ({point.percentage:.0f}%)<br/>',
             shared: true
+            //valueSuffix: " конкурсов"
         },
         plotOptions: {
             column: {
@@ -280,8 +277,8 @@ $(function () {
     console.log(data);
     var series = getChartData();
     prices_chart.series[0].setData(series[0], false);
-    prices_chart.series[1].setData(series[1], false);
-    prices_chart.series[2].setData(series[2]);
+    prices_chart.series[1].setData(series[1]);
+   // prices_chart.series[2].setData(series[2]);
 //    m2_chart.series[0].setData(series[5]);
     getQtyChartData();
 
@@ -289,7 +286,7 @@ $(function () {
         while(qty_chart.series.length > 0)
             qty_chart.series[0].remove(false);
         $.each (data.qty, function (i,qty){
-            qty_chart.addSeries(qty, false);
+            qty_chart.addSeries({data: qty.data, name: qty.name, tooltip: { valueSuffix: ' конкурсов'}}, false);
         })
         qty_chart.redraw();
 
@@ -300,12 +297,21 @@ $(function () {
         while(qty_chart.series.length > 0)
             qty_chart.series[0].remove(false);
         $.each (data.qty_sum, function (i,qty){
-            qty_chart.addSeries(qty, false);
+            qty_chart.addSeries({data: qty.data, name: qty.name, tooltip: { valueSuffix: ' млрд'}}, false);
         })
         qty_chart.redraw();
-
     })
-    //console.log(qty_chart.series[0])
+
+    function changeType(type) {
+        var chart = qty_chart;
+        for (var i =0; i < chart.series.length; i++){
+            chart.series[i].update({
+                stacking: type
+            }, false);
+        }
+        chart.redraw();
+    };
+
 
 })
 
@@ -320,8 +326,8 @@ getChartData = function (){
     res[5] = [];
 
     $.each (data.prices_begin, function (i,val){
-        res[0].push(toFixedAndParse(data.prices_begin[i]/1000000))
-        res[1].push(toFixedAndParse(data.prices_end[i]/1000000));
+        res[0].push({y: toFixedAndParse(data.prices_begin[i]/1000000), percent: toFixedAndParse(data.prices_percent[i]/data.count[i],2)})
+        res[1].push({y: toFixedAndParse(data.prices_end[i]/1000000), percent: toFixedAndParse(data.prices_percent[i]/data.count[i],2)});
         res[2].push(toFixedAndParse(data.prices_percent[i]/data.count[i],2));
         res[3].push(toFixedAndParse(data.one_start[i],2))
         res[4].push(toFixedAndParse(data.one_end[i],2))
@@ -334,7 +340,7 @@ getChartData = function (){
 
 getQtyChartData = function (){
     $.each (data.qty, function (i,qty){
-        qty_chart.addSeries(qty, false);
+        qty_chart.addSeries({data: qty.data, name: qty.name, tooltip: { valueSuffix: ' конкурсов'}}, false);
     })
     qty_chart.redraw();
 }

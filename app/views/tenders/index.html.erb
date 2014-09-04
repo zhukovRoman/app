@@ -56,8 +56,31 @@
   </div>
 </div>
 
-<button type="button" id="qty_count_button" class="col-sm-1 btn btn-primary">Число</button>
-<button type="button" id="qty_sum_button" class="col-sm-1 btn btn-primary">Сумма</button>
+<div class="row">
+  <div class="pull-left">
+    <button type="button" id="qty_count_button" class="btn btn-primary">Число</button>
+    <button type="button" id="qty_sum_button" class="btn btn-primary">Сумма</button>
+  </div>
+  <div class="pull-right">
+    <button type="button" id="qty_percent_button" onclick="changeType('percent')" class="btn btn-primary">В процентах</button>
+    <button type="button" id="qty_absolute_button" onclick="changeType('normal')" class="btn btn-primary">В абсолютных значениях</button>
+  </div>
+</div>
+
+<script type="application/javascript">
+    function changeType(type) {
+        for (var i =0; i < qty_chart.series.length; i++){
+            qty_chart.series[i].update({
+                stacking: type
+            }, false);
+        }
+        if (type=='percent')
+            qty_chart.yAxis[0].setTitle({text: '%'}, false)
+        if (type=='normal')
+            qty_chart.yAxis[0].setTitle({text: ''}, false)
+        qty_chart.redraw();
+    };
+</script>
 <div id="qty_chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
 <script type="application/javascript">

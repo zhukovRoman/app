@@ -8,14 +8,14 @@
     <div class="btn-group-vertical">
       <div class="btn btn-default parent_appointment selected" data-childs="['жилье', 'инженерия']">
         <div style="text-align: left;">Жилище</div>
-        <div class="btn-group-vertical childs-appointment">
+        <div class="btn-group-vertical childs-appointment house_appointment">
           <button type="button" class="btn btn-default child-appointment selected">жилье</button>
           <button type="button" class="btn btn-default child-appointment selected">инженерия</button>
         </div>
       </div>
       <div class="btn btn-default parent_appointment selected" data-childs="['БНК', 'ДОУ', 'Спорт - ФОК', 'ФОК' ,'школа' ]">
         <div style="text-align: left;">Образование</div>
-        <div class="btn-group-vertical childs-appointment">
+        <div class="btn-group-vertical childs-appointment social_appointment">
           <button type="button" class="btn btn-default child-appointment selected">БНК</button>
           <button type="button" class="btn btn-default child-appointment selected">ДОУ</button>
           <button type="button" class="btn btn-default child-appointment selected">Спорт - ФОК</button>
@@ -25,7 +25,7 @@
       </div>
       <div class="btn btn-default parent_appointment selected" data-childs="['Поликлиника']">
         <div style="text-align: left;">Здравоохранение</div>
-        <div class="btn-group-vertical childs-appointment">
+        <div class="btn-group-vertical childs-appointment social_appointment">
           <button type="button" class="btn btn-default child-appointment selected">Поликлиника</button>
         </div>
       </div>
@@ -43,7 +43,8 @@
   <div class="col-sm-8">
     <div class="col-sm-12">
       <ul class="nav nav-tabs" role="tablist">
-        <li class="active"><a href="#m2_price_tab" role="tab" data-toggle="tab">Стоимость кв м</a></li>
+        <li class="active"><a href="#m2_house_price_tab" role="tab" data-toggle="tab">Стоимость кв м жилья</a></li>
+        <li><a href="#m2_social_price_tab" role="tab" data-toggle="tab">Стоимость одного места социалки</a></li>
         <li><a href="#price_percent_tab" role="tab" data-toggle="tab">Среднее снижение стоимости</a></li>
         <li><a href="#qty_tab" role="tab" data-toggle="tab">Число заявок</a></li>
 
@@ -51,16 +52,27 @@
 
       <!-- Tab panes -->
       <div class="tab-content">
-        <div class="tab-pane active" id="m2_price_tab">
+        <div class="tab-pane active" id="m2_house_price_tab">
           <div class="panel panel-default" style="margin-top: 20px">
             <div class="panel-heading">Список вопросов, на которые отвечает график</div>
             <div class="panel-body">
               <ul>
-                <li>Как изменяется средняя цена за м2 по годам?</li>
+                <li>Как изменяется средняя цена за м2 жилья по годам?</li>
               </ul>
             </div>
           </div>
-          <div id="m2_price_chart" style="width: 750px; height: 500px"></div>
+          <div id="m2_house_price_chart" style="width: 750px; height: 500px"></div>
+        </div>
+        <div class="tab-pane" id="m2_social_price_tab">
+          <div class="panel panel-default" style="margin-top: 20px">
+            <div class="panel-heading">Список вопросов, на которые отвечает график</div>
+            <div class="panel-body">
+              <ul>
+                <li>Как изменяется средняя цена за 1 место социальных объектов по годам?</li>
+              </ul>
+            </div>
+          </div>
+          <div id="m2_social_price_chart" style="width: 750px; height: 500px"></div>
         </div>
         <div class="tab-pane" id="price_percent_tab">
           <div class="panel panel-default" style="margin-top: 20px">
@@ -114,7 +126,6 @@
 <script type="application/javascript">
 
     type_select = function(){
-
         //add_class
         if($(this).hasClass('selected')){
             $(this).removeClass('selected');
@@ -136,6 +147,22 @@
     getTypeFilter = function() {
         var res = [];
         $.each($(".tenders_types button.selected"), function() {
+            res.push($(this).text())
+        })
+        return res;
+    }
+
+    getHouseFilter = function(){
+        var res = [];
+        $.each($(".house_appointment button.selected"), function() {
+            res.push($(this).text())
+        })
+        return res;
+    }
+
+    getSocialFilter = function(){
+        var res = [];
+        $.each($(".social_appointment button.selected"), function() {
             res.push($(this).text())
         })
         return res;
@@ -195,7 +222,7 @@
             if (!$(val).hasClass('selected')){
                 all = false;
             }
-            console.log(val, all)
+            //console.log(val, all)
         })
 
         if (all){
@@ -226,6 +253,7 @@
     redrawCharts = function(){
         filter_tenders();
         m2_price_chart.series[0].setData(getDataForM2PriceChart())
+        m2_social_price_chart.series[0].setData(getDataForM2SocialPriceChart())
         price_percent_chart.series[0].setData(getDataForPricePercentChart())
         qty_line_chart.series[0].setData(getDataForQtyLineChart()[0])
         qty_line_chart.series[1].setData(getDataForQtyLineChart()[1])
@@ -244,7 +272,7 @@
                 filtered_tenders.push(t);
             }
         })
-        console.log(filtered_tenders.length)
+        //console.log(filtered_tenders.length)
     }
 
 
@@ -255,12 +283,12 @@
         },
         chart: {
             type: 'spline',
-            renderTo:'m2_price_chart',
+            renderTo:'m2_house_price_chart',
             events: {
                 drilldown: function (e) {
                     if (!e.seriesOptions) {
                         var chart = this,
-                        drilldowns = getDrillDownDataForM2Price()[0],
+                        drilldowns = getDrillDownDataForM2Price()[0][0],
                         series = drilldowns[e.point.name];
                         chart.addSeriesAsDrilldown(e.point, series);
                     }
@@ -306,6 +334,70 @@
         },
         series: [{
             name: 'средняя стоимость кв. м по годам',
+            data: [{y: 0}]
+        }],
+        drilldown: {
+            series: []
+        }
+    });
+
+    m2_social_price_chart = new Highcharts.Chart({
+        credits:  {
+            enabled: false
+        },
+        chart: {
+            type: 'spline',
+            renderTo:'m2_social_price_chart',
+            events: {
+                drilldown: function (e) {
+                    if (!e.seriesOptions) {
+                        var chart = this,
+                                drilldowns = getDrillDownDataForM2Price()[0][1],
+                                series = drilldowns[e.point.name];
+                        chart.addSeriesAsDrilldown(e.point, series);
+                    }
+                },
+                drillup: function(e){
+                    setTimeout(function(){
+                        m2_social_price_chart.series[0].setData(getDataForM2SocialPriceChart())
+                    }, 10)
+                }
+            }
+        },
+        title: {
+            text: 'Изменение средней стоимости одного места '
+        },
+        xAxis: {
+            type: 'category'
+//            categories: data.years
+        },
+        yAxis: {
+            title: {
+                text: 'Средняя стоимость места'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value/1000 + ' тыс. руб';
+                }
+            },
+            min: 0
+        },
+        tooltip: {
+            crosshairs: true,
+            valueSuffix: ' тыс. руб'
+
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        series: [{
+            name: 'средняя стоимость места по годам',
             data: [{y: 0}]
         }],
         drilldown: {
@@ -464,9 +556,34 @@
     {
         var res = []
         var tmp_res = {};
-        $.each(filtered_tenders, function(i,val){
+
+        $.each(tenders, function(i,val){
+           if ($.inArray(val.type, types)==-1 || $.inArray(val.appointment, getHouseFilter())==-1)
+           return;
+
            if (tmp_res[val.year_finish]==null)
             tmp_res[val.year_finish]={m2:0, count:0}
+
+            tmp_res[val.year_finish]['m2'] += val.price_m2_end;
+            tmp_res[val.year_finish]['count'] ++;
+        });
+        $.each(tmp_res, function(i,val){
+            res.push({y:parseFloat((val.m2/val.count).toFixed(0)), name: i, drilldown:true});
+        })
+        return res;
+    }
+
+    getDataForM2SocialPriceChart = function()
+    {
+        var res = []
+        var tmp_res = {};
+
+        $.each(tenders, function(i,val){
+            if ($.inArray(val.type, types)==-1 || $.inArray(val.appointment, getSocialFilter())==-1)
+                return;
+
+            if (tmp_res[val.year_finish]==null)
+                tmp_res[val.year_finish]={m2:0, count:0}
 
             tmp_res[val.year_finish]['m2'] += val.price_m2_end;
             tmp_res[val.year_finish]['count'] ++;
@@ -523,7 +640,8 @@
         ['Янв',0],['Фев',0],['Март',0],['Апр',0],['Май',0],['Июнь',0],['Июль',0],['Авг',0],['Сен',0],['Окт',0],['Ноя',0],['Дек',0]
     ]
     getDrillDownDataForM2Price = function (){
-        res={};
+        m2_house={};
+        m2_social={};
         avgs = {};
         percents_data={};
         qty_data={};
@@ -533,9 +651,10 @@
             avgs[val.year_finish] = {}
 
           if (avgs[val.year_finish][val.month_finish]==null)
-            avgs[val.year_finish][val.month_finish]={m2: 0, count:0, percent: 0, qty_all: 0, qty_accept:0}
+            avgs[val.year_finish][val.month_finish]={m2_house: 0, house_count: 0, social_count:0,
+                                                    m2_social: 0, count:0, percent: 0, qty_all: 0, qty_accept:0}
 
-            avgs[val.year_finish][val.month_finish]['m2']+=val.price_m2_end
+            //avgs[val.year_finish][val.month_finish]['m2']+=val.price_m2_end
             avgs[val.year_finish][val.month_finish]['percent']+=val.percent
             avgs[val.year_finish][val.month_finish]['qty_all']+=val.bid_all
             avgs[val.year_finish][val.month_finish]['qty_accept']+=val.bid_accept
@@ -543,15 +662,60 @@
 
         })
 
+        $.each(tenders, function(i,val){
+            if ($.inArray(val.type, types)!=-1 && $.inArray(val.appointment, getSocialFilter())!=-1){
+                if (avgs[val.year_finish]==null)
+                    avgs[val.year_finish] = {}
+
+                if (avgs[val.year_finish][val.month_finish]==null)
+                    avgs[val.year_finish][val.month_finish]={m2_house: 0, house_count: 0, social_count:0,
+                        m2_social: 0, count:0, percent: 0, qty_all: 0, qty_accept:0}
+
+
+                avgs[val.year_finish][val.month_finish]['m2_social']+=val.price_m2_end;
+                avgs[val.year_finish][val.month_finish]['social_count']++;
+            }
+            if ($.inArray(val.type, types)!=-1 && $.inArray(val.appointment, getHouseFilter())!=-1)
+            {
+                if (avgs[val.year_finish]==null)
+                    avgs[val.year_finish] = {}
+
+                if (avgs[val.year_finish][val.month_finish]==null)
+                    avgs[val.year_finish][val.month_finish]={m2_house: 0, house_count: 0, social_count:0,
+                        m2_social: 0, count:0, percent: 0, qty_all: 0, qty_accept:0}
+
+
+                avgs[val.year_finish][val.month_finish]['m2_house']+=val.price_m2_end;
+                avgs[val.year_finish][val.month_finish]['house_count']++;
+            }
+
+
+
+
+        })
 
 
         $.each (avgs, function(year,val){
-            if(res[val.year_finish]==null)
-                res[year]={name: year+'', data:[
+            if(m2_house[year]==null)
+                m2_house[year]={name: year+'', data:[
+                    ['Янв',0],['Фев',0],['Март',0],['Апр',0],['Май',0],['Июнь',0],['Июль',0],['Авг',0],['Сен',0],['Окт',0],['Ноя',0],['Дек',0]
+                ]}
+            //console.log(m2_house)
+            $.each(val, function(month, month_data){
+                //console.log((month_data.m2_house/(month_data['house_count'])))
+                m2_house[year]['data'][month-1][1]= parseFloat((month_data.m2_house/(month_data['house_count'])).toFixed(3))||0
+                //console.log(parseFloat((month_data.m2_house/(month_data['house_count'])).toFixed(3)),month_data.m2_house,(month_data['house_count']) )
+            })
+            //console.log(m2_house)
+        })
+        $.each (avgs, function(year,val){
+            if(m2_social[year]==null)
+                m2_social[year]={name: year+'', data:[
                     ['Янв',0],['Фев',0],['Март',0],['Апр',0],['Май',0],['Июнь',0],['Июль',0],['Авг',0],['Сен',0],['Окт',0],['Ноя',0],['Дек',0]
                 ]}
             $.each(val, function(month, month_data){
-                res[year]['data'][month-1][1]=  parseFloat((month_data.m2/(month_data['count'])).toFixed(3))
+                m2_social[year]['data'][month-1][1]=  parseFloat((month_data.m2_social/(month_data['social_count'])).toFixed(3))||0
+
             })
         })
 
@@ -561,7 +725,7 @@
                     ['Янв',0],['Фев',0],['Март',0],['Апр',0],['Май',0],['Июнь',0],['Июль',0],['Авг',0],['Сен',0],['Окт',0],['Ноя',0],['Дек',0]
                 ]}
             $.each(val, function(month, month_data){
-                percents_data[year]['data'][month-1][1]=parseFloat((month_data.percent/(month_data['count'])).toFixed(3))
+                percents_data[year]['data'][month-1][1]=parseFloat((month_data.percent/(month_data['count'])).toFixed(3))||0
             })
         })
 
@@ -569,13 +733,13 @@
             if(qty_data[val.year_finish]==null)
                 qty_data[year]={name: year+'', data_all:[], data_accept:[]}
             $.each(val, function(month, month_data){
-                qty_data[year]['data_all'][month-1]=parseFloat((month_data.qty_all/(month_data['count'])).toFixed(3))
-                qty_data[year]['data_accept'][month-1]=parseFloat((month_data.qty_accept/(month_data['count'])).toFixed(3))
+                qty_data[year]['data_all'][month-1]=parseFloat((month_data.qty_all/(month_data['count'])).toFixed(3))||0
+                qty_data[year]['data_accept'][month-1]=parseFloat((month_data.qty_accept/(month_data['count'])).toFixed(3))||0
             })
         })
 
-
-        return [res,percents_data, qty_data];
+        console.log(m2_house, m2_social)
+        return [[m2_house, m2_social],percents_data, qty_data];
     }
 
 
