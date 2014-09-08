@@ -568,7 +568,7 @@
             tmp_res[val.year_finish]['count'] ++;
         });
         $.each(tmp_res, function(i,val){
-            res.push({y:parseFloat((val.m2/val.count).toFixed(0)), name: i, drilldown:true});
+            res.push({y:parseFloat((val.m2/(val.count*1000)).toFixed(0)), name: i, drilldown:true});
         })
         return res;
     }
@@ -589,7 +589,7 @@
             tmp_res[val.year_finish]['count'] ++;
         });
         $.each(tmp_res, function(i,val){
-            res.push({y:parseFloat((val.m2/val.count).toFixed(0)), name: i, drilldown:true});
+            res.push({y:parseFloat((val.m2/(val.count*1000)).toFixed(0)), name: i, drilldown:true});
         })
         return res;
     }

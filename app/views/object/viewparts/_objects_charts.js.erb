@@ -43,7 +43,7 @@ $(function () {
         series: [{
             type: 'pie',
             name: 'Сумма',
-            innerSize: '0%',
+            innerSize: '50%',
             data: [
                 ['Осталось оплатить',  <%= @object.get_object_finance_by_type(1).take.residue_summ %>],
                 ['Оплачено за работу', <%= @object.get_object_finance_by_type(1).take.payed_for_work %>],
@@ -97,7 +97,7 @@ $(function () {
         series: [{
             type: 'pie',
             name: 'Сумма',
-            innerSize: '0%',
+            innerSize: '50%',
             data: [
                 ['Осталось оплатить',  <%= @object.get_object_finance_by_type(1).take.residue_summ %>],
                 ['В счет авансов', <%= @object.get_object_finance_by_type(1).take.in_avance_work %>],

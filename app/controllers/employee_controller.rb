@@ -57,8 +57,8 @@ class EmployeeController < ApplicationController
       @plotDatakNeuk.push((stat.k_complect.round 4))
       @plotDatakTek.push((stat.k_dismiss.round 4))
 
-      @plotDataManageCount.push((100*stat.employee_manage_count.to_f/stat.employee_count).round 1)
-      @plotDataProdCount.push((100*stat.employee_production_count.to_f/stat.employee_count).round 1)
+      @plotDataManageCount.push((stat.employee_manage_count.to_f/1).round 1)
+      @plotDataProdCount.push((stat.employee_production_count.to_f/1).round 1)
 
       @plotDataManageBonus.push(stat.bonus_manage.round 2)
       @plotDataManageSalary.push(stat.salary_manage.round 2)

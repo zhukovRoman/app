@@ -169,8 +169,15 @@
             overdues_objects.push(val);
         });
         bindOverdueObjects(document, overdues_objects);
-        $("#overdue_table_row").show();
+        $("#overdue_table_row").show('slow');
+        scrollToAnchor('overdue_table_body');
         console.log(overdues_objects);
+    }
+
+    function scrollToAnchor(id){
+        var aTag = $("#"+ id);
+        console.log(aTag);
+        $('html,body').animate({scrollTop: aTag.offset().top},'slow');
     }
 
     bindOverdueObjects = function(doc, objs){
@@ -178,6 +185,7 @@
         $(overdueTable).html('');
         $.each(objs, function(i, val){
             var row = document.createElement('tr');
+            $(row).addClass('danger');
             row.innerHTML = "<td>"+i+"</td>"+
                             "<td><a href='view?id="+val.id+"'>"+val.adress+"</a></td>"+
                             "<td>"+val.plansDates[doc]+"</td>"+
@@ -309,9 +317,9 @@
         setTimeout(function() {
             var filteredObjects = window.filteredObjects;
             var data = [
-                ['Остаток оплаты',   0],
-                ['Выполнено работ',       0],
-                ['Осталось выполнить',    0]
+                ['Осталось оплатить',   0],
+                ['Оплачено за работу',       0],
+                ['Выдано авансов',   0]
             ];
             $.each(filteredObjects, function(i,obj){
                 data[0][1]+=(obj.limit-obj.payed)
@@ -357,7 +365,7 @@
                 formatter: function () {
                     var s ="";
                     $.each(this.series.points, function (i, point) {
-                        s += "<b>"+point.name + '</b> ' + (point.y/1000000).toFixed(3) + ' млн рублей <br/>';
+                        s += "<b>"+point.name + '</b> ' + (point.y/1000000).toFixed(3) + ' млн руб <br/>';
                     });
                     return s;
                 },
@@ -367,16 +375,17 @@
             plotOptions: {
                 pie: {
                     center: ['50%', '50%']
-                }
+                },
+                showInLegend: true
             },
             series: [{
                 type: 'pie',
                 name: 'Сумма',
-                innerSize: '0%',
+                innerSize: '50%',
                 data: [
-                    ['Остаток оплаты',   45.0],
-                    ['Выполнено работ',       26.8],
-                    ['Осталось выполнить',    8.5]
+                    ['Не оплачено',   45.0],
+                    ['Выполнено и оплачено',       26.8],
+                    ['Оплачено, но не выполнено',    8.5]
 
                 ]
             }]

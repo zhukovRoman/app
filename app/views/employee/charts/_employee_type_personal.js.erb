@@ -20,13 +20,21 @@ $(function () {
         },
         tooltip: {
             shared: true,
-            valueSuffix: '%'
+            pointFormat: '{series.name}: <b>{point.y} ({point.percentage:.0f}%)</b><br/>',
+            valueSuffix: ' человек '
         },
         plotOptions: {
             column: {
                 pointPadding: 0.2,
                 borderWidth: 0,
-                stacking: 'percent'
+                stacking: 'percent',
+                dataLabels: {
+                    enabled: true,
+                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+                    style: {
+                        textShadow: '0 0 3px black, 0 0 3px black'
+                    }
+                }
             }
         },
         series: [{

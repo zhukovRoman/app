@@ -47,7 +47,7 @@ $(function () {
                 var result = '<b>' + this.x + '</b>';
                 $.each(this.points, function(i, datum) {
                     console.log(datum)
-                    result += '<br /> <i style="color: '+datum.point.series.color+'">' + datum.series.name + '</i>: ' + datum.y + ' человек';
+                    result += '<br /> <i style="color: '+datum.point.series.color+'">' + datum.series.name + '</i>: ' + datum.y + ' млн руб';
 
                 });
                 //console.log(this.points)
@@ -85,7 +85,7 @@ $(function () {
             renderTo:'m2_chart_type'
         },
         title: {
-            text: 'Стоимость кв. м. по конкурсам разного типа'
+            text: 'Стоимость ед. мощности по конкурсам разного типа'
         },
         xAxis: {
             categories: data.years
@@ -153,7 +153,8 @@ $(function () {
 //            y: 50
         },
         tooltip: {
-            valueDecimals: 0
+            valueDecimals: 0,
+            shared: true
         },
         plotOptions: {
 
@@ -164,11 +165,11 @@ $(function () {
             innerSize: '40%',
             data: data.types_chart_data,
             tooltip: {
-                valueSuffix: ' млн. руб'
+                valueSuffix: ' млн руб'
             },
             dataLabels: {
                 formatter: function () {
-                    return this.y > 1 ? '<b>' + this.point.name + ':</b> ' + toFixedAndParse(this.y/1000, 3) + ' млрд'  : null;
+                    return this.y > 1 ? '<b>' + this.point.name + ':</b> ' + toFixedAndParse(this.y/1, 0) + ' млн'  : null;
                 }
             }
         }]
@@ -191,9 +192,10 @@ $(function () {
 //            verticalAlign: 'middle',
 //            y: 50
         },
-//        tooltip: {
+        tooltip: {
+            shared: true
 //            pointFormat: '{series.name}: <b>{point.value:.1f}</b>'
-//        },
+        },
         plotOptions: {
             pie: {
 //                dataLabels: {
