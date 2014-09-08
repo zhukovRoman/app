@@ -74,6 +74,11 @@ class ApartmentController < ApplicationController
       end
     end
 
+    @apartmetns = Array.new
+    Apartment.all.each do |apart|
+      @apartmetns.push apart.to_json
+    end
+
     #puts finish
     #puts notFinish
     #puts rooms
