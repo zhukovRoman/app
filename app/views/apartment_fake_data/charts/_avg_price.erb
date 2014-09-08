@@ -1,0 +1,125 @@
+<div class="tab-pane" id="avgm2">
+  <div class="panel panel-default" style="margin-top: 20px">
+    <div class="panel-heading">Список вопросов, на которые отвечает график</div>
+    <div class="panel-body">
+      <ul>
+        <li>Какова средняя/минимальная/максимальная стоимость м2 по всем квартирам/по каждой комнатности
+            на прошлых/текущей неделе по всем объектам/по каждому объекту?</li>
+
+      </ul>
+      <i>Примечание: так как данные случайны, то фильтры не будут приводить к изменению графика</i>
+    </div>
+  </div>
+  <div class="col-sm-12" style="margin-top: 20px">
+    <%= render "apartment/charts/commons_part/rooms_filter" %>
+  </div>
+  <div class="row">
+    <div id="apartment-m2-avg" class ="chart" style="height: 500px; width: 900px;"></div>
+  </div>
+  <script src="http://code.highcharts.com/highcharts-more.js"></script>
+  <script type="application/javascript">
+      $(function () {
+          var tmp = getRandomArray(5,87,92)
+          var avg_chart = {
+              credits:  {
+                  enabled: false
+              },
+              title: {
+                  text: 'Стоимость м2 '
+              },
+
+              xAxis: {
+                  categories: ['Неделя 1', 'Неделя 2', 'Неделя 3', 'Неделя 4', 'Неделя 5']
+              },
+
+              yAxis: {
+                  title: {
+                      text: 'тыс рублей'
+                  }
+              },
+
+              tooltip: {
+                  crosshairs: true,
+                  shared: true,
+                  valueSuffix: 'тыс. руб.'
+              },
+
+              legend: {
+              },
+              series: [{
+                  name: 'Средняя оценочная',
+                  data: getRandomArray(5,90,100),
+                  zIndex: 10,
+                  marker: {
+                      fillColor: 'white',
+                      lineWidth: 2,
+                      lineColor: Highcharts.getOptions().colors[0]
+                  }
+              },{
+                  name: 'Диапазон (оценочная)',
+                  data: [[tmp[0], 99],
+                      [tmp[1], 100],
+                      [tmp[2], 100],
+                      [tmp[3], 98],
+                      [tmp[4], 99]
+                  ],
+                  type: 'arearange',
+                  lineWidth: 0,
+                  linkedTo: ':previous',
+                  zIndex: 2,
+                  color: Highcharts.getOptions().colors[0],
+                  fillOpacity: 0.15
+              },{
+                  name: 'Средняя скорректированная',
+                  data: getRandomArray(5,90,100),
+                  zIndex: 8,
+                  marker: {
+                      fillColor: 'white',
+                      lineWidth: 2,
+                      lineColor: Highcharts.getOptions().colors[1]
+                  }
+              },{
+                  name: 'Диапазон (скорректированная)',
+                  data: [[tmp[0], 100],
+                      [tmp[1], 101],
+                      [tmp[2], 103],
+                      [tmp[3], 100],
+                      [tmp[4], 100]
+                  ],
+                  type: 'arearange',
+                  lineWidth: 0,
+                  linkedTo: ':previous',
+                  color: Highcharts.getOptions().colors[1],
+                  zIndex: 1,
+                  fillOpacity: 0.15
+              },{
+                  name: 'Средняя итоговая',
+                  data: getRandomArray(5,90,100),
+                  zIndex: 7,
+                  marker: {
+                      fillColor: 'white',
+                      lineWidth: 2,
+                      lineColor: Highcharts.getOptions().colors[2]
+                  }
+              },{
+                  name: 'Диапазон (итоговая)',
+                  data: [[tmp[0], 101],
+                      [tmp[1], 103],
+                      [tmp[2], 105],
+                      [tmp[3], 105],
+                      [tmp[4], 101]
+                  ],
+                  type: 'arearange',
+                  lineWidth: 0,
+                  linkedTo: ':previous',
+                  color: Highcharts.getOptions().colors[2],
+                  fillOpacity: 0.15,
+                  zIndex: 0
+              }]
+
+          };
+          $('#apartment-m2-avg').highcharts(avg_chart);
+
+      });
+  </script>
+</div>

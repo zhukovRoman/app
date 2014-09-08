@@ -1,0 +1,57 @@
+var selectAllObjects = function () {
+    $.each($("#objects_filter input"), function(i , val){
+        //console.log(val)
+        $(val).prop('checked', true);
+    });
+    redrawChart();
+}
+
+var getRoomsFilter = function () {
+    return ($("#rooms_filter > label.active").attr('id'))
+}
+
+var getObjectFilter = function () {
+    var res = Array();
+    $.each($("#objects_filter input:checked"), function(i , val){
+        res.push($(val).attr("id"))
+    })
+    return res;
+}
+
+var createChart = function () {
+    rooms_filter = getRoomsFilter();
+    objects_filter = getObjectFilter();
+    $('#apartment-status-chart').highcharts(status_chart);
+
+}
+
+var redrawChart = function () {
+    setTimeout(function(){
+        rooms_filter = getRoomsFilter();
+        objects_filter = getObjectFilter();
+        var chart = $('#apartment-status-chart').highcharts();
+        $.each(chart.series, function(i, series){
+            series.setData(getStatusData(series.name), false)
+        });
+        chart.yAxis[0].setTitle({
+            text: current_status_data['y-axis-label']
+        });
+        chart.redraw();
+    },100);
+}
+
+rooms_filter = "";
+objects_filter = [];
+
+var getStatusData = function (status){
+    rooms_filter = getRoomsFilter();
+    objects_filter = getObjectFilter();
+    console.log(rooms_filter, objects_filter)
+    rooms_data = current_status_data[rooms_filter];
+    res = [0,0,0,0,0];
+    $.each(objects_filter, function(i, val){
+        res = addArrays(res, rooms_data[val][status]);
+    })
+    return res;
+}
+

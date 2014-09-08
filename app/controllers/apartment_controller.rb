@@ -7,7 +7,7 @@ class ApartmentController < ApplicationController
   end
 
   def index2
-
+    render "apartment_fake_data/index2"
   end
 
   def index

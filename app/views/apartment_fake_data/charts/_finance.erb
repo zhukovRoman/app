@@ -1,0 +1,92 @@
+<div class="tab-pane" id="financerealtor">
+  <div class="panel panel-default" style="margin-top: 20px">
+    <div class="panel-heading">Список вопросов, на которые отвечает график</div>
+    <div class="panel-body">
+      <ul>
+        <li>Сколько денег всего получено на текущий момент (накопительным итогом) за несколько недель по всем объектам/каждому объекту?</li>
+        <li>Сколько из этой суммы ушло на услуги риэлтора?</li>
+      </ul>
+      <i>Примечание: так как данные случайны, то фильтры не будут приводить к изменению графика</i>
+    </div>
+  </div>
+
+  <div class="col-sm-12" style="margin-top: 20px">
+    <%= render "apartment/charts/commons_part/rooms_filter" %>
+  </div>
+  <div class="row">
+    <div id="apartment-finance-realtor" class ="chart" style="height: 500px; width: 900px;"></div>
+  </div>
+  <script type="application/javascript">
+      $(function () {
+          $('#apartment-finance-realtor').highcharts({
+              credits:  {
+                  enabled: false
+              },
+              chart: {
+//                type: 'area'
+                  type: 'column'
+              },
+              title: {
+                  text: 'Накопительное получение финансов'
+              },
+              xAxis: {
+                  categories: ['Неделя 1', 'Неделя 2', 'Неделя 3', 'Неделя 4', 'Неделя 5'],
+                  tickmarkPlacement: 'on',
+                  title: {
+                      enabled: false
+                  }
+              },
+              yAxis: {
+                  title: {
+                      text: 'Миллионов'
+                  },
+                  labels: {
+                      formatter: function() {
+                          return this.value / 1;
+                      }
+                  },
+                  stackLabels: {
+                      enabled: true,
+                      style: {
+                          fontWeight: 'bold',
+                          color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                      }
+                  }
+              },
+              tooltip: {
+                  shared: true,
+                  valueSuffix: ' млн'
+              },
+              plotOptions: {
+//                area: {
+//                    stacking: 'normal',
+//                    lineColor: '#666666',
+//                    lineWidth: 1,
+//                    marker: {
+//                        lineWidth: 1,
+//                        lineColor: '#666666'
+//                    }
+//                }
+                  column: {
+                      stacking: 'normal',
+                      dataLabels: {
+                          enabled: true,
+                          color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+                          style: {
+                              textShadow: '0 0 3px black, 0 0 3px black'
+                          }
+                      }
+                  }
+              },
+              series: [{
+                  name: 'Получил риэлтор',
+                  data: [30, 62, 100, 150, 221]
+              }, {
+                  name: 'Получено',
+                  data: [100, 220, 330, 500, 700]
+
+              }]
+          });
+      });
+  </script>
+</div>

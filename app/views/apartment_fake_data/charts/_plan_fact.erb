@@ -1,0 +1,77 @@
+<div class="tab-pane" id="plan_fact">
+  <div class="panel panel-default" style="margin-top: 20px">
+    <div class="panel-heading">Список вопросов, на которые отвечает график</div>
+    <div class="panel-body">
+      <ul>
+        <li>Сколько и каких квартир (комнатность) планировали продать на прошлых/текущей неделе и сколько продали по всем объектам/по каждому объекту в штуках/м2/финансах?</li>
+      </ul>
+      <i>Примечание: так как данные случайны, то фильтры не будут приводить к изменению графика</i>
+    </div>
+  </div>
+  <div class="col-sm-12" style="margin-top: 20px">
+    <div class="col-sm-6 ">
+      <div class="btn-group" data-toggle="buttons" id="value_filter">
+        <label label-default="" id="in-pcs" class="btn btn-default active" data="pcs_status_data">
+          <input name="options"  type="radio" checked="checked">В квартирах
+        </label>
+        <label label-default=""  id="in-m2" class="btn btn-default" data="m2_status_data">
+          <input name="options"  type="radio">В м<sup>2</sup>
+        </label>
+        <label label-default="" id="in-fin" class="btn btn-default " data="finance_status_data">
+          <input name="options"  type="radio">В финанасах
+        </label>
+      </div>
+    </div>
+    <%= render "apartment/charts/commons_part/rooms_filter" %>
+  </div>
+  <div class="row">
+    <div id="apartment-plan-fact" class ="chart" style="height: 500px; width: 900px;"></div>
+  </div>
+  <script type="application/javascript">
+      $(function () {
+          $('#apartment-plan-fact').highcharts({
+              credits:  {
+                  enabled: false
+              },
+              chart: {
+                  type: 'column'
+              },
+              title: {
+                  text: 'План выполнения продаж'
+              },
+              xAxis: {
+                  categories: ['Неделя 1', 'Неделя 2', 'Неделя 3', 'Неделя 4', 'Неделя 5']
+              },
+              yAxis: {
+                  min: 0,
+                  title: {
+                      text: 'Количество'
+                  }
+              },
+              tooltip: {
+                  shared: true,
+                  useHTML: true
+              },
+              plotOptions: {
+                  column: {
+                      pointPadding: .1,
+                      borderWidth: 0,
+                      dataLabels: {
+                          enabled: true
+                      }
+                  }
+
+              },
+              series: [{
+                  name: 'План ',
+                  data: [25, 35, 40, 30, 45]
+
+              }, {
+                  name: 'Факт',
+                  data: [25, 32, 40, 28, 42]
+
+              }]
+          });
+      });
+  </script>
+</div>

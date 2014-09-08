@@ -1,0 +1,224 @@
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script type="application/javascript">
+    <%= render "apartment/charts/commons_part/common_scripts.js" %>
+</script>
+
+<!--<H3 style="color: red">ВСЕ ДАННЫЕ СЛУЧАЙНЫ</H3>-->
+
+<ul class="nav nav-tabs" role="tablist">
+  <li class="active"><a href="#statuses" role="tab" data-toggle="tab">Динамика продаж</a></li>
+  <li><a href="#avgm2" role="tab" data-toggle="tab">Cр. стоимость м<sup>2</sup></a></li>
+  <li><a href="#plan_fact" role="tab" data-toggle="tab">Выполнение плана</a></li>
+  <li><a href="#addprice" role="tab" data-toggle="tab">Добавочная стоимость</a></li>
+  <li><a href="#financerealtor" role="tab" data-toggle="tab">Накопление финансов</a></li>
+  <li><a href="#mortgage" role="tab" data-toggle="tab">Ипотека</a></li>
+  <li><a href="#floorprice" role="tab" data-toggle="tab">Этажность</a></li>
+</ul>
+
+<div class="row" style="margin-bottom: 100px">
+  <div class="tab-content col-sm-10">
+    <%= render "apartment/charts/apartment_statuses" %>
+    <%= render "apartment/charts/avg_price" %>
+    <%= render "apartment/charts/plan_fact" %>
+    <%= render "apartment/charts/add_price" %>
+    <%= render "apartment/charts/finance" %>
+    <%= render "apartment/charts/mortgage" %>
+    <%= render "apartment/charts/floors_price" %>
+  </div>
+  <div class="col-sm-2" id="objects_filter">
+    <div id="all-objects" class="btn btn-default btn-xs" style="margin-top: 40px">Все объекты</div>
+    <div><input id="nekrasovka1" type="checkbox" checked> Некрасовка 1</div>
+    <div><input id="nekrasovka2" type="checkbox" checked> Некрасовка 2</div>
+    <div><input id="solncevo" type="checkbox" checked> Солнцево</div>
+    <div><input id="basovskaya" type="checkbox" checked> Базовская</div>
+    <div><input id="zelenograd" type="checkbox" checked> Зеленоград</div>
+  </div>
+</div>
+
+<!--<p>Сколько людей покупают квартиры с отделкой</p>-->
+<div class="panel panel-default" style="margin-top: 20px">
+  <div class="panel-heading">Список вопросов, на которые отвечает график</div>
+  <div class="panel-body">
+    <ul>
+      <li>Сколько людей покупают квартиры с отделкой и без в абсолютных значениях и в пропорции?</li>
+    </ul>
+  </div>
+</div>
+<div  id="percent" class="btn btn-default btn-xs" onclick="changeType('percent')">В процентах</div>
+<div  id="absolute" class="btn btn-default btn-xs" onclick="changeType('normal')">Абсолбтное значение</div>
+<script type="application/javascript">
+    function changeType(type) {
+        var chart = $('#apartment-finishing-sell-chart').highcharts()
+        for (var i =0; i < chart.series.length; i++){
+            chart.series[i].update({
+                stacking: type
+            }, false);
+        }
+        chart.redraw();
+    };
+</script>
+<div id="apartment-finishing-sell-chart" style="width: 1100px; height: 500px;"></div>
+<script type="application/javascript">
+    $(function () {
+        $('#apartment-finishing-sell-chart').highcharts({
+            credits:  {
+                enabled: false
+            },
+            title: {
+                text: 'Продано квартир с отделкой и без'
+            },
+            xAxis: {
+                categories: ['Некрасовка', 'Сочинская', 'Покровская']
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Количество'
+                },
+                stackLabels: {
+                    enabled: true,
+                    style: {
+                        fontWeight: 'bold',
+                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                    }
+                }
+            },
+            tooltip:{
+                shared: true,
+                useHTML: true,
+                formatter: function() {
+                    var header = "<div style='font-weight: bold'>" + this.x + "</div>"
+                    var body = ""
+                    for (index = 0; index < this.points.length; ++index) {
+                        body += "<div>" +
+                                "<span style=' padding: 0px 3px; border-radius: 5px; background-color: "+
+                                this.points[index].series.color + "'></span>" +
+                                (this.points[index].y) + " " + this.points[index].series.name+ "</div>"
+                    }
+                    if (this.points[1] != undefined)
+                        body += "<div>  Всего: " + (this.points[0].y + this.points[1].y ) + "</div>"
+                    return header+body;
+
+                }
+            },
+            plotOptions: {
+                column: {
+                    stacking: 'percent'
+                }
+            },
+            series: [{
+                type: 'column',
+                name: 'С отделкой',
+                dataLabels: {
+                    enabled: true,
+                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+                    style: {
+                        textShadow: '0 0 3px black, 0 0 3px black'
+                    }
+                },
+                data: [0,0,0]
+            }, {
+                type: 'column',
+                name: 'Без отделки',
+                dataLabels: {
+                    enabled: true,
+                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+                    style: {
+                        textShadow: '0 0 3px black, 0 0 3px black'
+                    }
+                },
+                data: [84, 0, 44]
+            }]
+        });
+    });
+</script>
+
+
+
+<div class="panel panel-default" style="margin-top: 20px">
+  <div class="panel-heading">Список вопросов, на которые отвечает график</div>
+  <div class="panel-body">
+    <ul>
+      <li>Сколько и каких кваритр уже продано по каждому объекту в пропорции и в абсолютных значениях?</li>
+      <li>Сколько и каких кваритры еще остались по каждому объекту в пропорции и в абсолютных значениях?</li>
+    </ul>
+  </div>
+</div>
+<div   class="btn btn-default btn-xs" onclick="changeType2('percent')">В процентах</div>
+<div  class="btn btn-default btn-xs" onclick="changeType2('normal')">Абсолбтное значение</div>
+<script type="application/javascript">
+    function changeType2(type) {
+        var chart = $('#apartment-all-sell-status-chart2').highcharts()
+        for (var i =0; i < chart.series.length; i++){
+            chart.series[i].update({
+                stacking: type
+            }, false);
+        }
+        chart.redraw();
+    };
+</script>
+<div id="apartment-all-sell-status-chart2" style="width: 1100px; height: 500px; padding-top: 50px"></div>
+<script type="application/javascript">
+    $(function () {
+        $('#apartment-all-sell-status-chart2').highcharts({
+            credits:  {
+                enabled: false
+            },
+            title: {
+                text: 'Всего продано квартир'
+            },
+            xAxis: {
+                categories: ['Некрасовка', 'Сочинская', 'Покровская']
+            },
+            tooltip:{
+                shared: true
+            },
+            plotOptions: {
+                column: {
+                    stacking: 'percent'
+                }
+            },
+            chart: {
+                type: 'column'
+            },
+            series: [{
+                name: '1-ком продано',
+                data: [32, 0, 0],
+                stack: "1k"
+            },{
+                name: '1-ком осталось',
+                data: [10, 32, 0],
+                stack: "1k"
+            },{
+                name: '2-ком продано ',
+                data: [46, 0, 42],
+                stack: "2k"
+            },{
+
+                name: '2-ком осталось ',
+                data: [18, 64, 86],
+                stack: "2k"
+            },{
+                name: '3-ком продано',
+                data: [23, 0, 19],
+                stack: "3k"
+            },{
+                name: '3-ком осталось',
+                data: [10, 33, 109],
+                stack: "3k"
+            }]
+        });
+    });
+</script>
+
+
+<script type="application/javascript">
+    $(function(){
+        //навешиваем обработчики
+        $("#all-objects").on('click', selectAllObjects);
+        $("#objects_filter input").change(redrawChart);
+        $("#rooms_filter input").change(redrawChart);
+        $("#value_filter input").change(setNewValues);
+        createChart();
+    });
+</script>

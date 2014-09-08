@@ -1,0 +1,122 @@
+<div class="tab-pane" id="mortgage">
+  <div class="panel panel-default" style="margin-top: 20px">
+    <div class="panel-heading">Список вопросов, на которые отвечает график</div>
+    <div class="panel-body">
+      <ul>
+        <li>Сколько квартир по комнатности продано через ипотеку и за собственные средства по каждому объекту/по всем объектам?</li>
+        <li>Какие банки предоставляют кредиты и какова их доля во всех сделках с ипотекой по комнатности и по объектам?</li>
+      </ul>
+      <i>Примечание: так как данные случайны, то фильтры не будут приводить к изменению графика</i>
+    </div>
+  </div>
+
+  <div class="col-sm-12" style="margin-top: 20px">
+    <%= render "apartment/charts/commons_part/rooms_filter" %>
+  </div>
+  <div class="row">
+    <div id="apartment-mortgage" class ="chart" style="height: 500px; width: 900px;"></div>
+  </div>
+  <script type="application/javascript">
+      $(function () {
+
+          var colors = Highcharts.getOptions().colors,
+                  categories = ['Ипотека', 'Личные средства'],
+                  data = [{
+                      y: 0,
+                      color: colors[2],
+                      drilldown: {
+                          name: 'Ипотека',
+                          categories: ['Банк 1', 'Банк 2', 'Банк 3', 'Банк 4'],
+                          data: [0, 0, 0, 0],
+                          color: colors[0]
+                      }
+                  }, {
+                      y: 100,
+                      color: colors[3],
+                      drilldown: {
+                          name: 'Личные средства',
+                          categories: ['Личные средства'],
+                          data: [100],
+                          color: colors[1]
+                      }
+
+                  }];
+
+
+          // Build the data arrays
+          var browserData = [];
+          var versionsData = [];
+          for (var i = 0; i < data.length; i++) {
+
+              // add browser data
+              browserData.push({
+                  name: categories[i],
+                  y: data[i].y,
+                  color: data[i].color
+              });
+
+              // add version data
+              for (var j = 0; j < data[i].drilldown.data.length; j++) {
+                  var brightness = 0.2 - (j / data[i].drilldown.data.length) / 5 ;
+                  versionsData.push({
+                      name: data[i].drilldown.categories[j],
+                      y: data[i].drilldown.data[j],
+                      color: Highcharts.Color(data[i].color).brighten(brightness).get()
+                  });
+              }
+          }
+
+          // Create the chart
+          $('#apartment-mortgage').highcharts({
+              credits:  {
+                  enabled: false
+              },
+              chart: {
+                  type: 'pie'
+              },
+              title: {
+                  text: 'Распространенность ипотеки'
+              },
+              yAxis: {
+                  title: {
+                      text: 'empty'
+                  }
+              },
+              plotOptions: {
+                  pie: {
+                      shadow: false,
+                      center: ['50%', '50%']
+                  }
+              },
+              tooltip: {
+                  valueSuffix: '%'
+              },
+              series: [{
+                  name: 'Как покупают',
+                  data: browserData,
+                  size: '60%',
+                  dataLabels: {
+                      formatter: function() {
+                          return this.y > 5 ? this.point.name : null;
+                      },
+                      color: 'white',
+                      distance: -30
+                  }
+              }, {
+                  name: 'Доля',
+                  data: versionsData,
+                  size: '80%',
+                  innerSize: '60%',
+                  dataLabels: {
+                      formatter: function() {
+                          // display only if larger than 1
+                          return this.y > 1 ? '<b>'+ this.point.name +':</b> '+ this.y +'%'  : null;
+                      }
+                  }
+              }]
+          });
+      });
+
+
+  </script>
+</div>

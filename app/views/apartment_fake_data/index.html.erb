@@ -1,0 +1,807 @@
+<script src="http://code.highcharts.com/highcharts.js"></script>
+
+<ul class="nav nav-tabs" role="tablist">
+  <li ><a href="#fin" role="tab" data-toggle="tab">в финансах</a></li>
+  <li><a href="#m2" role="tab" data-toggle="tab">в м<sup>2</sup></a></li>
+  <li class="active"><a href="#apartment" role="tab" data-toggle="tab">в квартирах</a></li>
+  <li><a href="#avgm2" role="tab" data-toggle="tab">средняя стоимость м<sup>2</sup></a></li>
+  <li><a href="#planfact" role="tab" data-toggle="tab">выполнение плана</a></li>
+  <li><a href="#addprice" role="tab" data-toggle="tab">Добавочная стоимость</a></li>
+  <li><a href="#financerealtor" role="tab" data-toggle="tab">Накопление финансов</a></li>
+</ul>
+
+<div class="col-sm-12">
+  <div class="btn-group pull-left">
+    <button type="button" class="btn btn-default">Все</button>
+    <button type="button" class="btn btn-default">1к</button>
+    <button type="button" class="btn btn-default">2к</button>
+    <button type="button" class="btn btn-default">3к</button>
+  </div>
+</div>
+<div class="tab-content col-sm-10">
+    <div class="tab-pane active" id="apartment">
+      <div id="apartment-status-chart" class="col-sm-12" style=" height: 500px; padding-top: 50px"></div>
+      <script type="application/javascript">
+          $(function () {
+              $('#apartment-status-chart').highcharts({
+                  credits:  {
+                      enabled: false
+                  },
+                  title: {
+                      text: 'Статусы квартир'
+                  },
+                  xAxis: {
+                      categories: ['Неделя 1', 'Неделя 2', 'Неделя 3', 'Неделя 4', 'Неделя 5']
+                  },
+                  tooltip: {
+                      shared: true,
+                      valueSuffix: ' млн рублей'
+                  },
+                  series: [{
+                      type: 'column',
+                      name: 'Забронирвано',
+                      data: [250, 100, 70, 20, 50]
+                  },{
+                      type: 'column',
+                      name: 'Объявлен аукцион',
+                      data: [270, 200, 150, 110, 30]
+                  }, {
+                      type: 'column',
+                      name: 'Состоялся аукцион',
+                      data: [0, 20, 120, 200, 250]
+                  }, {
+                      type: 'column',
+                      name: 'Подписан ДКП',
+                      data: [0, 10, 80, 150, 200]
+                  }, {
+                      type: 'column',
+                      name: 'Передано право собсвтенности',
+                      data: [0, 10, 30, 130, 180]
+                  }]
+              });
+          });
+      </script>
+    </div>
+    <div class="tab-pane" id="m2">
+      <div id="apartment-avg2m-chart" style="width: 1100px; height: 500px; padding-top: 50px"></div>
+      <script type="application/javascript">
+          $(function () {
+              $('#apartment-avg2m-chart').highcharts({
+                  credits:  {
+                      enabled: false
+                  },
+                  title: {
+                      text: 'Статусы квартир'
+                  },
+                  xAxis: {
+                      categories: ['Некрасовка 1', 'Некрасовка 2', 'Солнцево', 'Базовская', 'Зеленоград']
+                  },
+                  labels: {
+                      items: [{
+                          html: 'По всем объектам',
+                          style: {
+                              left: '50px',
+                              top: '-30px',
+                              color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+                          }
+                      }]
+                  },
+                  tooltip: {
+                      shared: true,
+                      valueSuffix: ' млн рублей'
+                  },
+                  series: [{
+                      type: 'column',
+                      name: 'Забронировано',
+                      data: [1245, 30, 0, 0, 0]
+                  },{
+                      type: 'column',
+                      name: 'Объявлен аукцион',
+                      data: [1245, 30, 0, 0, 0]
+                  }, {
+                      type: 'column',
+                      name: 'Состоялся аукцион',
+                      data: [3000, 2, 0, 0, 6]
+                  }, {
+                      type: 'column',
+                      name: 'Подписан ДКП',
+                      data: [1000, 1, 0, 0, 0]
+                  }, {
+                      type: 'column',
+                      name: 'Передано право собсвтенности',
+                      data: [245, 3, 0, 0, 0]
+                  }, {
+                      type: 'pie',
+                      name: 'По всем объектам',
+                      data: [{
+                          name: 'Объявлен аукцион',
+                          y: 3100,
+                          color: Highcharts.getOptions().colors[0] // Jane's color
+                      }, {
+                          name: 'Состоялся аукцион',
+                          y: 20,
+                          color: Highcharts.getOptions().colors[1] // John's color
+                      }, {
+                          name: 'Подписан ДКП',
+                          y: 20,
+                          color: Highcharts.getOptions().colors[2] // Joe's color
+                      },
+                          {
+                              name: 'Передано право собсвтенности',
+                              y: 20,
+                              color: Highcharts.getOptions().colors[3] // Joe's color
+                          }],
+                      center: [180, 0],
+                      size: 100,
+                      showInLegend: false,
+                      dataLabels: {
+                          enabled: false
+                      }
+                  }]
+              });
+          });
+      </script>
+    </div>
+    <div class="tab-pane " id="fin">
+      <div id="apartment-finstatus-chart" class="col-sm-12" style="height: 500px; padding-top: 50px"></div>
+    </div>
+    <div class="tab-pane" id="avgm2">
+    <div id="apartment-m2-avg" style="width: 900px; height: 500px; "></div>
+    <script src="http://code.highcharts.com/highcharts-more.js"></script>
+    <script type="application/javascript">
+        $(function () {
+            var ranges = [
+                        [1402196400000, 90, 102],
+                        [1403202400000, 92, 103],
+                        [1404202400000, 89, 100],
+                        [1405202400000, 95, 101]
+                    ],
+                    averages = [
+                        [1402202400000, 99],
+                        [1403202400000, 100],
+                        [1404202400000, 97],
+                        [1405202400000, 99]
+                    ];
+
+
+            $('#apartment-m2-avg').highcharts({
+                title: {
+                    text: 'Стоимость м2 '
+                },
+
+                xAxis: {
+                    type: 'datetime'
+                },
+
+                yAxis: {
+                    title: {
+                        text: null
+                    }
+                },
+
+                tooltip: {
+                    crosshairs: true,
+                    shared: true,
+                    valueSuffix: 'тыс. руб.'
+                },
+
+                legend: {
+                },
+
+                series: [{
+                    name: ' Средняя',
+                    data: averages,
+                    zIndex: 1,
+                    marker: {
+                        fillColor: 'white',
+                        lineWidth: 2,
+                        lineColor: Highcharts.getOptions().colors[0]
+                    }
+                }, {
+                    name: 'Диапазон',
+                    data: ranges,
+                    type: 'arearange',
+                    lineWidth: 0,
+                    linkedTo: ':previous',
+                    color: Highcharts.getOptions().colors[0],
+                    fillOpacity: 0.3,
+                    zIndex: 0
+                }]
+
+            });
+
+        });
+    </script>
+  </div>
+    <div class="tab-pane" id="planfact">
+      <div id="apartment-plan"  style="width: 890px; height: 500px; "></div>
+
+    </div>
+    <div class="tab-pane" id="addprice">
+      <div id="apartment-add-price" style="width: 890px; height: 500px; "></div>
+      <script type="application/javascript">
+          $(function () {
+              $('#apartment-add-price').highcharts({
+                  chart: {
+                      type: 'column'
+                  },
+                  title: {
+                      text: 'Добавочная стоимость квартир'
+                  },
+                  xAxis: {
+                      categories: ['Неделя 1', 'Неделя 2', 'Неделя 3', 'Неделя 4', 'Неделя 5'],
+                      tickmarkPlacement: 'off',
+                      title: {
+                          enabled: false
+                      }
+                  },
+                  yAxis: {
+                      title: {
+                          text: 'Миллионов'
+                      },
+                      labels: {
+                          formatter: function() {
+                              return this.value / 1;
+                          }
+                      },
+                      stackLabels: {
+                          enabled: true,
+                          style: {
+                              fontWeight: 'bold',
+                              color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                          }
+                      }
+                  },
+                  tooltip: {
+                      shared: true,
+                      valueSuffix: ' млн'
+                  },
+                  plotOptions: {
+                      column: {
+                          stacking: 'normal',
+                          dataLabels: {
+                              enabled: true,
+                              color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+                              style: {
+                                  textShadow: '0 0 3px black, 0 0 3px black'
+                              }
+                          }
+                      }
+                  },
+                  series: [{
+                      name: 'Добавочная стоимость',
+                      data: [12, 25, 3, 14, 33]
+                  }, {
+                      name: 'Начальная стоимость',
+                      data: [100, 200, 78, 150, 250]
+
+                  }]
+              });
+          });
+      </script>
+    </div>
+    <div class="tab-pane"  id="financerealtor">
+      <div id="apartment-finance-realtor" style="width: 890px; height: 500px; "></div>
+      <script type="application/javascript">
+          $(function () {
+              $('#apartment-finance-realtor').highcharts({
+                  chart: {
+//                type: 'area'
+                      type: 'column'
+                  },
+                  title: {
+                      text: 'Накопительное получение финансов'
+                  },
+                  xAxis: {
+                      categories: ['02.06 - 08.06', '09.06 - 15.06', '16.06 - 22.06', '23.06 - 29.06', '30.06 - 05.07'],
+                      tickmarkPlacement: 'on',
+                      title: {
+                          enabled: false
+                      }
+                  },
+                  yAxis: {
+                      title: {
+                          text: 'Миллионов'
+                      },
+                      labels: {
+                          formatter: function() {
+                              return this.value / 1;
+                          }
+                      },
+                      stackLabels: {
+                          enabled: true,
+                          style: {
+                              fontWeight: 'bold',
+                              color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                          }
+                      }
+                  },
+                  tooltip: {
+                      shared: true,
+                      valueSuffix: ' млн'
+                  },
+                  plotOptions: {
+//                area: {
+//                    stacking: 'normal',
+//                    lineColor: '#666666',
+//                    lineWidth: 1,
+//                    marker: {
+//                        lineWidth: 1,
+//                        lineColor: '#666666'
+//                    }
+//                }
+                      column: {
+                          stacking: 'normal',
+                          dataLabels: {
+                              enabled: true,
+                              color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+                              style: {
+                                  textShadow: '0 0 3px black, 0 0 3px black'
+                              }
+                          }
+                      }
+                  },
+                  series: [{
+                      name: 'Получил риэлтор',
+                      data: [30, 62, 100, 150, 221]
+                  }, {
+                      name: 'Получено',
+                      data: [100, 220, 330, 500, 700]
+
+                  }]
+              });
+          });
+      </script>
+    </div>
+</div>
+<div class="col-sm-2" style="margin-top: 30px">
+  <div id="percent" class="btn btn-default btn-xs">Все объекты</div>
+  <br>
+  <input type="checkbox" checked> Некрасовка 1
+  <br>
+  <input type="checkbox" checked> Некрасовка 2
+  <br>
+  <input type="checkbox" checked> Солнцево
+  <br>
+  <input type="checkbox" checked> Базовская
+  <br>
+  <input type="checkbox" checked> Зеленоград
+  <br>
+</div>
+
+
+<div id="apartment-all-sell-status-chart" style="width: 1100px; height: 500px; padding-top: 50px"></div>
+<script type="application/javascript">
+    $(function () {
+        $('#apartment-all-sell-status-chart').highcharts({
+            credits:  {
+                enabled: false
+            },
+            title: {
+                text: 'Всего продано квартир'
+            },
+            xAxis: {
+                categories: ['Некрасовка 1', 'Некрасовка 2', 'Солнцево', 'Базовская', 'Зеленоград']
+            },
+            tooltip:{
+                shared: true,
+                useHTML: true,
+                formatter: function() {
+                    var header = "<div style='font-weight: bold'>" + this.x + "</div>"
+                    var body = ""
+                    for (index = 0; index < this.points.length; ++index) {
+                        body += "<div>" +
+                                "<span style=' padding: 0px 3px; border-radius: 5px; background-color: "+
+                                this.points[index].series.color + "'></span>" +
+                                (this.points[index].y) + " " + this.points[index].series.name+ "</div>"
+                    }
+                    if (this.points[1] != undefined)
+                        body += "<div>  Всего: " + (this.points[0].y + this.points[1].y + this.points[2].y) + "</div>"
+                    return header+body;
+
+                }
+            },
+            series: [{
+                type: 'column',
+                name: '1-комнатные',
+                data: [10, 3, 0, 0, 0]
+            }, {
+                type: 'column',
+                name: '2-комнатные',
+                data: [24, 2, 0, 0, 0]
+            }, {
+                type: 'column',
+                name: '3-комнатные',
+                data: [2, 1, 0, 0, 0]
+            }]
+        });
+    });
+</script>
+
+
+
+<div id="apartment-banks-chart" style="width: 1100px; height: 500px; padding-top: 50px"></div>
+<script type="application/javascript">
+    $(function () {
+
+        var colors = Highcharts.getOptions().colors,
+                categories = ['Ипотека', 'Личные средства'],
+                data = [{
+                    y: 55,
+                    color: colors[2],
+                    drilldown: {
+                        name: 'Ипотека',
+                        categories: ['Банк 1', 'Банк 2', 'Банк 3', 'Банк 4'],
+                        data: [10, 15, 12, 18],
+                        color: colors[0]
+                    }
+                }, {
+                    y: 45,
+                    color: colors[3],
+                    drilldown: {
+                        name: 'Личные средства',
+                        categories: ['Личные средства'],
+                        data: [45],
+                        color: colors[1]
+                    }
+
+                }];
+
+
+        // Build the data arrays
+        var browserData = [];
+        var versionsData = [];
+        for (var i = 0; i < data.length; i++) {
+
+            // add browser data
+            browserData.push({
+                name: categories[i],
+                y: data[i].y,
+                color: data[i].color
+            });
+
+            // add version data
+            for (var j = 0; j < data[i].drilldown.data.length; j++) {
+                var brightness = 0.2 - (j / data[i].drilldown.data.length) / 5 ;
+                versionsData.push({
+                    name: data[i].drilldown.categories[j],
+                    y: data[i].drilldown.data[j],
+                    color: Highcharts.Color(data[i].color).brighten(brightness).get()
+                });
+            }
+        }
+
+        // Create the chart
+        $('#apartment-banks-chart').highcharts({
+            credits:  {
+                enabled: false
+            },
+            chart: {
+                type: 'pie'
+            },
+            title: {
+                text: 'Распространенность ипотеки'
+            },
+            yAxis: {
+                title: {
+                    text: 'Total percent market share'
+                }
+            },
+            plotOptions: {
+                pie: {
+                    shadow: false,
+                    center: ['50%', '50%']
+                }
+            },
+            tooltip: {
+                valueSuffix: '%'
+            },
+            series: [{
+                name: 'Как покупают',
+                data: browserData,
+                size: '60%',
+                dataLabels: {
+                    formatter: function() {
+                        return this.y > 5 ? this.point.name : null;
+                    },
+                    color: 'white',
+                    distance: -30
+                }
+            }, {
+                name: 'Доля',
+                data: versionsData,
+                size: '80%',
+                innerSize: '60%',
+                dataLabels: {
+                    formatter: function() {
+                        // display only if larger than 1
+                        return this.y > 1 ? '<b>'+ this.point.name +':</b> '+ this.y +'%'  : null;
+                    }
+                }
+            }]
+        });
+    });
+
+
+</script>
+
+
+<!--<p>Сколько людей покупают квартиры с отделкой</p>-->
+<div  id="percent" class="btn btn-default btn-xs" onclick="changeType('percent')">В процентах</div>
+<div  id="absolute" class="btn btn-default btn-xs" onclick="changeType('normal')">Абсолбтное значение</div>
+<script type="application/javascript">
+    function changeType(type) {
+        var chart = $('#apartment-finishing-sell-chart').highcharts()
+        for (var i =0; i < chart.series.length; i++){
+            chart.series[i].update({
+                stacking: type
+            }, false);
+        }
+        chart.redraw();
+    };
+</script>
+<div id="apartment-finishing-sell-chart" style="width: 1100px; height: 500px;"></div>
+<script type="application/javascript">
+    $(function () {
+        $('#apartment-finishing-sell-chart').highcharts({
+            credits:  {
+                enabled: false
+            },
+            title: {
+                text: 'Продано квартир с отделкой и без'
+            },
+            xAxis: {
+                categories: ['Некрасовка 1', 'Некрасовка 2', 'Солнцево', 'Базовская', 'Зеленоград']
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Количество'
+                },
+                stackLabels: {
+                    enabled: true,
+                    style: {
+                        fontWeight: 'bold',
+                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                    }
+                }
+            },
+            tooltip:{
+                shared: true,
+                useHTML: true,
+                formatter: function() {
+                    var header = "<div style='font-weight: bold'>" + this.x + "</div>"
+                    var body = ""
+                    for (index = 0; index < this.points.length; ++index) {
+                        body += "<div>" +
+                                "<span style=' padding: 0px 3px; border-radius: 5px; background-color: "+
+                                this.points[index].series.color + "'></span>" +
+                                (this.points[index].y) + " " + this.points[index].series.name+ "</div>"
+                    }
+                    if (this.points[1] != undefined)
+                        body += "<div>  Всего: " + (this.points[0].y + this.points[1].y ) + "</div>"
+                    return header+body;
+
+                }
+            },
+            plotOptions: {
+                column: {
+                    stacking: 'percent'
+                }
+            },
+            series: [{
+                type: 'column',
+                name: 'С отделкой',
+                dataLabels: {
+                    enabled: true,
+                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+                    style: {
+                        textShadow: '0 0 3px black, 0 0 3px black'
+                    }
+                },
+                data: [10, 3, 0, 0, 0]
+            }, {
+                type: 'column',
+                name: 'Без отделки',
+                dataLabels: {
+                    enabled: true,
+                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+                    style: {
+                        textShadow: '0 0 3px black, 0 0 3px black'
+                    }
+                },
+                data: [24, 2, 0, 0, 0]
+            }]
+        });
+    });
+</script>
+
+
+
+<div   class="btn btn-default btn-xs" onclick="changeType2('percent')">В процентах</div>
+<div  class="btn btn-default btn-xs" onclick="changeType2('normal')">Абсолбтное значение</div>
+<script type="application/javascript">
+    function changeType2(type) {
+        var chart = $('#apartment-all-sell-status-chart2').highcharts()
+        for (var i =0; i < chart.series.length; i++){
+            chart.series[i].update({
+                stacking: type
+            }, false);
+        }
+        chart.redraw();
+    };
+</script>
+<div id="apartment-all-sell-status-chart2" style="width: 1100px; height: 500px; padding-top: 50px"></div>
+<script type="application/javascript">
+    $(function () {
+        $('#apartment-all-sell-status-chart2').highcharts({
+            credits:  {
+                enabled: false
+            },
+            title: {
+                text: 'Всего продано квартир'
+            },
+            xAxis: {
+                categories: ['Некрасовка 1', 'Некрасовка 2', 'Солнцево', 'Базовская', 'Зеленоград']
+            },
+            tooltip:{
+                shared: true
+            },
+            plotOptions: {
+                column: {
+                    stacking: 'percent'
+                }
+            },
+            chart: {
+                type: 'column'
+            },
+            series: [{
+                name: '1-ком продано',
+                data: [10, 3, 0, 0, 0],
+                stack: "1k"
+            },{
+                name: '1-ком осталось',
+                data: [10, 3, 0, 0, 0],
+                stack: "1k"
+            },{
+                name: '2-ком продано ',
+                data: [24, 2, 0, 0, 0],
+                stack: "2k"
+            },{
+
+                name: '2-ком осталось ',
+                data: [23, 1, 0, 0, 0],
+                stack: "2k"
+            },{
+                name: '3-ком продано',
+                data: [2, 1, 0, 0, 0],
+                stack: "3k"
+            },{
+                name: '3-ком осталось',
+                data: [2, 1, 0, 0, 0],
+                stack: "3k"
+            }]
+        });
+    });
+</script>
+
+
+<div class="col-sm-12">
+  <div id = "floors-price-chart" class="col-sm-10" style=" height: 500px; padding-top: 50px"></div>
+  <div class="col-sm-2"><div id="percent" class="btn btn-default btn-xs">Все объекты</div>
+    <br>
+    <input type="checkbox" checked> Некрасовка 1
+    <br>
+    <input type="checkbox" checked> Некрасовка 2
+    <br>
+    <input type="checkbox" checked> Солнцево
+    <br>
+    <input type="checkbox" checked> Базовская
+    <br>
+    <input type="checkbox" checked> Зеленоград
+    <br>
+  </div>
+  <script type="application/javascript">
+      $(function () {
+
+          var ranges = [
+                      [1, 14.3, 27.7],
+                      [2, 14.5, 27.8],
+                      [3, 15.5, 29.6],
+                      [4, 16.7, 30.7],
+                      [5, 16.5, 25.0],
+                      [6, 17.8, 25.7],
+                      [7, 13.5, 24.8],
+                      [8, 10.5, 21.4],
+                      [9, 9.2, 23.8],
+                      [10, 11.6, 21.8],
+                      [11, 10.7, 23.7],
+                      [12, 11.0, 23.3],
+                      [13, 11.6, 23.7],
+                      [14, 11.8, 20.7],
+                      [15, 12.6, 22.4],
+                      [16, 13.6, 19.6],
+                      [17, 11.4, 22.6],
+                      [18, 13.2, 25.0],
+                      [19, 14.2, 21.6],
+                      [20, 13.1, 17.1]
+                  ],
+                  averages = [
+                      [1, 21.5],
+                      [2, 22.1],
+                      [3, 23],
+                      [4, 23.8],
+                      [5, 21.4],
+                      [6, 21.3],
+                      [7, 18.3],
+                      [8, 15.4],
+                      [9, 16.4],
+                      [10, 17.7],
+                      [11, 17.5],
+                      [12, 17.6],
+                      [13, 17.7],
+                      [14, 16.8],
+                      [15, 17.7],
+                      [16, 16.3],
+                      [17, 17.8],
+                      [18, 18.1],
+                      [19, 17.2],
+                      [20, 14.4]
+                  ];
+
+
+          $('#floors-price-chart').highcharts({
+
+              title: {
+                  text: 'Стоимость м2 от этажа'
+              },
+
+              xAxis: {
+                    min: 1,
+                  max: 20,
+                  allowDecimals: false,
+                  tickInterval: 1
+//                  type: 'datetime'
+              },
+
+              yAxis: {
+                  title: {
+                      text: null
+                  }
+              },
+
+              tooltip: {
+                  crosshairs: true,
+                  shared: true,
+                  valueSuffix: 'тыс руб'
+              },
+
+              legend: {
+              },
+
+              series: [{
+                  name: 'Средняя',
+                  data: averages,
+                  zIndex: 1,
+                  marker: {
+                      fillColor: 'white',
+                      lineWidth: 2,
+                      lineColor: Highcharts.getOptions().colors[0]
+                  }
+              }, {
+                  name: 'Диапазон',
+                  data: ranges,
+                  type: 'arearange',
+                  lineWidth: 0,
+                  linkedTo: ':previous',
+                  color: Highcharts.getOptions().colors[0],
+                  fillOpacity: 0.3,
+                  zIndex: 0
+              }]
+
+          });
+
+      });
+  </script>
+</div>
+
