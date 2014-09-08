@@ -215,10 +215,10 @@
 <script type="application/javascript">
     $(function(){
         //навешиваем обработчики
-        $("#all-objects").on('click', selectAllObjects);
-        $("#objects_filter input").change(redrawChart);
-        $("#rooms_filter input").change(redrawChart);
+        //$("#all-objects").on('click', selectAllObjects);
+        //$("#objects_filter input").change(redrawChart);
+        $("#rooms_filter input").change(filterRooms);
         $("#value_filter input").change(setNewValues);
-        createChart();
+       // createChart();
     });
 </script>

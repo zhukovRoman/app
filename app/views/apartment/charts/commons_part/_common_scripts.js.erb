@@ -1,57 +1,51 @@
-var selectAllObjects = function () {
-    $.each($("#objects_filter input"), function(i , val){
-        //console.log(val)
-        $(val).prop('checked', true);
-    });
-    redrawChart();
-}
+apartments= <%= @apartmetns.to_json.html_safe %>;
+filtered_apartments = <%= @apartmetns.to_json.html_safe %>;
 
-var getRoomsFilter = function () {
-    return ($("#rooms_filter > label.active").attr('id'))
-}
-
-var getObjectFilter = function () {
-    var res = Array();
-    $.each($("#objects_filter input:checked"), function(i , val){
-        res.push($(val).attr("id"))
-    })
+getWeeksCategories = function(){
+    res = []
+    for (var i=4; i>=0; i--)
+    {
+        var start = moment().subtract(i, 'week').startOf('isoweek')
+        var end = moment().subtract(i, 'week').endOf('isoweek')
+        res.push(start.get('date')+"/"+(start.month()+1)+"-"+end.get('date')+"/"+(end.month()+1))
+    }
     return res;
 }
 
-var createChart = function () {
-    rooms_filter = getRoomsFilter();
-    objects_filter = getObjectFilter();
-    $('#apartment-status-chart').highcharts(status_chart);
-
-}
-
-var redrawChart = function () {
-    setTimeout(function(){
-        rooms_filter = getRoomsFilter();
-        objects_filter = getObjectFilter();
-        var chart = $('#apartment-status-chart').highcharts();
-        $.each(chart.series, function(i, series){
-            series.setData(getStatusData(series.name), false)
-        });
-        chart.yAxis[0].setTitle({
-            text: current_status_data['y-axis-label']
-        });
-        chart.redraw();
-    },100);
-}
-
-rooms_filter = "";
-objects_filter = [];
-
-var getStatusData = function (status){
-    rooms_filter = getRoomsFilter();
-    objects_filter = getObjectFilter();
-    console.log(rooms_filter, objects_filter)
-    rooms_data = current_status_data[rooms_filter];
-    res = [0,0,0,0,0];
-    $.each(objects_filter, function(i, val){
-        res = addArrays(res, rooms_data[val][status]);
-    })
+getWeeksStarts = function(){
+    res = []
+    for (var i=4; i>=0; i--)
+    {
+        var start = moment().subtract(i, 'week').startOf('isoweek')
+        res.push(start)
+    }
     return res;
 }
+
+filterRooms = function(){
+    console.log(this);
+    filtered_apartments.length=0;
+    if ($(this).attr('data-room')=='all')
+        $.each(apartments, function(i,val){
+           filtered_apartments.push(val)
+        })
+    else {
+        rooms = parseInt($(this).attr('data-room'))
+        $.each(apartments, function(i,val){
+            if (val.rooms==rooms)
+                filtered_apartments.push(val)
+        })
+    }
+    console.log(filtered_apartments)
+    redrawAllCharts();
+
+}
+redrawAllCharts=function(){
+    redrawStatusChart();
+    redrawAvgChart();
+    redrawAddPriceChart();
+    redrawFinanceRealtorChart();
+}
+
+
 

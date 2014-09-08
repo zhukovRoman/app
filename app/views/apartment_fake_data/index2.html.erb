@@ -1,6 +1,6 @@
 <script src="http://code.highcharts.com/highcharts.js"></script>
 <script type="application/javascript">
-    <%= render "apartment/charts/commons_part/common_scripts.js" %>
+    <%= render "apartment_fake_data/charts/commons_part/common_scripts.js" %>
 </script>
 
 <!--<H3 style="color: red">ВСЕ ДАННЫЕ СЛУЧАЙНЫ</H3>-->
@@ -17,13 +17,13 @@
 
 <div class="row" style="margin-bottom: 100px">
   <div class="tab-content col-sm-10">
-    <%= render "apartment/charts/apartment_statuses" %>
-    <%= render "apartment/charts/avg_price" %>
-    <%= render "apartment/charts/plan_fact" %>
-    <%= render "apartment/charts/add_price" %>
-    <%= render "apartment/charts/finance" %>
-    <%= render "apartment/charts/mortgage" %>
-    <%= render "apartment/charts/floors_price" %>
+    <%= render "apartment_fake_data/charts/apartment_statuses" %>
+    <%= render "apartment_fake_data/charts/avg_price" %>
+    <%= render "apartment_fake_data/charts/plan_fact" %>
+    <%= render "apartment_fake_data/charts/add_price" %>
+    <%= render "apartment_fake_data/charts/finance" %>
+    <%= render "apartment_fake_data/charts/mortgage" %>
+    <%= render "apartment_fake_data/charts/floors_price" %>
   </div>
   <div class="col-sm-2" id="objects_filter">
     <div id="all-objects" class="btn btn-default btn-xs" style="margin-top: 40px">Все объекты</div>
@@ -220,5 +220,6 @@
         $("#rooms_filter input").change(redrawChart);
         $("#value_filter input").change(setNewValues);
         createChart();
+
     });
 </script>

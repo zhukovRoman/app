@@ -70,7 +70,7 @@ class Apartment < ActiveRecord::Base
     apartment['has_qty_date']=has_qty_date
     apartment['free_date']=free_date
     apartment['not_sale_date']=not_sale_date
-
+    apartment['realtor_fee']=realtor_fee
     return apartment
   end
 end

@@ -5,7 +5,7 @@
       <ul>
         <li>На сколько больше финансов удалось получить за счет проведения аукциона на этой/прошлых неделях по всем объектам/по каждому объекту?</li>
       </ul>
-      <i>Примечание: так как данные случайны, то фильтры не будут приводить к изменению графика</i>
+      <!--<i>Примечание: так как данные случайны, то фильтры не будут приводить к изменению графика</i>-->
     </div>
   </div>
   <div class="col-sm-12" style="margin-top: 20px">
@@ -16,22 +16,19 @@
   </div>
   <script type="application/javascript">
       $(function () {
-          $('#apartment-add-price').highcharts({
+       apartment_add_price = new Highcharts.Chart({
               credits:  {
                   enabled: false
               },
               chart: {
-                  type: 'column'
+                  type: 'column',
+                  renderTo:'apartment-add-price'
               },
               title: {
                   text: 'Добавочная стоимость квартир'
               },
               xAxis: {
-                  categories: ['Неделя 1', 'Неделя 2', 'Неделя 3', 'Неделя 4', 'Неделя 5'],
-                  tickmarkPlacement: 'off',
-                  title: {
-                      enabled: false
-                  }
+                  categories: getWeeksCategories()
               },
               yAxis: {
                   title: {
@@ -66,15 +63,56 @@
                       }
                   }
               },
-              series: [{
-                  name: 'Добавочная стоимость',
-                  data: [12, 25, 3, 14, 33]
-              }, {
-                  name: 'Начальная стоимость',
-                  data: [100, 200, 78, 150, 250]
-
-              }]
+              series: []
           });
+
+
+
+
+      redrawAddPriceChart = function(){
+          weeks_group = []
+
+          $.each(filtered_apartments, function(i,val){
+              if (!(val.status=='ДКП' || val.status == 'ПС'))
+                  return;
+              apart_date = moment(val.ps_date||val.dkp_date)
+
+              $.each(getWeeksStarts(), function(t,week){
+                  if(weeks_group[t]==null) weeks_group[t]=[]
+                  if (apart_date.diff(week, 'days')>=0 && apart_date.diff(week, 'days')<7)
+                  {
+                      weeks_group[t].push(val)
+                  }
+              })
+          })
+
+          series = [
+              {name: 'Добавочная стоимость',data: [0,0,0,0,0]},
+              {name: 'Начальная стоимость',data: [0,0,0,0,0]}
+          ];
+
+          $.each(weeks_group, function(gi, week_data){
+              $.each(week_data, function(i,val){
+                  series[1]['data'][gi]+=parseFloat((val.summ/1000000).toFixed(3))
+                  series[0]['data'][gi]+=parseFloat((val.price_diff/1000000).toFixed(3))
+              })
+          })
+
+          series[0]['data'][1]= parseFloat((series[0]['data'][1]).toFixed(3))
+          series[1]['data'][1]= parseFloat((series[1]['data'][1]).toFixed(3))
+
+          while(apartment_add_price.series.length > 0)
+              apartment_add_price.series[0].remove(false);
+          $.each (series, function (i,ser){
+              apartment_add_price.addSeries(ser, false);
+          })
+          apartment_add_price.redraw();
+
+      }
+
+      redrawAddPriceChart();
+
+
       });
   </script>
 </div>

@@ -9,19 +9,19 @@
         <li>Сколько квартир/м2/млн руб в каждом статусе было на прошлых неделях по всем объектам/каждому объекту?</li>
         <li>Сколько 1/2/3-комнатных квартир/м2 в этих квартирах/млн руб в этих квартирах на текущий момент/было на прошлых неделях по всем объектам/каждому объекту?</li>
       </ul>
-      <i>Примечание: при нажатии на название статуса в панели под графиком будет отображена динамика этого статуса по всем объектам</i>
+      <!--<i>Примечание: при нажатии на название статуса в панели под графиком будет отображена динамика этого статуса по всем объектам</i>-->
     </div>
   </div>
   <div class="col-sm-12" style="margin-top: 20px">
       <div class="col-sm-6 ">
         <div class="btn-group" data-toggle="buttons" id="value_filter">
-          <label label-default="" id="in-pcs" class="btn btn-default " data="pcs_status_data">
+          <label label-default="" id="in-pcs" class="btn btn-default " data="count">
             <input name="options"  type="radio" checked="checked">В квартирах
           </label>
-          <label label-default=""  id="in-m2" class="btn btn-default" data="m2_status_data">
+          <label label-default=""  id="in-m2" class="btn btn-default" data="m2">
             <input name="options"  type="radio">В м<sup>2</sup>
           </label>
-          <label label-default="" id="in-fin" class="btn btn-default active" data="finance_status_data">
+          <label label-default="" id="in-fin" class="btn btn-default active" data="fin">
             <input name="options"  type="radio">В финанасах
           </label>
         </div>
@@ -30,13 +30,13 @@
   </div>
   <div class="row">
     <div id="apartment-status-chart" class ="chart" style="height: 500px; width: 900px;"></div>
-    <div class="btn-group" style="margin-top: 60px; margin-left: 100px">
-      <button type="button" class="btn btn-default" onclick="showDetailChart(this)">Забронировано</button>
-      <button type="button" class="btn btn-default" onclick="showDetailChart(this)">Объявлен аукцион</button>
-      <button type="button" class="btn btn-default" onclick="showDetailChart(this)">Состоялся аукцион</button>
-      <button type="button" class="btn btn-default" onclick="showDetailChart(this)">Подписан ДКП</button>
-      <button type="button" class="btn btn-default" onclick="showDetailChart(this)">Передано ПС</button>
-    </div>
+    <!--<div class="btn-group" style="margin-top: 60px; margin-left: 100px">-->
+      <!--<button type="button" class="btn btn-default" onclick="showDetailChart(this)">Забронировано</button>-->
+      <!--<button type="button" class="btn btn-default" onclick="showDetailChart(this)">Объявлен аукцион</button>-->
+      <!--<button type="button" class="btn btn-default" onclick="showDetailChart(this)">Состоялся аукцион</button>-->
+      <!--<button type="button" class="btn btn-default" onclick="showDetailChart(this)">Подписан ДКП</button>-->
+      <!--<button type="button" class="btn btn-default" onclick="showDetailChart(this)">Передано ПС</button>-->
+    <!--</div>-->
 
   <div id="apartment-status-detail" class ="chart" style="height: 500px; width: 900px; display: none"></div>
   </div>
@@ -52,7 +52,7 @@
                  text: 'Данамика статуса "'+$(btn).text()+'"'
              },
              xAxis: {
-                 categories: ['Неделя 1', 'Неделя 2', 'Неделя 3', 'Неделя 4', 'Неделя 5']
+                 categories: []
              },
              yAxis: {
                  min: 0,
@@ -71,27 +71,7 @@
                      borderWidth: 0
                  }
              },
-             series: [{
-                 name: 'Некрасовка 1',
-                 data: getRandomArray(5,10,25)
-
-             }, {
-                 name: 'Некрасовка 2',
-                 data: getRandomArray(5,10,25)
-
-             }, {
-                 name: 'Солнцево',
-                 data: getRandomArray(5,10,25)
-
-             }, {
-                 name: 'Базовская',
-                 data: getRandomArray(5,10,25)
-
-             }, {
-                 name: 'Зеленоград',
-                 data: getRandomArray(5,10,25)
-
-             }]
+             series: []
          });
      }
   </script>

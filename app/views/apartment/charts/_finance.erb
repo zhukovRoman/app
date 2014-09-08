@@ -6,7 +6,7 @@
         <li>Сколько денег всего получено на текущий момент (накопительным итогом) за несколько недель по всем объектам/каждому объекту?</li>
         <li>Сколько из этой суммы ушло на услуги риэлтора?</li>
       </ul>
-      <i>Примечание: так как данные случайны, то фильтры не будут приводить к изменению графика</i>
+      <!--<i>Примечание: так как данные случайны, то фильтры не будут приводить к изменению графика</i>-->
     </div>
   </div>
 
@@ -18,23 +18,20 @@
   </div>
   <script type="application/javascript">
       $(function () {
-          $('#apartment-finance-realtor').highcharts({
+          finance_realtor_chart = new Highcharts.Chart({
               credits:  {
                   enabled: false
               },
               chart: {
 //                type: 'area'
-                  type: 'column'
+                  type: 'column',
+                  renderTo:'apartment-finance-realtor'
               },
               title: {
                   text: 'Накопительное получение финансов'
               },
               xAxis: {
-                  categories: ['Неделя 1', 'Неделя 2', 'Неделя 3', 'Неделя 4', 'Неделя 5'],
-                  tickmarkPlacement: 'on',
-                  title: {
-                      enabled: false
-                  }
+                  categories: getWeeksCategories()
               },
               yAxis: {
                   title: {
@@ -80,13 +77,61 @@
               },
               series: [{
                   name: 'Получил риэлтор',
-                  data: [30, 62, 100, 150, 221]
+                  data: []
               }, {
                   name: 'Получено',
-                  data: [100, 220, 330, 500, 700]
+                  data: []
 
               }]
           });
+
+          redrawFinanceRealtorChart = function(){
+              $.each(filtered_apartments, function(i,val){
+                  if (!(val.status=='ДКП' || val.status == 'ПС'))
+                      return;
+                  apart_date = moment(val.ps_date||val.dkp_date)
+
+                  $.each(getWeeksStarts(), function(t,week){
+                      if(weeks_group[t]==null) weeks_group[t]=[]
+                      if (apart_date.diff(week, 'days')>=0 && apart_date.diff(week, 'days')<7)
+                      {
+                          weeks_group[t].push(val)
+                      }
+                  })
+              })
+              weeks_data = [];
+              $.each (weeks_group, function(i,group){
+                  if (weeks_data[i]==null) weeks_data[i]={getFinance:0, fee:0}
+
+                  $.each(group, function(t,apart){
+                      weeks_data[i]['fee']+=apart.realtor_fee;
+                      weeks_data[i]['getFinance']+=apart.end_summ
+                  })
+
+              })
+              console.log(weeks_data)
+              series_fee = []
+              series_get = []
+              $.each(weeks_data, function(i,val){
+                  if (i==0){
+                      series_fee.push(val.fee)
+                      series_get.push(val.getFinance)
+                  }
+                  else{
+                      series_fee.push(val.fee+series_fee[i-1])
+                      series_get.push(val.getFinance+series_get[i-1])
+                  }
+              })
+              $.each(series_fee, function(i,val){
+                  series_fee[i]=parseFloat((series_fee[i]/100000).toFixed(0))
+                  series_get[i]=parseFloat((series_get[i]/100000).toFixed(0))
+              })
+              finance_realtor_chart.series[0].setData(series_fee)
+              finance_realtor_chart.series[1].setData(series_get)
+          }
+
+          redrawFinanceRealtorChart();
+
       });
   </script>
 </div>
