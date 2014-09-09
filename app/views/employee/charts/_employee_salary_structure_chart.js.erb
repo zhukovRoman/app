@@ -8,6 +8,8 @@ $(function () {
         }, 100);
     }
 
+
+
     empoloyee_count_months = <%= @plotDataEmployeeCount.to_json.html_safe %>;
     employee_count_departments_tooltip = []
     $.each(<%= @plotDataDepEmployeeStats['employee_count'].to_json.html_safe %>, function (i,val){
@@ -34,6 +36,7 @@ $(function () {
                             returnYearChart).add();
                     chart.series[2].show();
                     employee_count_infos=employee_count_departments_tooltip;
+
                 });
     }
     var chartYear = {
@@ -93,7 +96,7 @@ $(function () {
             formatter: function() {
                 var result = '<b>' + this.x + '</b>';
                 $.each(this.points, function(i, datum) {
-                    result += '<br /> <i style="color:'+datum.series.color+'">' + datum.series.name + '</i>: ' + datum.y + ' тыч. руб';
+                    result += '<br /> <i style="color:'+datum.series.color+'">' + datum.series.name + '</i>: ' + datum.y + ' руб';
 
                 });
                 //console.log(this);
