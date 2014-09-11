@@ -119,6 +119,8 @@ class EmployeeController < ApplicationController
   end
 
   def vacancies
+      authorize! :vacancies, self
+
       @month = params[:month]
       if (@month== nil)
         @month = Date.current.month
