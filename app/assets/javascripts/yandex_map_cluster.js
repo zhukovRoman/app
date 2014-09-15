@@ -286,7 +286,7 @@ function init_map_all_object() {
     myMap = new ymaps.Map('map', {
             center: center,
             zoom: 10,
-            behaviors: ["default", "scrollZoom"]
+            behaviors: ["default"]
         }),
 
     // Создадим макет правой части балуна кластера.
@@ -375,7 +375,7 @@ function init_map_all_object() {
 
     // Добавим полученные геообъекты в кластеризатор.
     clusterer = new PieChartClusterer();
-
+    myMap.behaviors.disable('scrollZoom')
     rebind_markers();
 
 }
