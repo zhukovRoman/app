@@ -18,7 +18,7 @@ class TendersController < ApplicationController
     @result['one_start']=Hash.new
     @result['count']=Hash.new
 
-     ObjectTender.all.each do |t|
+   ObjectTender.all.each do |t|
       date = Date.parse(t.date_start.to_s)
       if (!years.include? date.year)
         years.push(date.year)
@@ -29,6 +29,7 @@ class TendersController < ApplicationController
       @result['one_end'][date.year] = (@result['one_end'][date.year]||0) + (t.price_m2_end||0)
       @result['one_start'][date.year] = (@result['one_start'][date.year]||0) + (t.price_m2_start||0)
       @result['prices_percent'][date.year] = (@result['prices_percent'][date.year]||0) + (t.percent_decline||0)
+
     end
     @result['years']=years
     @result['types_chart_data']=Array.new
@@ -50,7 +51,7 @@ class TendersController < ApplicationController
     @result['qty']=ObjectTender.get_qty_tenders_count
     @result['qty_sum']=ObjectTender.get_qty_tenders_sum
     @result['qty_years'] = Array.new
-    ObjectTender.select('YEAR(DataDeclaration) as year').distinct.each do |y|
+    ObjectTender.select('YEAR(DataFinish) as year').distinct.each do |y|
       @result['qty_years'].push y.year
     end
 
@@ -73,6 +74,8 @@ class TendersController < ApplicationController
       tender['bid_all']=t.bid_all||0
       tender['bid_accept']=t.bid_accept||0
       tender['bid_reject']=(t.bid_all||0)-(t.bid_accept||0)
+      tender['uk_only']=t.isUkOnly
+      tender['without_uk']=t.isWithoutUk
       if t.obj != nil
         tender['appointment']=t.obj.appointment
         @tenders.push tender

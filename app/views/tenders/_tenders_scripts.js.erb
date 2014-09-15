@@ -76,63 +76,6 @@ $(function () {
         }]
     });
 
-    m2_chart = new Highcharts.Chart({
-        credits:  {
-            enabled: false
-        },
-        chart: {
-            type: 'column',
-            renderTo:'m2_chart_type'
-        },
-        title: {
-            text: 'Стоимость ед. мощности по конкурсам разного типа'
-        },
-        xAxis: {
-            categories: data.years
-        },
-        yAxis: [{
-            min: 0,
-            title: {
-                text: 'Стоимость кв. м. по конкурсу'
-            },
-            stackLabels: {
-                enabled: true,
-                style: {
-                    fontWeight: 'bold',
-                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
-                }
-            }
-        }],
-        plotOptions: {
-            column: {
-                dataLabels: {
-                    enabled: true,
-                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
-                    style: {
-                        textShadow: '0 0 3px black, 0 0 3px black'
-                    }
-                }
-            }
-        },
-        tooltip:{
-          shared: true
-        },
-        series: [{
-            type: 'spline',
-            name: 'УК',
-            data: data.uk_m2_price,
-            tooltip: {
-                valueSuffix: ' тыс. руб'
-            }
-        },{
-            type: 'spline',
-            name: 'Генподряд',
-            data: data.gen_m2_price,
-            tooltip: {
-                valueSuffix: ' тыс. руб'
-            }
-        }]
-    });
 
 });
 $(function () {

@@ -26,6 +26,22 @@ class ObjectTender < ActiveRecord::Base
   #  return Obj.where(object_id = self.object_id)
   #end
 
+  def isUkOnly
+    if (self.type=='управляющая компания' && ObjectTender.where(object_id: self.object_id).count==1)
+      #  по объекту существует всего 1 конкурс и тот на УК
+      return true;
+    end
+    return false;
+  end
+
+  def isWithoutUk
+    if (ObjectTender.where(object_id: self.object_id, type: 'управляющая компания').count==0)
+    #  по объекту не было торогов на УК
+      return true
+    end
+    return false;
+  end
+
   def self.frendly_date (date)
     date =  Date.parse(date.to_s(:db))
     return date.year.to_s+"-"+date.month.to_s+"-"+date.day.to_s
@@ -36,7 +52,7 @@ class ObjectTender < ActiveRecord::Base
     item = Hash.new
     item['name']='1 заявка'
     item['data']=Array.new
-    ObjectTender.group('Year(DataDeclaration)').where('TenderQtyAccept=1').count(:object_id).each do |k,v|
+    ObjectTender.group('Year(DataFinish)').where('TenderQtyAccept=1').count(:object_id).each do |k,v|
       item['data'].push(v)
     end
     res.push(item)
@@ -44,7 +60,7 @@ class ObjectTender < ActiveRecord::Base
     item = Hash.new
     item['name']='2 заявки'
     item['data']=Array.new
-    ObjectTender.group('Year(DataDeclaration)').where('TenderQtyAccept=2').count(:object_id).each do |k,v|
+    ObjectTender.group('Year(DataFinish)').where('TenderQtyAccept=2').count(:object_id).each do |k,v|
       item['data'].push(v)
     end
     res.push(item)
@@ -52,7 +68,7 @@ class ObjectTender < ActiveRecord::Base
     item = Hash.new
     item['name']='3 заявки'
     item['data']=Array.new
-    ObjectTender.group('Year(DataDeclaration)').where('TenderQtyAccept=3').count(:object_id).each do |k,v|
+    ObjectTender.group('Year(DataFinish)').where('TenderQtyAccept=3').count(:object_id).each do |k,v|
       item['data'].push(v)
     end
     res.push(item)
@@ -60,7 +76,7 @@ class ObjectTender < ActiveRecord::Base
     item = Hash.new
     item['name']='4 заявки и более'
     item['data']=Array.new
-    ObjectTender.group('Year(DataDeclaration)').where('TenderQtyAccept>3').count(:object_id).each do |k,v|
+    ObjectTender.group('Year(DataFinish)').where('TenderQtyAccept>3').count(:object_id).each do |k,v|
       item['data'].push(v)
     end
     res.push(item)
@@ -73,7 +89,7 @@ class ObjectTender < ActiveRecord::Base
     item = Hash.new
     item['name']='1 заявка'
     item['data']=Array.new
-    ObjectTender.group('Year(DataDeclaration)').where('TenderQtyAccept=1').sum(:price_end).each do |k,v|
+    ObjectTender.group('Year(DataFinish)').where('TenderQtyAccept=1').sum(:price_end).each do |k,v|
       item['data'].push((v/(1000*1000*1000)).round 3)
     end
     res.push(item)
@@ -81,7 +97,7 @@ class ObjectTender < ActiveRecord::Base
     item = Hash.new
     item['name']='2 заявки'
     item['data']=Array.new
-    ObjectTender.group('Year(DataDeclaration)').where('TenderQtyAccept=2').sum(:price_end).each do |k,v|
+    ObjectTender.group('Year(DataFinish)').where('TenderQtyAccept=2').sum(:price_end).each do |k,v|
       item['data'].push((v/(1000*1000*1000)).round 3)
     end
     res.push(item)
@@ -89,7 +105,7 @@ class ObjectTender < ActiveRecord::Base
     item = Hash.new
     item['name']='3 заявки'
     item['data']=Array.new
-    ObjectTender.group('Year(DataDeclaration)').where('TenderQtyAccept=3').sum(:price_end).each do |k,v|
+    ObjectTender.group('Year(DataFinish)').where('TenderQtyAccept=3').sum(:price_end).each do |k,v|
       item['data'].push((v/(1000*1000*1000)).round 3)
     end
     res.push(item)
@@ -97,7 +113,7 @@ class ObjectTender < ActiveRecord::Base
     item = Hash.new
     item['name']='4 заявки и более'
     item['data']=Array.new
-    ObjectTender.group('Year(DataDeclaration)').where('TenderQtyAccept>3').sum(:price_end).each do |k,v|
+    ObjectTender.group('Year(DataFinish)').where('TenderQtyAccept>3').sum(:price_end).each do |k,v|
       item['data'].push((v/(1000*1000*1000)).round(3))
     end
     res.push(item)
