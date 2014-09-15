@@ -20,10 +20,14 @@ class ObjectController < ApplicationController
       object['year'] = o.getYearCorrect.to_s
       object['MGE']=o.getMGEStatus.to_s
       object['razresh']=o.getRazreshStatus.to_s
+      object['bank_garant']=o.getBankGarantStatus.to_s
+      object['destroy']=o.getDestroyStatus.to_s
       plansdate = Hash.new
       plansdate['GPZU']=o.object_document.GPZU_plan.to_s
       plansdate['MGE']=o.object_document.MGE_plan.to_s
       plansdate['razresh']=o.object_document.razrezh_build_plan.to_s
+      plansdate['bank_garant']=Date.current.to_s
+      plansdate['destroy']=(o.demolition_date_plan||Date.current).strftime('%d.%m.%Y')
       object['plansDates']=plansdate
       object['appointment']=o.appointment
       object['payed']=o.object_finance.pay_current_year||0
@@ -84,7 +88,7 @@ class ObjectController < ApplicationController
         obj['internal']=o.SMR_internal||'-'
         obj['internal_delay']=o.SMR_internal_delay||0
         finance = o.get_object_finance_by_type(1).take
-        obj['contract_sum']=finance == nil ? 0 : finance.work_summ
+        obj['contract_sum']=finance == nil ? 0 : (finance.work_summ||0).round
         org_objects.push(obj)
       end
       temporary_obj['objects']=org_objects

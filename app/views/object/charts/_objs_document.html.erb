@@ -12,10 +12,12 @@
 
 <div class="row">
   <div class="col-sm-12" >
-    <ul class="nav nav-pills" id="documents" style=" float: left; margin-left: 300px;">
+    <ul class="nav nav-pills" id="documents" style=" float: left; margin-left: 200px;">
       <li id="GPZU" class="active" data-title="ГПЗУ"><a href="#">ГПЗУ</a></li>
-      <li id="MGE" data-title="экспертизы"><a href="#">Экспертиза</a></li>
-      <li id="razresh" data-title="разрешения"><a href="#">Разрешение</a></li>
+      <li id="MGE" data-title="Наличие экспертизы"><a href="#">Экспертиза</a></li>
+      <li id="razresh" data-title="Наличие разрешения"><a href="#">Разрешение</a></li>
+      <li id="bank_garant" data-title="Погашение БГ"><a href="#">Банковкая гарантия</a></li>
+      <li id="destroy" data-title="Выполнение сноса"><a href="#">Снос</a></li>
     </ul>
     <button type="button" class="btn btn-danger" style="float: left; margin-top: 3px; margin-left: 35px;" id="overdue_link">Список просроченных</button>
   </div>
@@ -168,10 +170,21 @@
            if (val[document]=='Просрочено')
             overdues_objects.push(val);
         });
-        bindOverdueObjects(document, overdues_objects);
+        bindOverdueObjects(document, overdues_objects.sort(compareOverdueObjects));
         $("#overdue_table_row").show('slow');
         scrollToAnchor('overdue_table_body');
         console.log(overdues_objects);
+    }
+
+    compareOverdueObjects = function(a, b){
+        var doc = getCurrentDocument();
+        var one = moment(a.plansDates[doc], "DD.MM.YYYY")
+        var two = moment(b.plansDates[doc], "DD.MM.YYYY")
+        if (one.diff(two)<0)
+            return -1;
+        if (one.diff(two)>0)
+            return 1;
+        return 0;
     }
 
     function scrollToAnchor(id){
@@ -186,7 +199,7 @@
         $.each(objs, function(i, val){
             var row = document.createElement('tr');
             $(row).addClass('danger');
-            row.innerHTML = "<td>"+i+"</td>"+
+            row.innerHTML = "<td>"+(i+1)+"</td>"+
                             "<td><a href='view?id="+val.id+"'>"+val.adress+"</a></td>"+
                             "<td>"+val.plansDates[doc]+"</td>"+
                             "<td>"+val.manager+"</td>";
@@ -343,7 +356,7 @@
         allTitle.attr({
             text: summ
         });
-        chart.setTitle({ text: 'Наличие '+ $("#"+currentDocument).attr('data-title') })
+        chart.setTitle({ text:  $("#"+currentDocument).attr('data-title') })
     }
 
     createFinChart = function(){

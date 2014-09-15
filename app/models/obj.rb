@@ -110,6 +110,31 @@ class Obj < ActiveRecord::Base
     return self.object_document.getRazreshStatus
   end
 
+  def getBankGarantStatus
+    status = 'Погашена'
+    self.object_finance_by_work_types.each do |wtype|
+      if wtype.bankGarantyStatus != status
+        return 'Просрочено'
+      end
+    end
+    return status;
+  end
+
+  def getDestroyStatus
+    if (self.demolition_date_plan==nil && self.demolition_date==nil)
+      return 'Не требуется'
+    end
+    if (self.demolition_date!=nil)
+      return 'Выпоненен'
+    end
+    if(self.demolition_date_plan!=nil && self.demolition_date==nil && Date.parse(self.demolition_date_plan.to_s)>Date.current)
+      return 'Требуется'
+    end
+    if(self.demolition_date_plan!=nil && self.demolition_date==nil && Date.parse(self.demolition_date_plan.to_s)<Date.current)
+      return 'Просрочено'
+    end
+  end
+
   def self.getAllDistricts
     return Obj.where(is_archive: 0).select('region').distinct
   end

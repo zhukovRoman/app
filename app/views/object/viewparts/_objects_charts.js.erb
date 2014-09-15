@@ -15,7 +15,11 @@ $(function () {
         subtitle: {
             text: '<%= @object.get_object_finance_by_type(1).take.organization_name %> ' +
                     'по договору '+
-                    '<%= @object.get_object_finance_by_type(1).take.document_number %>'
+                    '<%= @object.get_object_finance_by_type(1).take.document_number %>'+
+                    '<br>' +
+                    'Сумма конракта '+
+                    '<%= number_to_currency(@object.get_object_finance_by_type(1).take.work_summ.round,
+                                            unit: "₽", separator: ",", delimiter: " ", format: "%n %u") %>'
         },
         tooltip: {
             formatter: function () {
@@ -69,7 +73,11 @@ $(function () {
         subtitle: {
             text: '<%= @object.get_object_finance_by_type(1).take.organization_name %> ' +
                     'по договору '+
-                    '<%= @object.get_object_finance_by_type(1).take.document_number %>'
+                    '<%= @object.get_object_finance_by_type(1).take.document_number %>'+
+                    '<br>' +
+                    'Сумма конракта '+
+                    '<%= number_to_currency(@object.get_object_finance_by_type(1).take.work_summ.round,
+                                            unit: "₽", separator: ",", delimiter: " ", format: "%n %u") %>'
         },
         tooltip: {
             formatter: function () {

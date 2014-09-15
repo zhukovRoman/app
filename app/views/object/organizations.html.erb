@@ -71,10 +71,10 @@
             var row = document.createElement('tr');
             if (val.internal_delay!=0 || val.constructive_delay!=0 || val.network_delay!=0)
                 $(row).addClass('danger');
-            row.innerHTML = "<td>"+i+"</td><td>"+val.region+"</td>"+
+            row.innerHTML = "<td>"+(i+1)+"</td><td>"+val.region+"</td>"+
                     "<td>"+val.year+"</td>"+
                     "<td>"+get_url_for_object_view(val.id, val.address)+"</td>"+
-                    "<td>"+val.contract_sum+"</td>"+
+                    "<td>"+val.contract_sum+"₽</td>"+
                     "<td>"+val.network+'/'+val.network_delay+"</td>"+
                     "<td>"+val.constructive+'/'+val.constructive_delay+"</td>"+
                     "<td>"+val.internal+'/'+val.internal_delay+"</td>";

@@ -47,4 +47,9 @@ class ObjectFinanceByWorkType < ActiveRecord::Base
     ap = self.avans_pogasheno||0
     return ((wc - ( av - ap))||0).round
   end
+
+  def bankGarantyStatus
+    #if self.bank_deadline
+    return 'Просрочено'
+  end
 end
