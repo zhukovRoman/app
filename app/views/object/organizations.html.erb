@@ -24,7 +24,7 @@
   </tbody>
 </table>
 <div id="fin_chart" style="width: 1000px; height: 500px"></div>
-
+<div id="work_chart" style="width: 1000px; height: 500px"></div>
 
 <h3>Торги</h3>
 <table class="table table-condensed">
@@ -52,7 +52,8 @@
         current_organization = organization_find(p.selected);
         console.log(current_organization);
         bind_tables();
-        create_fin_chart(current_organization.payed_left, current_organization.work_complete, current_organization.work_incomplete);
+        create_fin_chart(current_organization.payed_left, current_organization.payed, current_organization.avans_pogasheno, current_organization.avans_ne_pogasheno);
+        create_work_chart(current_organization.work_complete, current_organization.work_left, current_organization.avans_pogasheno);
     };
 
     organization_find = function (id){
@@ -119,7 +120,7 @@
 
 
     organizations = <%= @organizations.to_json.html_safe %>
-    create_fin_chart = function(payed_left, work_complete, work_incomplete ){
+    create_fin_chart = function(payed_left, payed, avans_pogasheno, avans_ne_pogasheno ){
                 // Build the chart
                 fin_chart = new Highcharts.Chart({
                     credits:  {
@@ -132,7 +133,7 @@
                         plotShadow: false
                     },
                     title: {
-                        text: 'Финансы по контрагенту'
+                        text: 'Оплаты по контрагенту'
                     },
                     tooltip: {
                         formatter: function () {
@@ -157,15 +158,66 @@
                     series: [{
                         type: 'pie',
                         name: 'Сумма',
-                        innerSize: '0%',
+                        innerSize: '50%',
                         data: [
                             ['Осталось оплатить', payed_left],
-                            ['Оплачено за работу', work_complete],
-                            ['Выдано авансов', work_incomplete]
+                            ['Не погашено авансов', avans_ne_pogasheno],
+                            ['Погашено авансов', avans_pogasheno],
+                            ['Оплачено', payed]
 
                         ]
                     }]
                 });
             }
+
+    create_work_chart = function(work_complete, work_incomlete, avans_pogasheno){
+        // Build the chart
+        fin_chart = new Highcharts.Chart({
+            credits:  {
+                enabled: false
+            },
+            chart: {
+                renderTo:'work_chart',
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false
+            },
+            title: {
+                text: 'Выполнение работ контрагентом'
+            },
+            tooltip: {
+                formatter: function () {
+                    var s ="";
+                    $.each(this.series.points, function (i, point) {
+                        s += "<b>"+point.name + '</b> ' + point.y + ' млн рублей <br/>';
+                    });
+                    return s;
+                },
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                pie: {
+                    center: ['50%', '50%'],
+                    dataLabels: {
+                        enabled: true
+                    },
+                    showInLegend: true
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: 'Сумма',
+                innerSize: '50%',
+                data: [
+                    ['Выполнено работ', work_complete],
+                    ['Выполнено в счет аванса', avans_pogasheno],
+                    ['Остаток выполнения', avans_pogasheno]
+
+
+                ]
+            }]
+        });
+    }
 
 </script>

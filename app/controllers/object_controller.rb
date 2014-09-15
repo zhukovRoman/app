@@ -71,8 +71,12 @@ class ObjectController < ApplicationController
       temporary_obj['name']=org.name
       temporary_obj['id']=org.id
       temporary_obj['payed_left']=(org.residue_summ_for_all_objects/1000000).round
+      temporary_obj['payed']=(org.payed_for_work_for_all_objects/1000000).round
+      temporary_obj['avans_pogasheno']=(org.avans_pagasheno_for_all_objects/10000000).round
+      temporary_obj['avans_ne_pogasheno']=(org.avans_not_pagasheno_for_all_objects/10000000).round
       temporary_obj['work_complete']=(org.payed_for_work_for_all_objects/1000000).round
-      temporary_obj['work_incomplete']=(org.avans_vidano_for_all_objects/1000000).round
+      temporary_obj['work_left']=(org.work_left_summ_for_all_objects/1000000).round
+
       org_objects = Array.new
       org.objs.each do |o|
         obj = Hash.new
