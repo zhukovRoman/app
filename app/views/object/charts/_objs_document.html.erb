@@ -289,6 +289,7 @@
         $("#overdue_link").click(showOverdueObjects);
         createDocumentChart();
         createFinChart();
+        createWorkChart();
         redrawCharts();
     });
 
@@ -307,6 +308,7 @@
             filterObjects();
             redrawDocumentChart();
             redrawFinanceChart();
+            redrawWorkChart();
             if (myMap != undefined)
             {
                 filter_map_points();
@@ -330,16 +332,37 @@
         setTimeout(function() {
             var filteredObjects = window.filteredObjects;
             var data = [
-                ['Осталось оплатить',   0],
-                ['Оплачено за работу',       0],
-                ['Выдано авансов',   0]
+                ['Оплачено',   0],
+                ['Погашено авансов',       0],
+                ['Непогашено авансов',   0],
+                ['Остаток оплаты',   0]
             ];
             $.each(filteredObjects, function(i,obj){
-                data[0][1]+=(obj.limit-obj.payed)
-                data[1][1]+=obj.complete
-                data[2][1]+=obj.incomplete
+                data[0][1]+=obj.payed
+                data[1][1]+=obj.avans_pogasheno
+                data[2][1]+=obj.avans_ne_pogasheno
+                data[3][1]+=obj.payed_left
             });
             fin_chart.series[0].setData(data, true);
+        }, 100)
+
+    }
+
+    redrawWorkChart = function () {
+        //add some delay for addClass complete
+        setTimeout(function() {
+            var filteredObjects = window.filteredObjects;
+            var data = [
+                ['Выполнено всего',   0],
+                ['Выполнено в счет аванса',       0],
+                ['Остаток выполнения',   0]
+            ];
+            $.each(filteredObjects, function(i,obj){
+                data[0][1]+=obj.work_complete
+                data[1][1]+=obj.avans_pogasheno
+                data[2][1]+=obj.work_left
+            });
+            work_chart.series[0].setData(data, true);
         }, 100)
 
     }
@@ -372,7 +395,7 @@
                 plotShadow: false
             },
             title: {
-                text: 'Финансы '
+                text: 'Оплаты'
             },
             tooltip: {
                 formatter: function () {
@@ -387,23 +410,72 @@
             },
             plotOptions: {
                 pie: {
-                    center: ['50%', '50%']
-                },
-                showInLegend: true
+                    center: ['50%', '50%'],
+                    showInLegend: true
+                }
+
             },
             series: [{
                 type: 'pie',
                 name: 'Сумма',
                 innerSize: '50%',
                 data: [
-                    ['Не оплачено',   45.0],
-                    ['Выполнено и оплачено',       26.8],
-                    ['Оплачено, но не выполнено',    8.5]
+                    ['Не оплачено',   0],
+                    ['Выполнено и оплачено',       0],
+                    ['Оплачено, но не выполнено',    0]
 
                 ]
             }]
         });
     }
+
+    createWorkChart = function(){
+        // Build the chart
+        work_chart = new Highcharts.Chart({
+            credits:  {
+                enabled: false
+            },
+            chart: {
+                renderTo:'work_chart',
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false
+            },
+            title: {
+                text: 'Выполнение работ'
+            },
+            tooltip: {
+                formatter: function () {
+                    var s ="";
+                    $.each(this.series.points, function (i, point) {
+                        s += "<b>"+point.name + '</b> ' + (point.y/1000000).toFixed(3) + ' млн руб <br/>';
+                    });
+                    return s;
+                },
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                pie: {
+                    center: ['50%', '50%'],
+                    showInLegend: true
+                }
+
+            },
+            series: [{
+                type: 'pie',
+                name: 'Сумма',
+                innerSize: '50%',
+                data: [
+                    ['Не оплачено',   0],
+                    ['Выполнено и оплачено',       0],
+                    ['Оплачено, но не выполнено',    0]
+
+                ]
+            }]
+        });
+    }
+
 
     filterObjects = function ()
     {

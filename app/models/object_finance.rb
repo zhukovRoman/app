@@ -16,7 +16,29 @@ class ObjectFinance < ActiveRecord::Base
   alias_attribute "sumAIP", "SumAIP"
 
 
-  def incomplete_work
-    return self.pay_current_year||0-self.complete_work||0
+  #def incomplete_work
+  #  return self.pay_current_year||0-self.complete_work||0
+  #end
+
+  def payed
+    return in_contract||0
   end
+
+  def avans_pogasheno
+    return prepayment_complite||0
+  end
+
+  def avans_ne_pogasheno
+    return (prepayment_take||0)-(prepayment_complite||0)
+  end
+
+  def payed_left
+    return (in_contract||0)-(contract_payed||0)
+  end
+
+  def work_left
+    return (in_contract||0)-(prepayment_complite||0)-(complete_work||0)
+  end
+
+
 end
