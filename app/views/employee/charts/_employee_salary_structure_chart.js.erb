@@ -11,10 +11,8 @@ $(function () {
 
 
     empoloyee_count_months = <%= @plotDataEmployeeCount.to_json.html_safe %>;
-    employee_count_departments_tooltip = []
-    $.each(<%= @plotDataDepEmployeeStats['employee_count'].to_json.html_safe %>, function (i,val){
-        employee_count_departments_tooltip.push(val.y)
-    })
+    employee_count_departments_months = <%= @departmentsEmployeesMonthsCounts.to_json.html_safe %>
+
 
     employee_count_infos = empoloyee_count_months;
 
@@ -35,7 +33,7 @@ $(function () {
                             10,
                             returnYearChart).add();
                     chart.series[2].show();
-                    employee_count_infos=employee_count_departments_tooltip;
+                    employee_count_infos=employee_count_departments_months[this.textContent]
 
                 });
     }

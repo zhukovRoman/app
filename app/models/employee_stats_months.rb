@@ -11,7 +11,8 @@ class EmployeeStatsMonths < ActiveRecord::Base
     stat.salary = monthsSalaries.sum("salary") + monthsSalaries.sum("retention")
     stat.tax = monthsSalaries.sum("NDFL") + monthsSalaries.sum("tax")
     stat.bonus = monthsSalaries.sum("bonus")
-    avg_salary = monthsSalaries.average("salary")!=nil ? monthsSalaries.average("salary") : 0
+    #avg_salary = monthsSalaries.average("salary")!=nil ? monthsSalaries.average("salary") : 0
+    avg_salary = monthsSalaries.sum("salary")/Employee.get_real_count_of_employees
     avg_retention = monthsSalaries.average("retention") != nil ? monthsSalaries.average("retention") : 0
     stat.avg_salary = avg_salary  + avg_retention
     #stat.avg_salary = monthsSalaries.average("salary")+monthsSalaries.average("retention")

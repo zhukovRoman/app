@@ -98,6 +98,8 @@ class EmployeeController < ApplicationController
       @plotDataDepEmployeeStats['vacancy'].push(info)
     end
     @drilldownData = EmployeeStatsDepartments.get_data_for_drilldown
+    @departmentsEmployeesMonthsCounts = EmployeeStatsDepartments.getMonthsEmployeesCounts
+
   end
 
   def editmanagment

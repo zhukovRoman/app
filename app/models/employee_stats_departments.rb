@@ -11,13 +11,17 @@ class EmployeeStatsDepartments < ActiveRecord::Base
       end
       monthsSalaries = Salary.joins(:employee).where(
                     salaries: {salary_date: for_date.at_beginning_of_month..for_date.at_end_of_month},
-                    employees: {department_id: dep.id})
+                    employees: {department_id: dep.getIdsSelfAndChilds, is_delete: 0}).
+                    where.not(employees: {FIO: 'empty'})
 
         stat.salary = monthsSalaries.sum("salary") + monthsSalaries.sum("retention")
         stat.tax = monthsSalaries.sum("NDFL") + monthsSalaries.sum("tax")
         stat.bonus = monthsSalaries.sum("bonus")
         avg_salary = monthsSalaries.average("salary")!=nil ? monthsSalaries.average("salary") : 0
         avg_retention = monthsSalaries.average("retention") != nil ? monthsSalaries.average("retention") : 0
+        puts "----------#{avg_salary}------------"
+        puts "----------#{avg_retention}------------"
+        puts "----------#{avg_salary+avg_retention}------------"
         stat.avg_salary = avg_salary  + avg_retention
 
 
@@ -32,6 +36,18 @@ class EmployeeStatsDepartments < ActiveRecord::Base
       stat.save
     end
 
+  end
+
+  def self.getMonthsEmployeesCounts
+    standalone_month_names = ["", "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"]
+    res = Hash.new
+    EmployeeStatsDepartments.select(:month).distinct.each do |m|
+      res[standalone_month_names[m.month.month]] = Array.new
+      EmployeeStatsDepartments.where(month: m.month).each do |s|
+        res[@standalone_month_names[m.month.month]].push(s.employee_count)
+      end
+    end
+    return res
   end
 
   def self.get_data_for_drilldown
