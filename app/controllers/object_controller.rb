@@ -89,6 +89,7 @@ class ObjectController < ApplicationController
         obj['id']=o.id
         obj['name']=(o.name||'')[0,200]
         obj['address']=(o.adress||'')[0,200]
+        obj['status']=o.status_name||'-'
         obj['region']=o.region
         obj['year']=o.getYearCorrect
         obj['network']=o.SMR_external_network||'-'
