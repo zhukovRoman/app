@@ -78,6 +78,10 @@ class ObjectController < ApplicationController
       temporary_obj['avans_ne_pogasheno']=(org.avans_not_pagasheno_for_all_objects/10000000).round
       temporary_obj['work_complete']=(org.payed_for_work_for_all_objects/1000000).round
       temporary_obj['work_left']=(org.work_left_summ_for_all_objects/1000000).round
+      temporary_obj['phone']='Недоступно'
+      temporary_obj['email']='Недоступно'
+      temporary_obj['FIO'] = 'Недоступно'
+      temporary_obj['address'] = 'Недоступно'
 
       org_objects = Array.new
       org.objs.each do |o|

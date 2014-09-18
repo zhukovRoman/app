@@ -2,6 +2,32 @@
 <select id="organization_select" style="width: 350px">
   <option></option>
 </select>
+<form class="form-horizontal" role="form">
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Телефон</label>
+    <div class="col-sm-10">
+      <p class="form-control-static" id="tel"></p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">E-mail</label>
+    <div class="col-sm-10">
+      <p class="form-control-static" id="email"></p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Адрес</label>
+    <div class="col-sm-10">
+      <p class="form-control-static" id="address"></p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Генеральный директор</label>
+    <div class="col-sm-10">
+      <p class="form-control-static" id="FIO"></p>
+    </div>
+  </div>
+</form>
 <h3>Объекты</h3>
 <table class="table table-condensed">
   <thead>
@@ -50,11 +76,19 @@
     {
         //console.log($(this), evt, p);
         current_organization = organization_find(p.selected);
-        console.log(current_organization);
+        //console.log(current_organization);
+        bindContactInfo (current_organization);
         bind_tables();
         create_fin_chart(current_organization.payed_left, current_organization.payed, current_organization.avans_pogasheno, current_organization.avans_ne_pogasheno);
         create_work_chart(current_organization.work_complete, current_organization.work_left, current_organization.avans_pogasheno);
     };
+
+    bindContactInfo = function (org){
+        $('#tel').text(org.phone)
+        $('#email').text(org.email)
+        $('#FIO').text(org.FIO)
+        $('#address').text(org.address)
+    }
 
     organization_find = function (id){
         var res = null;
