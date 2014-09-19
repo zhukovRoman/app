@@ -30,7 +30,10 @@ class TendersController < ApplicationController
       @result['one_start'][date.year] = (@result['one_start'][date.year]||0) + (t.price_m2_start||0)
       @result['prices_percent'][date.year] = (@result['prices_percent'][date.year]||0) + (t.percent_decline||0)
 
-    end
+   end
+
+
+
     @result['years']=years
     @result['types_chart_data']=Array.new
     ObjectTender.group('TenderSName').sum(:price_end).each do |k, v|
@@ -76,8 +79,10 @@ class TendersController < ApplicationController
       tender['bid_reject']=(t.bid_all||0)-(t.bid_accept||0)
       tender['uk_only']=t.isUkOnly
       tender['without_uk']=t.isWithoutUk
+
       if t.obj != nil
         tender['appointment']=t.obj.appointment
+        tender['series']=(t.obj.seria=='ИНД') ? t.obj.seria : 'Сер'
         @tenders.push tender
       end
 
