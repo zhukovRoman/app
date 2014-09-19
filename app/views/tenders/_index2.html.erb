@@ -9,7 +9,13 @@
       <div class="btn btn-default parent_appointment " data-childs="['жилье', 'инженерия']">
         <div style="text-align: left;">Жилище</div>
         <div class="btn-group-vertical childs-appointment house_appointment">
-          <button type="button" class="btn btn-default child-appointment selected">жилье</button>
+          <div type="button" class="btn btn-default child-appointment selected">
+            <div class="sub_appointment">жилье</div>
+            <div class="btn-group house-type">
+              <button type="button" class="btn btn-default selected">ИНД</button>
+              <button type="button" class="btn btn-default selected">Сер</button>
+            </div>
+          </div>
           <button type="button" class="btn btn-default child-appointment">инженерия</button>
         </div>
       </div>
@@ -20,7 +26,7 @@
           <button type="button" class="btn btn-default child-appointment selected">ДОУ</button>
           <button type="button" class="btn btn-default child-appointment selected">Спорт - ФОК</button>
           <button type="button" class="btn btn-default child-appointment selected">ФОК</button>
-          <button type="button" class="btn btn-default child-appointment selected">школа</button>
+          <button type="button" class="btn btn-default child-appointment">школа</button>
         </div>
       </div>
       <div class="btn btn-default parent_appointment selected" data-childs="['Поликлиника']">
@@ -188,7 +194,19 @@
 
     getHouseFilter = function(){
         var res = [];
-        $.each($(".house_appointment button.selected"), function() {
+        $.each($(".house_appointment > button.selected"), function() {
+            res.push($(this).text())
+        })
+
+        $.each($(".house_appointment > div.selected > div.sub_appointment"), function() {
+            res.push($(this).text())
+        })
+        return res;
+    }
+
+    getHouseTypeFilter = function (){
+        var res = [];
+        $.each($(".house-type > button.selected"), function() {
             res.push($(this).text())
         })
         return res;
@@ -242,6 +260,17 @@
         redrawCharts();
     }
 
+    seriesSelect = function(){
+        event.cancelBubble = true;
+        if($(this).hasClass('selected')){
+            $(this).removeClass('selected');
+        }
+        else {
+            $(this).addClass('selected');
+        }
+        redrawCharts();
+    }
+
     parent_appointment_select = function(){
         //add_class
         if($(this).hasClass('selected')){
@@ -279,6 +308,8 @@
         $('.child-appointment').click(appointment_select);
         $('.parent_appointment').click(parent_appointment_select);
         $('.tenders_types button').click(type_select);
+        $('.house-type > button').click(seriesSelect);
+
         redrawCharts();
     })
 
@@ -316,8 +347,6 @@
         //console.log(filtered_tenders.length)
     }
 
-
-
     m2_price_chart = new Highcharts.Chart({
         credits:  {
             enabled: false
@@ -354,7 +383,7 @@
             },
             labels: {
                 formatter: function () {
-                    return this.value/1000 + ' тыс. руб';
+                    return this.value/1 + ' тыс. руб';
                 }
             },
             min: 0
@@ -375,7 +404,7 @@
         },
         series: [{
             name: 'средняя стоимость кв. м по годам',
-            data: [{y: 0}]
+            data: []
         }],
         drilldown: {
             series: []
@@ -615,7 +644,7 @@
             },
             labels: {
                 formatter: function () {
-                    return this.value/1000 + ' тыс. руб';
+                    return this.value/1 + ' тыс. руб';
                 }
             },
             min: 0
@@ -768,6 +797,7 @@
         $.each(tenders, function(i,val){
            if ($.inArray(val.type, types)==-1 || $.inArray(val.appointment, getHouseFilter())==-1)
            return;
+           if($.inArray(val.series, getHouseTypeFilter())==-1) return;
 
            if (tmp_res[val.year_finish]==null)
             tmp_res[val.year_finish]={m2:0, count:0}
@@ -778,6 +808,8 @@
         $.each(tmp_res, function(i,val){
             res.push({y:parseFloat((val.m2/(val.count*1000)).toFixed(0)), name: i, drilldown:true});
         })
+
+
         return res;
     }
 
@@ -975,40 +1007,49 @@
             }
 
         })
-        console.log(avgs);
+        //console.log(avgs);
 
 
         $.each (avgs, function(year,val){
             if(m2_house[year]==null)
                 m2_house[year]={name: year+'', data:[
-                    ['Янв',0],['Фев',0],['Март',0],['Апр',0],['Май',0],['Июнь',0],['Июль',0],['Авг',0],['Сен',0],['Окт',0],['Ноя',0],['Дек',0]
+                    ['Янв',null],['Фев',null],['Март',null],['Апр',null],['Май',null],['Июнь',null],['Июль',null],['Авг',null],['Сен',null],['Окт',null],['Ноя',null],['Дек',null]
                 ]}
-            //console.log(m2_house)
+
             $.each(val, function(month, month_data){
                 //console.log((month_data.m2_house/(month_data['house_count'])))
-                m2_house[year]['data'][month-1][1]= parseFloat((month_data.m2_house/(month_data['house_count'])).toFixed(0))||0
-                //console.log(parseFloat((month_data.m2_house/(month_data['house_count'])).toFixed(3)),month_data.m2_house,(month_data['house_count']) )
+                m2_house[year]['data'][month-1][1]= parseFloat((month_data.m2_house/(month_data['house_count']*1000)).toFixed(0))||0
+                if (m2_house[year]['data'][month-1][1]==0) {
+                    m2_house[year]['data'][month-1][1]=null
+                }
+
+
             })
-            //console.log(m2_house)
+
         })
         $.each (avgs, function(year,val){
             if(m2_social[year]==null)
                 m2_social[year]={name: year+'', data:[
-                    ['Янв',0],['Фев',0],['Март',0],['Апр',0],['Май',0],['Июнь',0],['Июль',0],['Авг',0],['Сен',0],['Окт',0],['Ноя',0],['Дек',0]
+                    ['Янв',null],['Фев',null],['Март',null],['Апр',null],['Май',null],['Июнь',null],['Июль',null],['Авг',null],['Сен',null],['Окт',null],['Ноя',null],['Дек',null]
                 ]}
             $.each(val, function(month, month_data){
-                m2_social[year]['data'][month-1][1]=  parseFloat((month_data.m2_social/(month_data['social_count'])).toFixed(0))||0
-
+                m2_social[year]['data'][month-1][1]=  parseFloat((month_data.m2_social/(month_data['social_count']*1000)).toFixed(0))||0
+                if (m2_social[year]['data'][month-1][1]==0) {
+                    m2_social[year]['data'][month-1][1]=null
+                }
             })
         })
 
         $.each (avgs, function(year,val){
             if(percents_data[val.year_finish]==null)
                 percents_data[year]={name: year+'', data:[
-                    ['Янв',0],['Фев',0],['Март',0],['Апр',0],['Май',0],['Июнь',0],['Июль',0],['Авг',0],['Сен',0],['Окт',0],['Ноя',0],['Дек',0]
+                    ['Янв',null],['Фев',null],['Март',null],['Апр',null],['Май',null],['Июнь',null],['Июль',null],['Авг',null],['Сен',null],['Окт',null],['Ноя',null],['Дек',null]
                 ]}
             $.each(val, function(month, month_data){
                 percents_data[year]['data'][month-1][1]=parseFloat((month_data.percent/(month_data['count'])).toFixed(2))||0
+                if (percents_data[year]['data'][month-1][1]==0) {
+                    percents_data[year]['data'][month-1][1]=null
+                }
             })
         })
 
@@ -1016,8 +1057,8 @@
             if(qty_data[val.year_finish]==null)
                 qty_data[year]={name: year+'', data_all:[], data_accept:[]}
             $.each(val, function(month, month_data){
-                qty_data[year]['data_all'][month-1]=parseFloat((month_data.qty_all/(month_data['count'])).toFixed(3))||0
-                qty_data[year]['data_accept'][month-1]=parseFloat((month_data.qty_accept/(month_data['count'])).toFixed(3))||0
+                qty_data[year]['data_all'][month-1]=parseFloat((month_data.qty_all/(month_data['count'])).toFixed(3))||null
+                qty_data[year]['data_accept'][month-1]=parseFloat((month_data.qty_accept/(month_data['count'])).toFixed(3))||null
             })
         })
 
@@ -1025,12 +1066,12 @@
             if(uk_data[val.year_finish]==null)
                 uk_data[year]={name: year+'', uk:[], notuk:[]}
             $.each(val, function(month, month_data){
-                uk_data[year]['uk'][month-1]=parseFloat((month_data.uk_price/(month_data['uk_count']||1)).toFixed(3))||0
-                uk_data[year]['notuk'][month-1]=parseFloat((month_data.notuk_price/(month_data['notuk_count']||1)).toFixed(3))||0
+                uk_data[year]['uk'][month-1]=parseFloat((month_data.uk_price/(month_data['uk_count']||1)).toFixed(3))||null
+                uk_data[year]['notuk'][month-1]=parseFloat((month_data.notuk_price/(month_data['notuk_count']||1)).toFixed(3))||null
             })
         })
 
-
+        console.log([[m2_house, m2_social],percents_data, qty_data, uk_data])
         return [[m2_house, m2_social],percents_data, qty_data, uk_data];
     }
 
