@@ -1,0 +1,33 @@
+#DocumentExistsInfo.panel-group
+  .panel.panel-default
+    .panel-heading
+      h4.panel-title
+        a data-parent="#accordion" data-toggle="collapse" href="#documentInfo1"
+          | Наличие документов
+    #documentInfo1.panel-collapse.collapse
+      .panel-body
+        .col-sm-4.ingeener-work-label ТнЗ
+        .col-sm-8 = 'Нет данных'
+        .col-sm-4.ingeener-work-label ТЗ
+        .col-sm-8 = 'Нет данных'
+        .col-sm-4.ingeener-work-label Перечень оборудования
+        .col-sm-8 = 'Нет данных'
+        .col-sm-4.ingeener-work-label Разрешение на строительство
+        .col-sm-8 = @object.object_document.razrezh_build_fact||'Не получено'
+        .col-sm-4.ingeener-work-label Задание на проектирование
+        .col-sm-8 = 'Нет данных'
+        .col-sm-4.ingeener-work-label БСП
+        .col-sm-8 = @object.object_document.BSP_fact||'Не получено'
+        .col-sm-4.ingeener-work-label Разрешения на ввод
+        .col-sm-8 = @object.object_document.razreshenie_enter_fact||'Не получено'
+        .col-sm-4.ingeener-work-label ЗОС
+        .col-sm-8 = 'Нет данных'
+        .col-sm-4.ingeener-work-label Стадия разработки П
+        .col-sm-8 = 'Нет данных'
+        .col-sm-4.ingeener-work-label Стадия разработки РД
+        .col-sm-8 = 'Нет данных'
+        .col-sm-4.ingeener-work-label Тех условия
+        .col-sm-8 = 'Нет данных'
+        .col-sm-4.ingeener-work-label Договор на тех присоединение
+        .col-sm-8 = 'Нет данных'
+
