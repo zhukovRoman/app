@@ -58,25 +58,17 @@ class ObjectTender < ActiveRecord::Base
     res.push(item)
 
     item = Hash.new
-    item['name']='2 заявки'
+    item['name']='от 2 до 4 заявок'
     item['data']=Array.new
-    ObjectTender.group('Year(DataFinish)').where('TenderQtyAccept=2').count(:object_id).each do |k,v|
+    ObjectTender.group('Year(DataFinish)').where('TenderQtyAccept>1 and TenderQtyAccept<5').count(:object_id).each do |k,v|
       item['data'].push(v)
     end
     res.push(item)
 
     item = Hash.new
-    item['name']='3 заявки'
+    item['name']='5 заявок и более'
     item['data']=Array.new
-    ObjectTender.group('Year(DataFinish)').where('TenderQtyAccept=3').count(:object_id).each do |k,v|
-      item['data'].push(v)
-    end
-    res.push(item)
-
-    item = Hash.new
-    item['name']='4 заявки и более'
-    item['data']=Array.new
-    ObjectTender.group('Year(DataFinish)').where('TenderQtyAccept>3').count(:object_id).each do |k,v|
+    ObjectTender.group('Year(DataFinish)').where('TenderQtyAccept>4').count(:object_id).each do |k,v|
       item['data'].push(v)
     end
     res.push(item)
@@ -95,26 +87,18 @@ class ObjectTender < ActiveRecord::Base
     res.push(item)
 
     item = Hash.new
-    item['name']='2 заявки'
+    item['name']='от 2 до 4 заявок'
     item['data']=Array.new
-    ObjectTender.group('Year(DataFinish)').where('TenderQtyAccept=2').sum(:price_end).each do |k,v|
+    ObjectTender.group('Year(DataFinish)').where('TenderQtyAccept>1 and TenderQtyAccept<5').sum(:price_end).each do |k,v|
       item['data'].push((v/(1000*1000*1000)).round 3)
     end
     res.push(item)
 
     item = Hash.new
-    item['name']='3 заявки'
+    item['name']='5 заявок и более'
     item['data']=Array.new
-    ObjectTender.group('Year(DataFinish)').where('TenderQtyAccept=3').sum(:price_end).each do |k,v|
+    ObjectTender.group('Year(DataFinish)').where('TenderQtyAccept>4').sum(:price_end).each do |k,v|
       item['data'].push((v/(1000*1000*1000)).round 3)
-    end
-    res.push(item)
-
-    item = Hash.new
-    item['name']='4 заявки и более'
-    item['data']=Array.new
-    ObjectTender.group('Year(DataFinish)').where('TenderQtyAccept>3').sum(:price_end).each do |k,v|
-      item['data'].push((v/(1000*1000*1000)).round(3))
     end
     res.push(item)
 
