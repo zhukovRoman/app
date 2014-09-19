@@ -42,5 +42,9 @@ class ObjectFinance < ActiveRecord::Base
     return (in_contract||0)-(prepayment_complite||0)-(complete_work||0)
   end
 
+  def limit_residue
+    return (sum_titul_current_year||0)-(pay_current_year||0)
+  end
+
 
 end
