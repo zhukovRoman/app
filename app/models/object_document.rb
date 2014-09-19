@@ -15,8 +15,6 @@ class ObjectDocument < ActiveRecord::Base
   alias_attribute "BI_plan","DataPlanBI"
   alias_attribute "BSP_fact","DataBSP"
   alias_attribute "BSP_plan","DataPlanBSP"
-  alias_attribute "BSP_fact","DataBSP"
-  alias_attribute "BSP_plan","DataPlanBSP"
   alias_attribute "TZ_comm_fact","DataKomissiya"
   alias_attribute "TZ_comm_plan","DataPlanKomissiya"
 
