@@ -178,9 +178,10 @@
 
     getAppointmentFilter = function (){
         var res = [];
-        $.each($(".child-appointment.selected"), function() {
+        $.each($("button.child-appointment.selected, div.child-appointment.selected>div "), function() {
             res.push($(this).text())
         })
+
         return res;
     }
 
@@ -302,6 +303,30 @@
         redrawCharts();
     }
 
+    setDrillDownSummChart = function(){
+        var year=$(this).text()
+        var data= getDrillDownDataForSummChart(year);
+        console.log(data)
+
+        summ_chart.xAxis[0].setCategories(months,false)
+        summ_chart.series[0].setData(data['sum'][0],false)
+        summ_chart.series[1].setData(data['sum'][1],false)
+        summ_chart.series[2].setData(data['sum'][2],true)
+
+        summ_chart.renderer.button('Назад',
+                200,
+                10,
+                returnYearSummChart).add();
+
+    }
+    returnYearSummChart = function(){
+        summ_chart.series[0].setData(getDataForSummChart()['sum'][0],false)
+        summ_chart.series[1].setData(getDataForSummChart()['sum'][1],false)
+        summ_chart.series[2].setData(getDataForSummChart()['sum'][2],false)
+        summ_chart.xAxis[0].setCategories(data.years,true)
+        $('#sum_chart .highcharts-xaxis-labels > text').click(setDrillDownSummChart);
+    }
+
     $(function(){
         //$("#appointment_filter label").change(redrawCharts);
         $("#appointment_filter_top label").change(appointment_group_select);
@@ -310,7 +335,10 @@
         $('.tenders_types button').click(type_select);
         $('.house-type > button').click(seriesSelect);
 
+//        $('#sum_chart .highcharts-xaxis-labels').click(setDrillDownSummChart);
+
         redrawCharts();
+        $('#sum_chart .highcharts-xaxis-labels > text').click(setDrillDownSummChart);
     })
 
     filtered_tenders = [];
@@ -324,12 +352,12 @@
         qty_line_chart.series[1].setData(getDataForQtyLineChart()[1])
         uk_notuk_chart.series[0].setData(getDataForUKM2PriceChart()[0])
         uk_notuk_chart.series[1].setData(getDataForUKM2PriceChart()[1])
-        summ_chart.series[0].setData(getDataForSummCountChart()['sum'][0])
-        summ_chart.series[1].setData(getDataForSummCountChart()['sum'][1])
-        summ_chart.series[2].setData(getDataForSummCountChart()['sum'][2])
-        count_chart.series[0].setData(getDataForSummCountChart()['count'][0])
-        count_chart.series[1].setData(getDataForSummCountChart()['count'][1])
-        count_chart.series[2].setData(getDataForSummCountChart()['count'][2])
+        summ_chart.series[0].setData(getDataForSummChart()['sum'][0])
+        summ_chart.series[1].setData(getDataForSummChart()['sum'][1])
+        summ_chart.series[2].setData(getDataForSummChart()['sum'][2])
+        count_chart.series[0].setData(getDataForCountChart()['count'][0])
+        count_chart.series[1].setData(getDataForCountChart()['count'][1])
+        count_chart.series[2].setData(getDataForCountChart()['count'][2])
         //console.log(m2_price_chart.drilldown.series[0])
     }
 
@@ -713,7 +741,7 @@
         },
         yAxis: {
             title: {
-                text: 'Доля конкурсов по типу'
+                text: 'Доля конкурсов по типу (%)'
             }
         },
         tooltip: {
@@ -731,16 +759,22 @@
         },
         series: [{
             name:'Прочее',
-            data: []
+            data: [],
+            drilldown:true
         },
         {
             name:'Генподряд',
-            data: []
+            data: [],
+            drilldown:true
         },
         {
             name:'УК',
-            data: []
-        }]
+            data: [],
+            drilldown:true
+        }],
+        drilldown: {
+            series: []
+        }
     });
     count_chart = new Highcharts.Chart({
         credits:  {
@@ -883,7 +917,7 @@
         return res
     }
 
-    getDataForSummCountChart = function()
+    getDataForSummChart = function()
     {
         var res = {}
         var tmp_res = {};
@@ -896,27 +930,57 @@
             if(tmp_res[val.year_finish][type]==null)
                tmp_res[val.year_finish][type]={sum:0, count:0}
 
-            tmp_res[val.year_finish][type]['sum'] += val.price_m2_end;
+            tmp_res[val.year_finish][type]['sum'] += val.price_end;
             tmp_res[val.year_finish][type]['count'] ++;
         });
 
         console.log(tmp_res)
         summ_data = {}
-        count_data = {}
+
         $.each(tmp_res, function(year, year_data){
             $.each(year_data, function(type, data){
 
                 if(summ_data[type]==null)
                     summ_data[type]=[]
                 summ_data[type].push(data.sum/1000000)
+            })
+        })
+        //Другое, ГП, УК
+        return {sum: [summ_data['Другое'],summ_data['генподрядчик'],summ_data['управляющая компания']]}
+    }
+
+    getDataForCountChart = function()
+    {
+        var res = {}
+        var tmp_res = {};
+
+        $.each(filtered_tenders, function(i,val){
+
+            if (tmp_res[val.year_finish]==null)
+                tmp_res[val.year_finish]={}
+            var type = val.type
+            if(tmp_res[val.year_finish][type]==null)
+                tmp_res[val.year_finish][type]={sum:0, count:0}
+
+            tmp_res[val.year_finish][type]['sum'] += val.price_m2_end;
+            tmp_res[val.year_finish][type]['count'] ++;
+        });
+
+
+
+        count_data = {}
+        $.each(tmp_res, function(year, year_data){
+            $.each(year_data, function(type, data){
                 if(count_data[type]==null)
                     count_data[type]=[]
                 count_data[type].push(data.count)
             })
         })
-        //Другое, ГП, УК
-        return {sum: [summ_data['Другое'],summ_data['генподрядчик'],summ_data['управляющая компания']],
-                count: [count_data['Другое'],count_data['генподрядчик'],count_data['управляющая компания']]}
+
+        console.log(count_data);
+        res = {count:[]}
+        //return count_data;
+        return {count: [count_data['Другое'],count_data['генподрядчик'],count_data['управляющая компания']]}
     }
 
     getDataForQtyLineChart = function()
@@ -1075,6 +1139,46 @@
         return [[m2_house, m2_social],percents_data, qty_data, uk_data];
     }
 
+
+    getDrillDownDataForSummChart = function(year){
+        var res = {}
+        var tmp_res = {};
+
+        $.each(filtered_tenders, function(i,val){
+
+
+            if (val.year_finish != year) return;
+
+            if (tmp_res[val.month_finish]==null)
+                tmp_res[val.month_finish]={}
+            var type = (val.type=="управляющая компания"||val.type=="генподрядчик") ? val.type : 'Другое'
+            if(tmp_res[val.month_finish][type]==null)
+                tmp_res[val.month_finish][type]={sum:0}
+
+            tmp_res[val.month_finish][type]['sum'] += val.price_end;
+
+        });
+
+        console.log(tmp_res)
+        summ_data = {}
+
+        $.each(tmp_res, function(month, month_data){
+            $.each(month_data, function(type, data){
+                if(summ_data[type]==null)
+                    summ_data[type]=[]
+                summ_data[type][month-1]=(data.sum/1000000)
+            })
+        })
+
+        $.each(summ_data, function(type, type_data){
+            for(var i = 0; i<12; i++)
+            {
+                if (type_data[i]==null) type_data[i]=null
+            }
+        })
+        //Другое, ГП, УК
+        return {sum: [summ_data['Другое'],summ_data['генподрядчик'],summ_data['управляющая компания']]}
+    }
 
 
 </script>
