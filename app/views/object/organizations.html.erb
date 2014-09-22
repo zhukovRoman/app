@@ -99,11 +99,20 @@
         return res;
     }
 
+    function compare_objects_by_year(a,b) {
+        if (a.year < b.year)
+            return -1;
+        if (a.year > b.year)
+            return 1;
+        return 0;
+    }
+
     bind_tables = function(){
         var table = document.getElementById('body_table');
         $(table).html('');
         num = 0;
-        $.each(current_organization.objects, function(i, val){
+        var objects = current_organization.objects.sort(compare_objects_by_year)
+        $.each(objects, function(i, val){
             var row = document.createElement('tr');
             if (val.internal_delay!=0 || val.constructive_delay!=0 || val.network_delay!=0)
                 $(row).addClass('danger');
@@ -111,7 +120,7 @@
                     "<td>"+val.year+"</td>"+
                     "<td>"+get_url_for_object_view(val.id, val.address)+"</td>"+
                     "<td>"+val.status+"</td>"+
-                    "<td>"+val.contract_sum+"₽</td>"+
+                    "<td>"+thousands_sep(val.contract_sum)+" ₽</td>"+
                     "<td>"+val.network+'/'+val.network_delay+"</td>"+
                     "<td>"+val.constructive+'/'+val.constructive_delay+"</td>"+
                     "<td>"+val.internal+'/'+val.internal_delay+"</td>";
@@ -124,8 +133,8 @@
             date = new Date(val.DataFinish);
             row.innerHTML = "<td>"+val.TenderSName+"</td>"+
                     "<td>"+date.getDate()+"-"+date.getMonth()+"-"+date.getFullYear()+"</td>"+
-                    "<td>"+val.TenderPriceBegin+"</td>"+
-                    "<td>"+val.TenderPriceEnd+"</td>"+
+                    "<td>"+thousands_sep(val.TenderPriceBegin)+" ₽</td>"+
+                    "<td>"+thousands_sep(val.TenderPriceEnd.toFixed(0))+" ₽</td>"+
                     "<td>"+val.TenderProcentDecline.toFixed(2)+"</td>"+
                     "<td>"+val.TenderQtyPresent+"/"+val.TenderQtyAccept+"</td>";
             tenders_table.appendChild(row);
@@ -175,7 +184,7 @@
                         formatter: function () {
                             var s ="";
                             $.each(this.series.points, function (i, point) {
-                                s += "<b>"+point.name + '</b> ' + point.y + ' млн рублей <br/>';
+                                s += "<b>"+point.name + '</b> ' + thousands_sep(point.y) + ' млн рублей <br/>';
                             });
                             return s;
                         },
@@ -225,7 +234,7 @@
                 formatter: function () {
                     var s ="";
                     $.each(this.series.points, function (i, point) {
-                        s += "<b>"+point.name + '</b> ' + point.y + ' млн рублей <br/>';
+                        s += "<b>"+point.name + '</b> ' + thousands_sep(point.y) + ' млн рублей <br/>';
                     });
                     return s;
                 },
