@@ -66,6 +66,7 @@
             <div class="panel-body">
               <ul>
                 <li>Как изменяется средняя цена за м2 жилья по годам?</li>
+
               </ul>
             </div>
           </div>
@@ -378,8 +379,8 @@
 
     redrawCharts = function(){
         filter_tenders();
-        m2_price_chart.series[0].setData(getDataForM2PriceChart())
-        m2_social_price_chart.series[0].setData(getDataForM2SocialPriceChart())
+        //m2_price_chart.series[0].setData(getDataForM2PriceChart())
+        //m2_social_price_chart.series[0].setData(getDataForM2SocialPriceChart())
         price_percent_chart.series[0].setData(getDataForPricePercentChart())
         qty_line_chart.series[0].setData(getDataForQtyLineChart()[0])
         qty_line_chart.series[1].setData(getDataForQtyLineChart()[1])

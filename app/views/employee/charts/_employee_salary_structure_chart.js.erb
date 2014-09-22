@@ -1,4 +1,8 @@
 
+function thousands_sep (value)
+{
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
 $(function () {
     function returnYearChart() {
         setTimeout(function(){
@@ -15,6 +19,9 @@ $(function () {
 
 
     employee_count_infos = empoloyee_count_months;
+
+
+
 
     function rebindXaxis () {
         $('#salary_structure_chart .highcharts-axis-labels text, ' +
@@ -92,9 +99,11 @@ $(function () {
         },
         tooltip: {
             formatter: function() {
+
+
                 var result = '<b>' + this.x + '</b>';
                 $.each(this.points, function(i, datum) {
-                    result += '<br /> <i style="color:'+datum.series.color+'">' + datum.series.name + '</i>: ' + datum.y + ' руб';
+                    result += '<br /> <i style="color:'+datum.series.color+'">' + datum.series.name + '</i>: ' + thousands_sep(datum.y) + ' руб';
 
                 });
                 //console.log(this);
