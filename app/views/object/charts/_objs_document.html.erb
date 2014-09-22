@@ -382,6 +382,7 @@
         chart.setTitle({ text:  $("#"+currentDocument).attr('data-title') })
     }
 
+
     createFinChart = function(){
         // Build the chart
         fin_chart = new Highcharts.Chart({
@@ -401,7 +402,7 @@
                 formatter: function () {
                     var s ="";
                     $.each(this.series.points, function (i, point) {
-                        s += "<b>"+point.name + '</b> ' + (point.y/1000000).toFixed(3) + ' млн руб <br/>';
+                        s += "<b>"+point.name + '</b> ' + thousands_sep((point.y/1000000).toFixed(0)) + ' млн руб <br/>';
                     });
                     return s;
                 },
@@ -448,7 +449,7 @@
                 formatter: function () {
                     var s ="";
                     $.each(this.series.points, function (i, point) {
-                        s += "<b>"+point.name + '</b> ' + (point.y/1000000).toFixed(3) + ' млн руб <br/>';
+                        s += "<b>"+point.name + '</b> ' + thousands_sep((point.y/1000000).toFixed(0)) + ' млн руб <br/>';
                     });
                     return s;
                 },
