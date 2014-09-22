@@ -319,12 +319,44 @@
                 returnYearSummChart).add();
 
     }
+
+    setDrillDownCountChart = function(){
+        var year=$(this).text()
+
+        count_chart.renderer.button('Назад',
+                200,
+                10,
+                returnYearCountChart).add();
+        count_chart.xAxis[0].setCategories(months,false)
+        while(count_chart.series.length > 0)
+            count_chart.series[0].remove(false);
+
+        var data=getDrillDownDataForCountChart(year);
+        $.each(data, function(type,type_data){
+            count_chart.addSeries(type_data,false)
+        })
+        count_chart.redraw();
+
+
+    }
+
     returnYearSummChart = function(){
         summ_chart.series[0].setData(getDataForSummChart()['sum'][0],false)
         summ_chart.series[1].setData(getDataForSummChart()['sum'][1],false)
         summ_chart.series[2].setData(getDataForSummChart()['sum'][2],false)
         summ_chart.xAxis[0].setCategories(data.years,true)
         $('#sum_chart .highcharts-xaxis-labels > text').click(setDrillDownSummChart);
+    }
+
+    returnYearCountChart = function(){
+        while(count_chart.series.length > 0)
+            count_chart.series[0].remove(false);
+        count_data=getDataForCountChart();
+        $.each(count_data, function(type,type_data){
+            count_chart.addSeries(type_data,false)
+        })
+        count_chart.redraw();
+        $('#count_chart .highcharts-xaxis-labels > text').click(setDrillDownCountChart);
     }
 
     $(function(){
@@ -339,6 +371,7 @@
 
         redrawCharts();
         $('#sum_chart .highcharts-xaxis-labels > text').click(setDrillDownSummChart);
+        $('#count_chart .highcharts-xaxis-labels > text').click(setDrillDownCountChart);
     })
 
     filtered_tenders = [];
@@ -355,10 +388,14 @@
         summ_chart.series[0].setData(getDataForSummChart()['sum'][0])
         summ_chart.series[1].setData(getDataForSummChart()['sum'][1])
         summ_chart.series[2].setData(getDataForSummChart()['sum'][2])
-        count_chart.series[0].setData(getDataForCountChart()['count'][0])
-        count_chart.series[1].setData(getDataForCountChart()['count'][1])
-        count_chart.series[2].setData(getDataForCountChart()['count'][2])
-        //console.log(m2_price_chart.drilldown.series[0])
+
+        while(count_chart.series.length > 0)
+            count_chart.series[0].remove(false);
+        count_data=getDataForCountChart();
+        $.each(count_data, function(type,type_data){
+            count_chart.addSeries(type_data,false)
+        })
+        count_chart.redraw();
     }
 
     filter_tenders = function(){
@@ -372,7 +409,7 @@
                 filtered_tenders.push(t);
             }
         })
-        //console.log(filtered_tenders.length)
+
     }
 
     m2_price_chart = new Highcharts.Chart({
@@ -809,18 +846,7 @@
                 stacking: 'percent'
             }
         },
-        series: [{
-            name:'Прочее',
-            data: []
-        },
-            {
-                name:'Генподряд',
-                data: []
-            },
-            {
-                name:'УК',
-                data: []
-            }]
+        series: []
     });
 
     getDataForM2PriceChart = function()
@@ -951,36 +977,27 @@
 
     getDataForCountChart = function()
     {
-        var res = {}
         var tmp_res = {};
-
         $.each(filtered_tenders, function(i,val){
 
             if (tmp_res[val.year_finish]==null)
                 tmp_res[val.year_finish]={}
             var type = val.type
             if(tmp_res[val.year_finish][type]==null)
-                tmp_res[val.year_finish][type]={sum:0, count:0}
+                tmp_res[val.year_finish][type]={count:0}
 
-            tmp_res[val.year_finish][type]['sum'] += val.price_m2_end;
+
             tmp_res[val.year_finish][type]['count'] ++;
         });
-
-
-
-        count_data = {}
+        var count_data = {}
         $.each(tmp_res, function(year, year_data){
             $.each(year_data, function(type, data){
                 if(count_data[type]==null)
-                    count_data[type]=[]
-                count_data[type].push(data.count)
+                    count_data[type]={name: type, data:[]}
+                count_data[type]['data'].push([parseInt(year), data.count])
             })
         })
-
-        console.log(count_data);
-        res = {count:[]}
-        //return count_data;
-        return {count: [count_data['Другое'],count_data['генподрядчик'],count_data['управляющая компания']]}
+        return count_data;
     }
 
     getDataForQtyLineChart = function()
@@ -1141,13 +1158,12 @@
 
 
     getDrillDownDataForSummChart = function(year){
-        var res = {}
+
         var tmp_res = {};
 
         $.each(filtered_tenders, function(i,val){
-
-
-            if (val.year_finish != year) return;
+            if (val.year_finish != year)
+                return;
 
             if (tmp_res[val.month_finish]==null)
                 tmp_res[val.month_finish]={}
@@ -1159,7 +1175,7 @@
 
         });
 
-        console.log(tmp_res)
+
         summ_data = {}
 
         $.each(tmp_res, function(month, month_data){
@@ -1178,6 +1194,33 @@
         })
         //Другое, ГП, УК
         return {sum: [summ_data['Другое'],summ_data['генподрядчик'],summ_data['управляющая компания']]}
+    }
+
+    getDrillDownDataForCountChart = function(year){
+        var tmp_res = {};
+        $.each(filtered_tenders, function(i,val){
+
+            if (val.year_finish != year)
+                return;
+
+            if (tmp_res[val.month_finish]==null)
+                tmp_res[val.month_finish]={}
+            var type = val.type
+            if(tmp_res[val.month_finish][type]==null)
+                tmp_res[val.month_finish][type]={count:0}
+
+
+            tmp_res[val.month_finish][type]['count'] ++;
+        });
+        var count_data = {}
+        $.each(tmp_res, function(month, month_data){
+            $.each(month_data, function(type, data){
+                if(count_data[type]==null)
+                    count_data[type]={name: type, data:[]}
+                count_data[type]['data'].push([parseInt(month-1), data.count])
+            })
+        })
+        return count_data;
     }
 
 
