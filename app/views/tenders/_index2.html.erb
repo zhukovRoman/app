@@ -782,14 +782,37 @@
                 text: 'Доля конкурсов по типу (%)'
             }
         },
-        tooltip: {
-            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
-            shared: true,
-            //crosshairs: true,
-            valueSuffix: ' млн. руб',
-            valueDecimals: 1
+        tooltip:{
+            formatter: function() {
+                var result = '<b>' + this.x + '</b>';
+                $.each(this.points, function(i, datum) {
 
+                    result += '<br /> <i style="color: '+datum.point.series.color+'">'
+                            + datum.series.name + '</i>: '
+                            + thousands_sep(datum.y.toFixed(0)) + ' млн руб ('
+                            + datum.percentage.toFixed(0) + '%)';
+
+                });
+                //console.log(this.points)
+                //result += '<br />Среднее снижение цены ' + this.points[0].point.percent + '%'
+
+                return result;
+            },
+            //headerFormat: '<div style="font-size:13px">{point.key}</div>',
+            //pointFormat: '<div><b>{series.name}</b>: ' + '{point.y} человек</div>' ,
+            //footerFormat: '',
+            shared: true,
+            useHTML: true
         },
+//        tooltip: {
+//            //pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>' +thousands_sep(point.y)+'</b> ({point.percentage:.0f}%)<br/>',
+//            shared: true,
+//            //crosshairs: true,
+//            valueSuffix: ' млн. руб',
+//            valueDecimals: 1,
+//            formatter:
+//
+//        },
         plotOptions: {
             column: {
                 stacking: 'percent'
@@ -1148,8 +1171,8 @@
             if(uk_data[val.year_finish]==null)
                 uk_data[year]={name: year+'', uk:[], notuk:[]}
             $.each(val, function(month, month_data){
-                uk_data[year]['uk'][month-1]=parseFloat((month_data.uk_price/(month_data['uk_count']||1)).toFixed(3))||null
-                uk_data[year]['notuk'][month-1]=parseFloat((month_data.notuk_price/(month_data['notuk_count']||1)).toFixed(3))||null
+                uk_data[year]['uk'][month-1]=parseFloat((month_data.uk_price/((month_data['uk_count']*1000)||1)).toFixed(3))||null
+                uk_data[year]['notuk'][month-1]=parseFloat((month_data.notuk_price/((month_data['notuk_count']*1000)||1)).toFixed(3))||null
             })
         })
 

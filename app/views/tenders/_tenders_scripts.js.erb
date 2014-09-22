@@ -47,7 +47,7 @@ $(function () {
                 var result = '<b>' + this.x + '</b>';
                 $.each(this.points, function(i, datum) {
 
-                    result += '<br /> <i style="color: '+datum.point.series.color+'">' + datum.series.name + '</i>: ' + datum.y + ' млн руб';
+                    result += '<br /> <i style="color: '+datum.point.series.color+'">' + datum.series.name + '</i>: ' + thousands_sep(datum.y) + ' млн руб';
 
                 });
                 //console.log(this.points)
@@ -106,7 +106,7 @@ $(function () {
             },
             dataLabels: {
                 formatter: function () {
-                    return this.y > 1 ? '<b>' + this.point.name + ':</b> ' + toFixedAndParse(this.y/1, 0) + ' млн'  : null;
+                    return this.y > 1 ? '<b>' + this.point.name + ':</b> ' + thousands_sep(toFixedAndParse(this.y/1, 0)) + ' млн'  : null;
                 }
             }
         }]
@@ -156,7 +156,7 @@ $(function () {
             data: data.types_chart_count_data,
             dataLabels: {
                 formatter: function () {
-                    return this.y > 1 ? '<b>' + this.point.name + ':</b> ' + this.y + ''  : null;
+                    return this.y > 1 ? '<b>' + this.point.name + ':</b> ' + thousands_sep(this.y) + ''  : null;
                 }
             }
         }]
