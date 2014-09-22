@@ -20,7 +20,7 @@
       <p class="form-control-static"><%="1: #{@object.Q1Rooms.round||"-"} <br>".html_safe+
                                         "2: #{@object.Q2Rooms.round||"-"} <br>".html_safe+
                                         "3: #{@object.Q3Rooms.round||"-"} <br>".html_safe+
-                                        "4: #{@object.Q4Rooms.round||"-"}".html_safe %> </p>
+                                        "4: #{(@object.Q4Rooms||0).round||"-"}".html_safe %> </p>
     </div>
   </div>
   <div class="form-group">
