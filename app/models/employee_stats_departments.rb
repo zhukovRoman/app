@@ -62,13 +62,13 @@ class EmployeeStatsDepartments < ActiveRecord::Base
       salary = {'name'=>'Зарплата', 'data' => Array.new, 'tooltip'=>  {"valueSuffix"=>" руб"}}
       tax = {'name'=>'Налоги', 'data' => Array.new, 'tooltip'=>  {"valueSuffix"=>" руб"}}
       bonus = {'name'=>'Премии', 'data' => Array.new, 'tooltip'=>  {"valueSuffix"=>" руб"}}
-      avg = {'name'=>'Средняя зарплата', 'data' => Array.new, 'tooltip'=>  {"valueSuffix"=>" руб"}, "type"=>'spline',"yAxis" => 1}
+      avg = {'name'=>'Средняя зарплата', 'data' => Array.new, 'tooltip'=>  {"valueSuffix"=>" "}, "type"=>'spline',"yAxis" => 1}
       EmployeeStatsDepartments.where(month: m.month).each do |s|
         result[@standalone_month_names[m.month.month]][cat].push(Department.find(s.department_id).name)
-        avg['data'].push(s.avg_salary.round 2)
-        bonus['data'].push(s.bonus.round 2)
-        tax['data'].push(s.tax.round 2)
-        salary['data'].push(s.salary.round 2)
+        avg['data'].push((s.salary/s.employee_count).round 0)
+        bonus['data'].push(s.bonus.round 0)
+        tax['data'].push(s.tax.round 0)
+        salary['data'].push(s.salary.round 0)
       end
       result[@standalone_month_names[m.month.month]][data].push(tax)
       result[@standalone_month_names[m.month.month]][data].push(bonus)

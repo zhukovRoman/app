@@ -23,11 +23,11 @@ $(function () {
         yAxis: [{
             min: 0,
             title: {
-                text: 'Сумма конкурсов (млн рублей)'
+                text: 'Сумма конкурсов '
             },
             labels: {
                 formatter: function () {
-                    return this.value + ' млн. руб';
+                    return this.value/1000 + ' млн ₽';
                 }
             }
         }],
@@ -47,7 +47,7 @@ $(function () {
                 var result = '<b>' + this.x + '</b>';
                 $.each(this.points, function(i, datum) {
 
-                    result += '<br /> <i style="color: '+datum.point.series.color+'">' + datum.series.name + '</i>: ' + thousands_sep(datum.y) + ' млн руб';
+                    result += '<br /> <i style="color: '+datum.point.series.color+'">' + datum.series.name + '</i>: ' + thousands_sep(datum.y) + ' млн ₽';
 
                 });
                 //console.log(this.points)
@@ -102,11 +102,11 @@ $(function () {
             innerSize: '40%',
             data: data.types_chart_data,
             tooltip: {
-                valueSuffix: ' млн руб'
+                valueSuffix: ' млн ₽'
             },
             dataLabels: {
                 formatter: function () {
-                    return this.y > 1 ? '<b>' + this.point.name + ':</b> ' + thousands_sep(toFixedAndParse(this.y/1, 0)) + ' млн'  : null;
+                    return this.y > 1 ? '<b>' + this.point.name + ':</b> ' + thousands_sep(toFixedAndParse(this.y/1, 0)) + ' млн ₽'  : null;
                 }
             }
         }]
@@ -347,7 +347,7 @@ $(function () {
         while(qty_chart.series.length > 0)
             qty_chart.series[0].remove(false);
         $.each (data.qty_sum, function (i,qty){
-            qty_chart.addSeries({data: qty.data, name: qty.name, tooltip: { valueSuffix: ' млрд'}}, false);
+            qty_chart.addSeries({data: qty.data, name: qty.name, tooltip: { valueSuffix: ' млрд ₽'}}, false);
         })
         qty_chart.redraw();
     })

@@ -19,17 +19,17 @@ $(function () {
                     '<br>' +
                     'Сумма конракта '+
                     '<%= number_to_currency(@object.get_object_finance_by_type(1).take.work_summ.round,
-                                            unit: "₽", separator: ",", delimiter: " ", format: "%n %u") %>'
+                                            unit: "₽", separator: ",", delimiter: " ", format: "%n %u", precision: 0) %>'
         },
         tooltip: {
             formatter: function () {
                 var s ="";
                 sum = 0;
                 $.each(this.series.points, function (i, point) {
-                    s += "<b>"+point.name + '</b> ' + (point.y/1000000).toFixed(3) + ' млн рублей <br/>';
+                    s += "<b>"+point.name + '</b> ' + (point.y/1000000).toFixed(3) + ' млн ₽ <br/>';
                     sum += point.y;
                 });
-                s += "<b>Стоимость по договору </b>" + (sum/1000000).toFixed(3) + ' млн рублей <br/>'
+                s += "<b>Стоимость по договору </b>" + (sum/1000000).toFixed(3) + ' млн ₽ <br/>'
                 return s;
             },
             shared: true,
@@ -77,14 +77,14 @@ $(function () {
                     '<br>' +
                     'Сумма конракта '+
                     '<%= number_to_currency(@object.get_object_finance_by_type(1).take.work_summ.round,
-                                            unit: "₽", separator: ",", delimiter: " ", format: "%n %u") %>'
+                                            unit: "₽", separator: ",", delimiter: " ", format: "%n %u", precision: 0) %>'
         },
         tooltip: {
             formatter: function () {
                 var s ="";
                 sum = 0;
                 $.each(this.series.points, function (i, point) {
-                    s += "<b>"+point.name + '</b> ' + (point.y/1000000).toFixed(3) + ' млн рублей <br/>';
+                    s += "<b>"+point.name + '</b> ' + (point.y/1000000).toFixed(3) + ' млн ₽ <br/>';
                     sum += point.y;
                 });
                 //s += "<b>Стоимость по договору </b>" + sum + ' рублей <br/>'
@@ -126,17 +126,17 @@ $(function () {
             plotShadow: false
         },
         title: {
-            text: 'Освоение бюджета в этом году'
+            text: 'Освоение бюджета в <%= Date.current.year %> году'
         },
         tooltip: {
             formatter: function () {
                 var s ="";
                 sum = 0;
                 $.each(this.series.points, function (i, point) {
-                    s += "<b>"+point.name + '</b> ' + (point.y/1000000).toFixed(3) + ' млн рублей <br/>';
+                    s += "<b>"+point.name + '</b> ' + (point.y/1000000).toFixed(3) + ' млн ₽ <br/>';
                     sum += point.y;
                 });
-                s += "<b>Лимит по объекту в этом году </b>" + (sum/1000000).toFixed(3) + ' млн рублей <br/>'
+                s += "<b>Лимит по объекту в <%= Date.current.year %>  году </b>" + (sum/1000000).toFixed(3) + ' млн ₽ <br/>'
                 return s;
             },
             shared: true,

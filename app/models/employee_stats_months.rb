@@ -44,7 +44,11 @@ class EmployeeStatsMonths < ActiveRecord::Base
     stat.bonus_manage = managersMonthSalaries.sum("bonus")
     avg_m_salary = managersMonthSalaries.average("salary") != nil ? managersMonthSalaries.average("salary") : 0
     avg_m_retention = managersMonthSalaries.average("retention") != nil ? managersMonthSalaries.average("retention") : 0
-    stat.avg_salary_manage = avg_m_salary + avg_m_retention
+    #stat.avg_salary_manage = avg_m_salary + avg_m_retention
+    puts "------"
+    puts stat.salary_manage
+    puts Employee::get_managers_count
+    stat.avg_salary_manage = stat.salary_manage/Employee::get_managers_count
     stat.AUP_count = Employee::get_managers_count
     stat.save
     return stat

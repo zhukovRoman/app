@@ -44,26 +44,26 @@ class EmployeeController < ApplicationController
     EmployeeStatsMonths.where(month: Date.current-1.year..Date.current).each do |stat|
       #@plotXAxis.push(stat.month.strftime('%b'))
       @plotXAxis.push(@standalone_month_names[stat.month.month])
-      @plotDataSalary.push(stat.salary.round 2)
-      @plotDataBonus.push(stat.bonus.round 2)
-      @plotDataTax.push(stat.tax.round 2)
-      @plotDataAvgSalary.push((stat.avg_salary.round 2))
+      @plotDataSalary.push(stat.salary.round 0)
+      @plotDataBonus.push(stat.bonus.round 0)
+      @plotDataTax.push(stat.tax.round 0)
+      @plotDataAvgSalary.push((stat.avg_salary.round 0))
 
       @plotDataEmployeeAdd.push(stat.employee_adds)
       @plotDataEmployeeCount.push(stat.employee_count)
       @plotDataEmployeeDismiss.push(stat.employee_dismiss)
       @plotDataVacancyCount.push(stat.vacancy_count)
 
-      @plotDatakNeuk.push(((stat.k_complect*100).round 4))
-      @plotDatakTek.push(((stat.k_dismiss*100).round 4))
+      @plotDatakNeuk.push(((stat.k_complect*100).round 2))
+      @plotDatakTek.push(((stat.k_dismiss*100).round 2))
 
       @plotDataManageCount.push((stat.employee_manage_count.to_f/1).round 1)
       @plotDataProdCount.push((stat.employee_production_count.to_f/1).round 1)
 
-      @plotDataManageBonus.push(stat.bonus_manage.round 2)
-      @plotDataManageSalary.push(stat.salary_manage.round 2)
-      @plotDataManageTax.push(stat.tax_manage.round 2)
-      @plotDataManageAvg.push((stat.avg_salary_manage.round 0))
+      @plotDataManageBonus.push(stat.bonus_manage.round 0)
+      @plotDataManageSalary.push(stat.salary_manage.round 0)
+      @plotDataManageTax.push(stat.tax_manage.round 0)
+      @plotDataManageAvg.push(((stat.salary_manage/stat.AUP_count).round 0))
       @plotDataAUPCount.push(stat.AUP_count)
     end
 

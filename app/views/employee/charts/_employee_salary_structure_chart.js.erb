@@ -103,7 +103,7 @@ $(function () {
 
                 var result = '<b>' + this.x + '</b>';
                 $.each(this.points, function(i, datum) {
-                    result += '<br /> <i style="color:'+datum.series.color+'">' + datum.series.name + '</i>: ' + thousands_sep(datum.y) + ' руб';
+                    result += '<br /> <i style="color:'+datum.series.color+'">' + datum.series.name + '</i>: ' + thousands_sep(datum.y) + ' ₽';
 
                 });
                 //console.log(this);

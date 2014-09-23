@@ -2,7 +2,7 @@
   <div class="form-group">
     <label class="col-sm-5 control-label">Мощность</label>
     <div class="col-sm-7">
-      <p class="form-control-static"><%= @object.power || "Неизвестно" %> <%= @object.power_measure || "" %></p>
+      <p class="form-control-static"><%= @object.power==nil ? @object.power.round : "Неизвестно" %> <%= @object.power_measure || "" %></p>
     </div>
   </div>
 
@@ -17,10 +17,10 @@
   <div class="form-group">
     <label class="col-sm-5 control-label">Квартирография</label>
     <div class="col-sm-7">
-      <p class="form-control-static"><%="1: #{@object.Q1Rooms.round||"-"} <br>".html_safe+
-                                        "2: #{@object.Q2Rooms.round||"-"} <br>".html_safe+
-                                        "3: #{@object.Q3Rooms.round||"-"} <br>".html_safe+
-                                        "4: #{(@object.Q4Rooms||0).round||"-"}".html_safe %> </p>
+      <p class="form-control-static"><%="1-ком: #{@object.Q1Rooms.round||"-"} кв<br>".html_safe+
+                                        "2-ком: #{@object.Q2Rooms.round||"-"} кв<br>".html_safe+
+                                        "3-ком: #{@object.Q3Rooms.round||"-"} кв<br>".html_safe+
+                                        "4-ком: #{(@object.Q4Rooms||0).round||"-"} кв".html_safe %> </p>
     </div>
   </div>
   <div class="form-group">
@@ -34,21 +34,21 @@
     <label class="col-sm-5 control-label">Общая стоимость объекта по АИП</label>
     <div class="col-sm-7">
       <p class="form-control-static">
-        <%= number_to_currency(@object.budget, unit: "₽", separator: ",", delimiter: " ", format: "%n %u")%></p>
+        <%= number_to_currency(@object.budget, unit: "₽", separator: ",", delimiter: " ", format: "%n %u", precision:0)%></p>
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-5 control-label">Общая стоимость объекта по МГЭ</label>
     <div class="col-sm-7">
       <p class="form-control-static">
-        <%= number_to_currency(0, unit: "₽", separator: ",", delimiter: " ", format: "%n %u")%></p>
+        <%= number_to_currency(0, unit: "₽", separator: ",", delimiter: " ", format: "%n %u", precision:0)%></p>
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-5 control-label">Общая стоимость объекта по ПСС</label>
     <div class="col-sm-7">
       <p class="form-control-static">
-        <%= number_to_currency(@object.SumPSS||0, unit: "₽", separator: ",", delimiter: " ", format: "%n %u")%></p>
+        <%= number_to_currency(@object.SumPSS||0, unit: "₽", separator: ",", delimiter: " ", format: "%n %u", precision:0)%></p>
     </div>
   </div>
   <div class="form-group">
