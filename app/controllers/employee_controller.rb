@@ -54,8 +54,8 @@ class EmployeeController < ApplicationController
       @plotDataEmployeeDismiss.push(stat.employee_dismiss)
       @plotDataVacancyCount.push(stat.vacancy_count)
 
-      @plotDatakNeuk.push((stat.k_complect.round 4))
-      @plotDatakTek.push((stat.k_dismiss.round 4))
+      @plotDatakNeuk.push(((stat.k_complect*100).round 4))
+      @plotDatakTek.push(((stat.k_dismiss*100).round 4))
 
       @plotDataManageCount.push((stat.employee_manage_count.to_f/1).round 1)
       @plotDataProdCount.push((stat.employee_production_count.to_f/1).round 1)
