@@ -1041,8 +1041,8 @@
         $.each(tmp_res, function(i,val){
             //res_all.push(parseFloat((val.all/val.count).toFixed(3)));
             //res_accept.push(parseFloat((val.accept/val.count).toFixed(3)));
-            res_all.push({y:parseFloat((val.all/val.count).toFixed(3)), name: i, drilldown:true});
-            res_accept.push({y:parseFloat((val.accept/val.count).toFixed(3)), name: i, drilldown:true});
+            res_all.push({y:parseFloat((val.all/val.count).toFixed(1)), name: i, drilldown:true});
+            res_accept.push({y:parseFloat((val.accept/val.count).toFixed(1)), name: i, drilldown:true});
         });
 
         return [res_all, res_accept];
@@ -1162,8 +1162,8 @@
             if(qty_data[val.year_finish]==null)
                 qty_data[year]={name: year+'', data_all:[], data_accept:[]}
             $.each(val, function(month, month_data){
-                qty_data[year]['data_all'][month-1]=parseFloat((month_data.qty_all/(month_data['count'])).toFixed(3))||null
-                qty_data[year]['data_accept'][month-1]=parseFloat((month_data.qty_accept/(month_data['count'])).toFixed(3))||null
+                qty_data[year]['data_all'][month-1]=parseFloat((month_data.qty_all/(month_data['count'])).toFixed(1))||null
+                qty_data[year]['data_accept'][month-1]=parseFloat((month_data.qty_accept/(month_data['count'])).toFixed(1))||null
             })
         })
 
