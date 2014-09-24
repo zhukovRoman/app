@@ -81,7 +81,7 @@
         bindContactInfo (current_organization);
         bind_tables();
         create_fin_chart(current_organization.payed_left, current_organization.payed, current_organization.avans_pogasheno, current_organization.avans_ne_pogasheno);
-        create_work_chart(current_organization.work_complete, current_organization.work_left, current_organization.avans_pogasheno);
+        create_work_chart(current_organization.work_complete, current_organization.work_left);
     };
 
     bindContactInfo = function (org){
@@ -184,7 +184,7 @@
                         formatter: function () {
                             var s ="";
                             $.each(this.series.points, function (i, point) {
-                                s += "<b>"+point.name + '</b> ' + thousands_sep(point.y) + ' млн рублей <br/>';
+                                s += "<b>"+point.name + '</b> ' + thousands_sep(point.y) + ' млн ₽ <br/>';
                             });
                             return s;
                         },
@@ -205,17 +205,17 @@
                         name: 'Сумма',
                         innerSize: '50%',
                         data: [
-                            ['Осталось оплатить', payed_left],
-                            ['Не погашено авансов', avans_ne_pogasheno],
-                            ['Погашено авансов', avans_pogasheno],
-                            ['Оплачено', payed]
+                            ['Остаток оплаты', payed_left],
+                            ['Авансов выдано и не погашено', avans_ne_pogasheno],
+                            ['Аванасов выдано и погашено', avans_pogasheno],
+                            ['Оплачено не в счет авансов', payed]
 
                         ]
                     }]
                 });
             }
 
-    create_work_chart = function(work_complete, work_incomlete, avans_pogasheno){
+    create_work_chart = function(work_complete, work_incomlete){
         // Build the chart
         fin_chart = new Highcharts.Chart({
             credits:  {
@@ -228,13 +228,13 @@
                 plotShadow: false
             },
             title: {
-                text: 'Выполнение работ контрагентом'
+                text: 'Выполнение работ по произведенным оплатам'
             },
             tooltip: {
                 formatter: function () {
                     var s ="";
                     $.each(this.series.points, function (i, point) {
-                        s += "<b>"+point.name + '</b> ' + thousands_sep(point.y) + ' млн рублей <br/>';
+                        s += "<b>"+point.name + '</b> ' + thousands_sep(point.y) + ' млн ₽ <br/>';
                     });
                     return s;
                 },
@@ -256,8 +256,7 @@
                 innerSize: '50%',
                 data: [
                     ['Выполнено работ', work_complete],
-                    ['Выполнено в счет аванса', avans_pogasheno],
-                    ['Остаток выполнения', avans_pogasheno]
+                    ['Остаток выполнения', work_incomlete]
 
 
                 ]

@@ -28,7 +28,7 @@ class Organization < ActiveRecord::Base
 
   #остаток оплаты
   def residue_summ_for_all_objects
-    return ObjectFinanceByWorkType.where(organization_name: self.name).sum('SummaRabot-PayFact')||0
+    return (ObjectFinanceByWorkType.where(organization_name: self.name).sum('SummaRabot') - ObjectFinanceByWorkType.where(organization_name: self.name).sum('PayFact'))||0
   end
 
 
@@ -37,12 +37,15 @@ class Organization < ActiveRecord::Base
   end
 
   def work_left_summ_for_all_objects
-    return ObjectFinanceByWorkType.where(organization_name: self.name).sum('SummaRabot-VipolnenoRabot-AvansPogasheno')||0
+    #return ObjectFinanceByWorkType.where(organization_name: self.name).sum('SummaRabot-VipolnenoRabot')||0
+    return ((ObjectFinanceByWorkType.where(organization_name: self.name).sum('SummaRabot')||0) -
+        (ObjectFinanceByWorkType.where(organization_name: self.name).sum('VipolnenoRabot')||0))||0
   end
 
   #оплачено
   def payed_for_work_for_all_objects
-    return ObjectFinanceByWorkType.where(organization_name: self.name).sum('PayFact-AvansVidano')||0
+    #return ObjectFinanceByWorkType.where(organization_name: self.name).sum('PayFact-AvansVidano')||0
+    return (ObjectFinanceByWorkType.where(organization_name: self.name).sum('PayFact') -ObjectFinanceByWorkType.where(organization_name: self.name).sum('AvansVidano'))||0
   end
 
   def avans_vidano_for_all_objects
@@ -54,7 +57,8 @@ class Organization < ActiveRecord::Base
   end
 
   def avans_not_pagasheno_for_all_objects
-    return ObjectFinanceByWorkType.where(organization_name: self.name).sum('AvansVidano-AvansPogasheno')||0
+    #return ObjectFinanceByWorkType.where(organization_name: self.name).sum('AvansVidano-AvansPogasheno')||0
+    return (ObjectFinanceByWorkType.where(organization_name: self.name).sum('AvansVidano') - ObjectFinanceByWorkType.where(organization_name: self.name).sum('AvansPogasheno'))||0
   end
 
   def get_tenders
