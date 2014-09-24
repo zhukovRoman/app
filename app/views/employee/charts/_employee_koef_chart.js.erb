@@ -4,7 +4,7 @@ $(function () {
             enabled: false
         },
         title: {
-            text: 'Коэффицент текучести кадров'
+            text: 'Коэффициент текучести кадров'
         },
         xAxis: {
             categories: JSON.parse('<%= @plotXAxis.to_json.html_safe %>')
@@ -23,7 +23,7 @@ $(function () {
             data: <%= @plotDatakNeuk.as_json%>,
             type: 'spline'
         }, {
-            name: 'Коэффицент текучести кадров',
+            name: 'Коэффициент текучести кадров',
             type: 'spline',
             data: <%= @plotDatakTek.as_json%>
         }]

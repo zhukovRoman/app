@@ -74,7 +74,7 @@ $(function () {
             },
             labels: {
                 formatter: function() {
-                    return this.value / 1000 +' т.р.';
+                    return thousands_sep(this.value / 1000) +' тыс ₽';
                 }
             }
         },{
@@ -82,7 +82,7 @@ $(function () {
             opposite: true,
             labels: {
                 formatter: function() {
-                    return this.value / 1000 +' т.р.';
+                    return thousands_sep(this.value / 1000) +' тыс ₽';
                 }
             }
         }],
