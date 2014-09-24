@@ -30,12 +30,14 @@ class ObjectController < ApplicationController
       plansdate['destroy']=(o.demolition_date_plan||Date.current).strftime('%d.%m.%Y')
       object['plansDates']=plansdate
       object['appointment']=o.appointment
-      object['payed']=o.object_finance.payed
-      object['payed_left']=o.object_finance.payed_left
-      object['avans_pogasheno']=o.object_finance.avans_pogasheno
-      object['avans_ne_pogasheno']=o.object_finance.avans_ne_pogasheno
+
+      object['payed']=o.object_finance.payed_without_avans #
+      object['payed_left']=o.object_finance.payed_left#
+      object['avans_pogasheno']=o.object_finance.avans_pogasheno #
+      object['avans_ne_pogasheno']=o.object_finance.avans_ne_pogasheno #
+
       object['work_left']=o.object_finance.work_left
-      object['work_complete']=o.object_finance.complete_work
+      object['work_complete']=o.object_finance.complete_work||0
       object['lat']=o.lat
       object['lng']=o.lng
       object['id']=o.id

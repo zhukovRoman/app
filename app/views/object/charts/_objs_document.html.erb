@@ -332,9 +332,9 @@
         setTimeout(function() {
             var filteredObjects = window.filteredObjects;
             var data = [
-                ['Оплачено',   0],
-                ['Погашено авансов',       0],
-                ['Непогашено авансов',   0],
+                ['Оплачено не в счет авансов',   0],
+                ['Авансов выдано и погашено',       0],
+                ['Авансов выдано и непогашено',   0],
                 ['Остаток оплаты',   0]
             ];
             $.each(filteredObjects, function(i,obj){
@@ -353,14 +353,14 @@
         setTimeout(function() {
             var filteredObjects = window.filteredObjects;
             var data = [
-                ['Выполнено всего',   0],
-                ['Выполнено в счет аванса',       0],
+                ['Выполнено',   0],
                 ['Остаток выполнения',   0]
+                //['Выполнено в счет аванса',       0],
             ];
             $.each(filteredObjects, function(i,obj){
                 data[0][1]+=obj.work_complete
-                data[1][1]+=obj.avans_pogasheno
-                data[2][1]+=obj.work_left
+                //data[1][1]+=obj.avans_pogasheno
+                data[1][1]+=obj.work_left
             });
             work_chart.series[0].setData(data, true);
         }, 100)
@@ -402,7 +402,7 @@
                 formatter: function () {
                     var s ="";
                     $.each(this.series.points, function (i, point) {
-                        s += "<b>"+point.name + '</b> ' + thousands_sep((point.y/1000000).toFixed(0)) + ' млн руб <br/>';
+                        s += "<b>"+point.name + '</b> ' + thousands_sep((point.y/1000000).toFixed(0)) + ' млн ₽ <br/>';
                     });
                     return s;
                 },
@@ -449,7 +449,7 @@
                 formatter: function () {
                     var s ="";
                     $.each(this.series.points, function (i, point) {
-                        s += "<b>"+point.name + '</b> ' + thousands_sep((point.y/1000000).toFixed(0)) + ' млн руб <br/>';
+                        s += "<b>"+point.name + '</b> ' + thousands_sep((point.y/1000000).toFixed(0)) + ' млн ₽ <br/>';
                     });
                     return s;
                 },

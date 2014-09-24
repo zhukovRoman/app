@@ -26,7 +26,7 @@ class ObjectFinanceByWorkType < ActiveRecord::Base
   end
 
   def work_left
-    return ((self.pay_fact-self.work_comlete)||0).round
+    return ((self.work_summ||0)-(self.work_comlete||0)||0).round
   end
 
   def payed_for_work
@@ -38,7 +38,7 @@ class ObjectFinanceByWorkType < ActiveRecord::Base
   def in_avance_work
     av = self.avans_vidano||0
     ap = (self.avans_pogasheno||0)
-    return (av - ap).round
+    return ((av - ap)||0).round
   end
 
   def work_with_avance
@@ -51,5 +51,9 @@ class ObjectFinanceByWorkType < ActiveRecord::Base
   def bankGarantyStatus
     #if self.bank_deadline
     return 'Просрочено'
+  end
+
+  def pay_left
+    return self.residue_summ
   end
 end

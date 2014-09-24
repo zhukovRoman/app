@@ -26,6 +26,10 @@ class ObjectFinance < ActiveRecord::Base
     return in_contract||0
   end
 
+  def payed_without_avans
+    return (contract_payed||0) - (prepayment_take||0)
+  end
+
   def avans_pogasheno
     return prepayment_complite||0
   end
@@ -39,7 +43,7 @@ class ObjectFinance < ActiveRecord::Base
   end
 
   def work_left
-    return (in_contract||0)-(prepayment_complite||0)-(complete_work||0)
+    return (in_contract||0)-(complete_work||0)
   end
 
   def limit_residue

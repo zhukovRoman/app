@@ -26,10 +26,10 @@ $(function () {
                 var s ="";
                 sum = 0;
                 $.each(this.series.points, function (i, point) {
-                    s += "<b>"+point.name + '</b> ' + (point.y/1000000).toFixed(3) + ' млн ₽ <br/>';
+                    s += "<b>"+point.name + '</b> ' + thousands_sep((point.y/1000000).toFixed(3)) + ' млн ₽ <br/>';
                     sum += point.y;
                 });
-                s += "<b>Стоимость по договору </b>" + (sum/1000000).toFixed(3) + ' млн ₽ <br/>'
+                s += "<b>Стоимость по договору </b>" + thousands_sep((sum/1000000).toFixed(3)) + ' млн ₽ <br/>'
                 return s;
             },
             shared: true,
@@ -49,9 +49,11 @@ $(function () {
             name: 'Сумма',
             innerSize: '50%',
             data: [
-                ['Осталось оплатить',  <%= @object.get_object_finance_by_type(1).take.residue_summ %>],
-                ['Оплачено за работу', <%= @object.get_object_finance_by_type(1).take.payed_for_work %>],
-                ['Выдано авансов', <%= @object.get_object_finance_by_type(1).take.avans_vidano||0.round %>]
+
+                ['Оплачено не в счет авансов', <%= @object.get_object_finance_by_type(1).take.payed_for_work %>],
+                ['Авансов выдано и погащено', <%= @object.get_object_finance_by_type(1).take.avans_pogasheno||0.round %>],
+                ['Авансов выдано и не погащено', <%= @object.get_object_finance_by_type(1).take.in_avance_work||0.round %>],
+                ['Осталось оплатить',  <%= @object.get_object_finance_by_type(1).take.pay_left %>],
 
             ]
         }]
@@ -84,10 +86,10 @@ $(function () {
                 var s ="";
                 sum = 0;
                 $.each(this.series.points, function (i, point) {
-                    s += "<b>"+point.name + '</b> ' + (point.y/1000000).toFixed(3) + ' млн ₽ <br/>';
+                    s += "<b>"+point.name + '</b> ' + thousands_sep((point.y/1000000).toFixed(3)) + ' млн ₽ <br/>';
                     sum += point.y;
                 });
-                //s += "<b>Стоимость по договору </b>" + sum + ' рублей <br/>'
+                s += "<b>Стоимость по договору </b>" + thousands_sep((sum/1000000).toFixed(3)) + ' рублей <br/>'
                 return s;
             },
             shared: true,
@@ -107,9 +109,9 @@ $(function () {
             name: 'Сумма',
             innerSize: '50%',
             data: [
-                ['Осталось оплатить',  <%= @object.get_object_finance_by_type(1).take.residue_summ %>],
-                ['В счет авансов', <%= @object.get_object_finance_by_type(1).take.in_avance_work %>],
-                ['Работ выполнено и оплачено', <%= @object.get_object_finance_by_type(1).take.work_with_avance %>]
+                ['Работ выполнено',  <%= @object.get_object_finance_by_type(1).take.work_comlete||0 %>],
+                ['Работ не выполнено', <%= @object.get_object_finance_by_type(1).take.work_left %>]
+
 
             ]
         }]
