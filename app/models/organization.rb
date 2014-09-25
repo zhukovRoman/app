@@ -64,4 +64,20 @@ class Organization < ActiveRecord::Base
   def get_tenders
     return ObjectTender.where(organization_id: self.id)
   end
+
+  def getOrgPartsInTendersByYears
+    tendersByYears = Hash.new
+    self.object_tenders.where(status: 'проведен').
+        group("YEAR(DataFinish)").distinct('ObjectID').count.each do |year, countT|
+      tendersByYears[year]=tendersByYears[year]||Hash.new
+      tendersByYears[year]['count']=countT
+    end
+
+    self.object_tenders.where(status: 'проведен').
+        group("YEAR(DataFinish)").sum('TenderPriceEnd').each do |year, summT|
+      tendersByYears[year]=tendersByYears[year]||Hash.new
+      tendersByYears[year]['sum']=summT
+    end
+    return tendersByYears
+  end
 end

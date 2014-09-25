@@ -65,6 +65,23 @@ class ObjectController < ApplicationController
     authorize! :index, self
     require 'json'
 
+    allTendersByYears = Hash.new
+    ObjectTender.where(status: 'проведен').
+        group("YEAR(DataFinish)").distinct('ObjectID').count.each do |year, countT|
+
+      allTendersByYears[year]=allTendersByYears[year]||Hash.new
+      allTendersByYears[year]['count']=countT
+    end
+
+    ObjectTender.where(status: 'проведен').
+        group("YEAR(DataFinish)").sum('TenderPriceEnd').each do |year, summT|
+
+      allTendersByYears[year]=allTendersByYears[year]||Hash.new
+      allTendersByYears[year]['sum']=summT
+    end
+
+
+
     @organizations = Array.new
     #temp = Organization.includes(:objs)
     Organization.includes(:objs, :object_tenders, objs: :object_finance).where(vw_ObjectForMobileInfo_NEW: {ObjectArchve: 0}).each do |org|
@@ -85,6 +102,10 @@ class ObjectController < ApplicationController
       temporary_obj['FIO'] = 'Недоступно'
       temporary_obj['address'] = 'Недоступно'
 
+      #parts in tenders
+      temporary_obj['tenders_parts'] = Hash.new
+      temporary_obj['tenders_parts']['all']=allTendersByYears
+      temporary_obj['tenders_parts']['current'] = org.getOrgPartsInTendersByYears
       org_objects = Array.new
       org.objs.each do |o|
         obj = Hash.new
