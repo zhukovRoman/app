@@ -3,7 +3,7 @@
     .panel-heading
       h4.panel-title
         a data-parent="#visit_info" data-toggle="collapse" href="#infos"
-          | Информация с объездов
+          ="Информация с объездов (Дата объезда: #{@object.getVisitsInfo.take.visit_date})"
     #infos.panel-collapse.collapse
       .panel-body
         - @object.getVisitsInfo.each do |info|

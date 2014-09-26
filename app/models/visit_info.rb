@@ -17,4 +17,9 @@ class VisitInfo < ActiveRecord::Base
   def get_parametr_name
     return self.parametr_name.gsub(' ','&nbsp;')
   end
+
+  def visit_date
+    return Date.parse(max_data.to_s).day.to_s+"-"+Date.parse(max_data.to_s).month.to_s+"-"+Date.parse(max_data.to_s).year.to_s
+  end
+
 end
