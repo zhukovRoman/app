@@ -148,9 +148,6 @@ class ObjectTender < ActiveRecord::Base
              group('MONTH(DataFinish)').count(:tender_id)
     ObjectTender.where('YEAR(DataFinish)='+year.to_s).where('TenderQtyAccept=1').
                                                       group('MONTH(DataFinish)').count(:tender_id).each do |k,v|
-      puts "-------------"
-      puts k.to_s+" "+v.to_s
-      puts "-------------"
       res['count']['one'].push [months[k-1],v]
     end
     ObjectTender.where('YEAR(DataFinish)='+year.to_s).where('TenderQtyAccept>1 and TenderQtyAccept<5').
@@ -174,8 +171,6 @@ class ObjectTender < ActiveRecord::Base
         group('MONTH(DataFinish)').sum(:price_end).each do |k,v|
       res['sum']['g_four'].push [months[k-1],(v/(1000*1000*1000)).round(3)]
     end
-
-
     return res;
   end
 
