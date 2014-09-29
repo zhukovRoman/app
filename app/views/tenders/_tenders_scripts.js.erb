@@ -72,96 +72,7 @@ $(function () {
     });
 });
 
-$(function () {
-    types_chart = new Highcharts.Chart({
-        credits:  {
-            enabled: false
-        },
-        chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: 0,
-            plotShadow: false,
-            renderTo:'types_chart_summ'
-        },
-        title: {
-            text: 'Суммы конкурсов по типу конкурса'
-//            align: 'center',
-//            verticalAlign: 'middle',
-//            y: 50
-        },
-        tooltip: {
-            valueDecimals: 0,
-            shared: true
-        },
-        plotOptions: {
 
-        },
-        series: [{
-            type: 'pie',
-            name: 'Сумма конкурсов',
-            innerSize: '40%',
-            data: data.types_chart_data,
-            tooltip: {
-                valueSuffix: ' млн ₽'
-            },
-            dataLabels: {
-                formatter: function () {
-                    return this.y > 1 ? '<b>' + this.point.name + ':</b> ' + thousands_sep(toFixedAndParse(this.y/1, 0)) + ' млн ₽'  : null;
-                }
-            }
-        }]
-    });
-});
-$(function () {
-    types_chart_count = new Highcharts.Chart({
-        credits:  {
-            enabled: false
-        },
-        chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: 0,
-            plotShadow: false,
-            renderTo:'types_chart_count'
-        },
-        title: {
-            text: 'Число конкурсов по типу конкурса'
-//            align: 'center',
-//            verticalAlign: 'middle',
-//            y: 50
-        },
-        tooltip: {
-            shared: true
-//            pointFormat: '{series.name}: <b>{point.value:.1f}</b>'
-        },
-        plotOptions: {
-            pie: {
-//                dataLabels: {
-//                    enabled: true,
-//                    distance: -50,
-//                    style: {
-//                        fontWeight: 'bold',
-//                        color: 'white',
-//                        textShadow: '0px 1px 2px black'
-//                    }
-//                },
-//                startAngle: -90,
-//                endAngle: 90,
-                center: ['50%', '50%']
-            }
-        },
-        series: [{
-            type: 'pie',
-            name: 'Количество конкурсов',
-            innerSize: '40%',
-            data: data.types_chart_count_data,
-            dataLabels: {
-                formatter: function () {
-                    return this.y > 1 ? '<b>' + this.point.name + ':</b> ' + thousands_sep(this.y) + ''  : null;
-                }
-            }
-        }]
-    });
-});
 $(function() {
     qty_chart = new Highcharts.Chart({
         credits:  {
@@ -209,14 +120,17 @@ $(function() {
                 }
             }
         },
-        series: []
+        series: [
+            {
+                name: 'test', data:[['',0]]
+            }]
     });
 
 })
 
 drilldownSummChart = function (){
 
-    var drilldowns = {
+    var drilldownsSumm = {
         '2012': [[
             {y:0, percent:0},
             {y:9557, percent:4.48},
@@ -297,11 +211,10 @@ drilldownSummChart = function (){
                 {y:0, percent:0}]
         ]
     }
-    console.log('drilldown');
     var months = ['Янв', 'Фев', 'Март', 'Апр', 'Май', 'Июнь', 'Июль', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек']
     prices_chart.xAxis[0].setCategories(months, false)
-    prices_chart.series[0].setData(drilldowns[$(this).text()][0], false);
-    prices_chart.series[1].setData(drilldowns[$(this).text()][1], true);
+    prices_chart.series[0].setData(drilldownsSumm[$(this).text()][0], false);
+    prices_chart.series[1].setData(drilldownsSumm[$(this).text()][1], true);
     prices_chart.renderer.button('Назад',
             200,
             10,
@@ -315,9 +228,46 @@ returnYearChart = function(){
     prices_chart.xAxis[0].setCategories(data.years, false)
     prices_chart.series[0].setData(series[0], false);
     prices_chart.series[1].setData(series[1],false);
-    prices_chart.redraw()
+    prices_chart.redraw();
 
     $('#prices_chart .highcharts-drilldown-axis-label').click(drilldownSummChart)
+}
+
+returnYearQtyChart = function(){
+    if (qtyDrilldownCategory=='count') $('#qty_count_button').click();
+    if (qtyDrilldownCategory=='sum') $('#qty_sum_button').click();
+}
+
+drilldownQtyChart = function(){
+    var months = ["Янв", "Фев", "Март", "Апр", "Май", "Июнь", "Июль", "Авг", "Сен", "Окт", "Ноя", "Дек"];
+
+    var series = [null, null, null, null, null, null, null, null, null, null, null, null];
+    qty_chart.xAxis[0].setCategories(months, false)
+    $.each (data['qty_drilldowns'][$(this).text()][qtyDrilldownCategory]['one'], function(i,val){
+        series[months.indexOf(val[0])]=val[1];
+    })
+    console.log(series)
+    qty_chart.series[2].setData(series, false);
+
+    var series = [null, null, null, null, null, null, null, null, null, null, null, null];
+    qty_chart.xAxis[0].setCategories(months, false)
+    $.each (data['qty_drilldowns'][$(this).text()][qtyDrilldownCategory]['two_four'], function(i,val){
+        series[months.indexOf(val[0])]=val[1];
+    })
+    qty_chart.series[1].setData(series, false);
+
+    var series = [null, null, null, null, null, null, null, null, null, null, null, null];
+    qty_chart.xAxis[0].setCategories(months, false)
+    $.each (data['qty_drilldowns'][$(this).text()][qtyDrilldownCategory]['g_four'], function(i,val){
+        series[months.indexOf(val[0])]=val[1];
+    })
+    qty_chart.series[0].setData(series, true);
+
+
+    qty_chart.renderer.button('Назад',
+            200,
+            10,
+            returnYearQtyChart).add();
 }
 
 $(function () {
@@ -327,9 +277,13 @@ $(function () {
     prices_chart.series[1].setData(series[1]);
     $('#prices_chart .highcharts-drilldown-axis-label').click(drilldownSummChart)
 
+    $('#qty_chart .highcharts-xaxis-labels > text').click(drilldownQtyChart)
+
 
     getQtyChartData();
     $('#qty_count_button').click();
+
+    qtyDrilldownCategory = 'sum';
 
     $('#qty_count_button').click(function(){
         while(qty_chart.series.length > 0)
@@ -337,11 +291,12 @@ $(function () {
         $.each (data.qty, function (i,qty){
             qty_chart.addSeries({data: qty.data, name: qty.name, tooltip: { valueSuffix: ' конкурсов'}}, false);
         })
+        qty_chart.xAxis[0].setCategories(data.qty_years, false)
         qty_chart.redraw();
+        qtyDrilldownCategory = 'count';
+        $('#qty_chart .highcharts-xaxis-labels > text').click(drilldownQtyChart)
 
     })
-
-
 
     $('#qty_sum_button').click(function(){
         while(qty_chart.series.length > 0)
@@ -349,7 +304,11 @@ $(function () {
         $.each (data.qty_sum, function (i,qty){
             qty_chart.addSeries({data: qty.data, name: qty.name, tooltip: { valueSuffix: ' млрд ₽'}}, false);
         })
+        qty_chart.xAxis[0].setCategories(data.qty_years, false)
+
         qty_chart.redraw();
+        qtyDrilldownCategory = 'sum';
+        $('#qty_chart .highcharts-xaxis-labels > text').click(drilldownQtyChart)
     })
 
     $('#qty_sum_button').click();
@@ -361,6 +320,9 @@ $(function () {
                 stacking: type
             }, false);
         }
+//        if (type=='percent') chart.yAxis[0].setTitle({text: '%'})
+//        if (type=='normal' && qtyDrilldownCategory=='sum') chart.yAxis[0].setTitle({text: 'млрд ₽ '})
+//        if (type=='normal' && qtyDrilldownCategory=='count') chart.yAxis[0].setTitle({text: 'Количество '})
         chart.redraw();
     };
 
@@ -399,6 +361,7 @@ getQtyChartData = function (){
         qty_chart.addSeries({data: qty.data, name: qty.name, tooltip: { valueSuffix: ' конкурсов'}}, false);
     })
     qty_chart.redraw();
+    $('#qty_chart .highcharts-xaxis-labels > text').click(drilldownQtyChart)
 }
 
 toFixedAndParse = function (value, dec){
@@ -406,5 +369,7 @@ toFixedAndParse = function (value, dec){
     //console.log(value)
     return parseFloat ((value).toFixed(dec))
 }
+
+
 
 

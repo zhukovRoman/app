@@ -51,12 +51,16 @@ class TendersController < ApplicationController
       @result['types_chart_count_data'].push(tmp)
     end
 
-    @result['qty']=ObjectTender.get_qty_tenders_count
-    @result['qty_sum']=ObjectTender.get_qty_tenders_sum
+    @result['qty'] = ObjectTender.get_qty_tenders_count
+    @result['qty_sum'] = ObjectTender.get_qty_tenders_sum
     @result['qty_years'] = Array.new
+    @result['qty_drilldowns'] = Hash.new
     ObjectTender.select('YEAR(DataFinish) as year').distinct.each do |y|
       @result['qty_years'].push y.year
+      @result['qty_drilldowns'][y.year]=ObjectTender.get_qty_tenders_drilldown_by_year y.year
+
     end
+
 
     @result['uk_m2_price']=ObjectTender.uk_m2_price
     @result['gen_m2_price']=ObjectTender.gen_m2_price

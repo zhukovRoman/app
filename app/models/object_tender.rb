@@ -8,6 +8,7 @@ class ObjectTender < ActiveRecord::Base
   has_one :organization, foreign_key: 'OrganizationId'
 
   alias_attribute 'object_id','ObjectID'
+  alias_attribute 'tender_id', 'TenderId'
   alias_attribute 'status','TenderStatus'
   alias_attribute 'date_declaration','DataDeclaration'
   alias_attribute 'date_start','DataStart'
@@ -52,7 +53,7 @@ class ObjectTender < ActiveRecord::Base
     item = Hash.new
     item['name']='1 заявка'
     item['data']=Array.new
-    ObjectTender.group('Year(DataFinish)').where('TenderQtyAccept=1').count(:object_id).each do |k,v|
+    ObjectTender.group('Year(DataFinish)').where('TenderQtyAccept=1').count(:tender_id).each do |k,v|
       item['data'].push(v)
     end
     res.push(item)
@@ -60,7 +61,7 @@ class ObjectTender < ActiveRecord::Base
     item = Hash.new
     item['name']='от 2 до 4 заявок'
     item['data']=Array.new
-    ObjectTender.group('Year(DataFinish)').where('TenderQtyAccept>1 and TenderQtyAccept<5').count(:object_id).each do |k,v|
+    ObjectTender.group('Year(DataFinish)').where('TenderQtyAccept>1 and TenderQtyAccept<5').count(:tender_id).each do |k,v|
       item['data'].push(v)
     end
     res.push(item)
@@ -68,7 +69,7 @@ class ObjectTender < ActiveRecord::Base
     item = Hash.new
     item['name']='5 заявок и более'
     item['data']=Array.new
-    ObjectTender.group('Year(DataFinish)').where('TenderQtyAccept>4').count(:object_id).each do |k,v|
+    ObjectTender.group('Year(DataFinish)').where('TenderQtyAccept>4').count(:tender_id).each do |k,v|
       item['data'].push(v)
     end
     res.push(item)
@@ -126,6 +127,56 @@ class ObjectTender < ActiveRecord::Base
       res.push (v.avg/1000).round
     end
     return res
+  end
+
+  def self.get_qty_tenders_drilldown_by_year year
+    months = ['Янв', 'Фев', 'Март', 'Апр', 'Май', 'Июнь', 'Июль', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек']
+    res = Hash.new
+
+    res['count']=Hash.new
+    res['sum']=Hash.new
+
+    res['count']['one']=Array.new
+    res['count']['two_four']=Array.new
+    res['count']['g_four']=Array.new
+
+    res['sum']['one']=Array.new
+    res['sum']['two_four']=Array.new
+    res['sum']['g_four']=Array.new
+
+    puts ObjectTender.where('YEAR(DataFinish)='+year.to_s).where('TenderQtyAccept=1').
+             group('MONTH(DataFinish)').count(:tender_id)
+    ObjectTender.where('YEAR(DataFinish)='+year.to_s).where('TenderQtyAccept=1').
+                                                      group('MONTH(DataFinish)').count(:tender_id).each do |k,v|
+      puts "-------------"
+      puts k.to_s+" "+v.to_s
+      puts "-------------"
+      res['count']['one'].push [months[k-1],v]
+    end
+    ObjectTender.where('YEAR(DataFinish)='+year.to_s).where('TenderQtyAccept>1 and TenderQtyAccept<5').
+                                                      group('MONTH(DataFinish)').count(:tender_id).each do |k,v|
+      res['count']['two_four'].push [months[k-1],v]
+    end
+    ObjectTender.where('YEAR(DataFinish)='+year.to_s).where('TenderQtyAccept>4').
+                                                      group('MONTH(DataFinish)').count(:tender_id).each do |k,v|
+      res['count']['g_four'].push [months[k-1],v]
+    end
+
+    ObjectTender.where('YEAR(DataFinish)='+year.to_s).where('TenderQtyAccept=1').
+        group('MONTH(DataFinish)').sum(:price_end).each do |k,v|
+      res['sum']['one'].push [months[k-1],(v/(1000*1000*1000)).round(3)]
+    end
+    ObjectTender.where('YEAR(DataFinish)='+year.to_s).where('TenderQtyAccept>1 and TenderQtyAccept<5').
+        group('MONTH(DataFinish)').sum(:price_end).each do |k,v|
+      res['sum']['two_four'].push [months[k-1],(v/(1000*1000*1000)).round(3)]
+    end
+    ObjectTender.where('YEAR(DataFinish)='+year.to_s).where('TenderQtyAccept>4').
+        group('MONTH(DataFinish)').sum(:price_end).each do |k,v|
+      res['sum']['g_four'].push [months[k-1],(v/(1000*1000*1000)).round(3)]
+    end
+
+
+    return res;
   end
 
 end
