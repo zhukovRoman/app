@@ -35,21 +35,21 @@ class TendersController < ApplicationController
 
 
     @result['years']=years
-    @result['types_chart_data']=Array.new
-    ObjectTender.group('TenderSName').sum(:price_end).each do |k, v|
-      tmp = Array.new
-      tmp.push (k)
-      tmp.push((v/1000000).round)
-      @result['types_chart_data'].push(tmp)
-    end
-
-    @result['types_chart_count_data']=Array.new
-    ObjectTender.group('TenderSName').count(:object_id).each do |k, v|
-      tmp = Array.new
-      tmp.push (k)
-      tmp.push(v.round)
-      @result['types_chart_count_data'].push(tmp)
-    end
+    #@result['types_chart_data']=Array.new
+    #ObjectTender.group('TenderSName').sum(:price_end).each do |k, v|
+    #  tmp = Array.new
+    #  tmp.push (k)
+    #  tmp.push((v/1000000).round)
+    #  @result['types_chart_data'].push(tmp)
+    #end
+    #
+    #@result['types_chart_count_data']=Array.new
+    #ObjectTender.group('TenderSName').count(:object_id).each do |k, v|
+    #  tmp = Array.new
+    #  tmp.push (k)
+    #  tmp.push(v.round)
+    #  @result['types_chart_count_data'].push(tmp)
+    #end
 
     @result['qty'] = ObjectTender.get_qty_tenders_count
     @result['qty_sum'] = ObjectTender.get_qty_tenders_sum
@@ -66,6 +66,7 @@ class TendersController < ApplicationController
     @result['gen_m2_price']=ObjectTender.gen_m2_price
 
     @tenders = Array.new
+
     ObjectTender.where('ObjectId IS NOT NULL').includes(:obj).each do |t|
       tender = Hash.new
       tender['status']=t.status
@@ -92,6 +93,35 @@ class TendersController < ApplicationController
 
     end
 
+    @objectTenders = Array.new
+    Obj.where(is_archive: 0).includes(:object_tenders).each do |obj|
+      if obj.year_correct=="Нет в АИП"
+        next;
+      end
+      object = Hash.new
+      object['id']=obj.id
+      object['year_enter']=obj.year_correct
+      object['appointment']=obj.appointment
+      object['power']=obj.power
+      object['series']=(obj.seria=='ИНД') ? obj.seria : 'Сер'
+      object['tenders']=Array.new
+      tenders_sum = 0
+      if (obj.tenders.where(status: 'проведен').count == 0)
+        next;
+      end
+
+      obj.tenders.where(status: 'проведен').each do |t|
+        tender = Hash.new
+        tender['sum']=t.price_end||0
+        tender['type']=t.type
+        tenders_sum += t.price_end||0
+        object['tenders'].push tender
+      end
+      object['tenders_sum']=tenders_sum
+      object['price_m2']=tenders_sum/(obj.power||1)
+
+      @objectTenders.push(object);
+    end
 
 
     #@result[]

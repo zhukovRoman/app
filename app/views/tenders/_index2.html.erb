@@ -379,7 +379,8 @@
 
     redrawCharts = function(){
         filter_tenders();
-        //m2_price_chart.series[0].setData(getDataForM2PriceChart())
+        m2_price_chart.xAxis[0].setCategories(getDataForHouseM2PriceChart()[0])
+        m2_price_chart.series[0].setData(getDataForHouseM2PriceChart()[1]);
         //m2_social_price_chart.series[0].setData(getDataForM2SocialPriceChart())
         price_percent_chart.series[0].setData(getDataForPricePercentChart())
         qty_line_chart.series[0].setData(getDataForQtyLineChart()[0])
@@ -419,29 +420,14 @@
         },
         chart: {
             type: 'spline',
-            renderTo:'m2_house_price_chart',
-            events: {
-                drilldown: function (e) {
-                    if (!e.seriesOptions) {
-                        var chart = this,
-                        drilldowns = getDrillDownDataForM2Price()[0][0],
-                        series = drilldowns[e.point.name];
-                        chart.addSeriesAsDrilldown(e.point, series);
-                    }
-                },
-                drillup: function(e){
-                    setTimeout(function(){
-                        m2_price_chart.series[0].setData(getDataForM2PriceChart())
-                    }, 10)
-                }
-            }
+            renderTo:'m2_house_price_chart'
         },
         title: {
             text: 'Изменение средней стоимости кв. м. '
         },
         xAxis: {
             type: 'category'
-//            categories: data.years
+            //categories: getDataForHouseM2PriceChart()[0]
         },
         yAxis: {
             title: {
@@ -449,14 +435,20 @@
             },
             labels: {
                 formatter: function () {
-                    return this.value/1 + ' тыс. руб';
+                    return this.value/1000 + ' тыс ₽';
                 }
             },
             min: 0
         },
         tooltip: {
             crosshairs: true,
-            valueSuffix: ' тыс. руб'
+            useHTML: true,
+            //valueSuffix: ' тыс. руб'
+            formatter: function() {
+                return "" +
+                    "<b>"+this.point.category+"</b><br>" +
+                    "<i>"+this.series.name+"</i>: "+
+                        thousands_sep(this.y) + ' тыс ₽'}
 
         },
         plotOptions: {
@@ -469,8 +461,8 @@
             }
         },
         series: [{
-            name: 'средняя стоимость кв. м по годам',
-            data: []
+            name: 'средняя стоимость кв. м по годам ввода'
+           // data: getDataForHouseM2PriceChart()[1]
         }],
         drilldown: {
             series: []
@@ -893,6 +885,38 @@
         },
         series: []
     });
+
+
+    getDataForHouseM2PriceChart = function(){
+        var years = [];
+        var prices = {};
+        $.each(objsData, function (i,obj){
+            if ($.inArray(obj.appointment, getHouseFilter())==-1) return;
+            if ($.inArray(obj.series, getHouseTypeFilter())==-1) return;
+
+            var year = obj.year_enter||"----";
+            if (years.indexOf(year)==-1) years.push (year)
+
+            if (prices[year]==null) prices[year] = {power:0, sum: 0};
+            var tenders_sum = 0;
+            $.each(obj.tenders, function(i,tender){
+
+                if ($.inArray(tender.type, getTypeFilter())==-1 )
+                    return;
+                tenders_sum+=tender.sum
+            })
+            prices[year].power+=obj.power
+            prices[year].sum+=tenders_sum
+        })
+
+        var data = [];
+        $.each(years, function(i,year){
+            data[i]= parseFloat((prices[year].sum/(prices[year].power||1)).toFixed(0))
+        })
+
+
+        return [years, data];
+    }
 
     getDataForM2PriceChart = function()
     {

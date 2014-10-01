@@ -1,6 +1,7 @@
 <script src="http://code.highcharts.com/highcharts.js"></script>
 <script type="application/javascript">
     data = <%= @result.to_json.html_safe %>
+    objsData = <%= @objectTenders.to_json.html_safe %>
 </script>
 
 <%= render "tenders/index2.html" %>
