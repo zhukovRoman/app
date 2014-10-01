@@ -9,7 +9,7 @@ class Obj < ActiveRecord::Base
   has_one :object_prepare, foreign_key: 'ObjectId'
   has_one :organization, foreign_key: 'OrganizationGenBuilder_ID'
   has_many :object_finance_by_work_types, foreign_key: 'ObjectID'
-  has_many :object_tenders, foreign_key: 'ObjectId'
+  has_many :object_tenders, foreign_key: 'ObjectID'
   has_many :visit_infos, foreign_key: 'ObjectId'
 
   alias_attribute 'id','ObjectId' #
