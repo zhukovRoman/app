@@ -1,7 +1,10 @@
 Rails.application.routes.draw do
+  get 'info/index'
+
   get 'tenders/index'
 
   get 'api/getchart'
+
 
   get 'apartment/index'
 
