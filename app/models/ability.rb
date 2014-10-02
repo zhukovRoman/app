@@ -8,8 +8,12 @@ class Ability
     can :index, ApartmentController if [1,2,3,4,5,6,7,10,11].include? user.id
     can :index, TendersController if [1,2,4,5,6,7,10,11].include? user.id
     #can :index, EmployeeController if [1,2,4,5,6,7,8,9,10,11,12,13].include? user.id
+    can :index, EmployeeController if true
     #can :index, ObjectController if [1,2,4,5,6,7,10,11,12,13].include? user.id
+    can :index, ObjectController if true
     #can :organizations, ObjectController if [1,2,4,5,6,7,10,11,12,13].include? user.id
+    can :organizations, ObjectController if true
+    
     can :vacancies, EmployeeController if [1,2,4,8,9,10,11].include? user.id
     # Define abilities for the passed in user here. For example:
     #
