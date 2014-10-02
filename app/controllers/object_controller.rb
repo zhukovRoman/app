@@ -1,5 +1,5 @@
 class ObjectController < ApplicationController
-  before_filter :authenticate_user!
+  #before_filter :authenticate_user!
   before_action :change_partName
 
   def change_partName
@@ -7,7 +7,7 @@ class ObjectController < ApplicationController
   end
 
   def index
-    authorize! :index, self
+    #authorize! :index, self
     require 'json'
     @objects = Obj.notArchive
     @data = Hash.new
@@ -62,7 +62,7 @@ class ObjectController < ApplicationController
   end
 
   def organizations
-    authorize! :index, self
+    #authorize! :index, self
     require 'json'
 
     allTendersByYears = Hash.new

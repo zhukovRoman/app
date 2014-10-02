@@ -1,6 +1,6 @@
 class EmployeeController < ApplicationController
 
-  before_filter :authenticate_user!, :except => [:personalflowXmlParse, :salaryXmlParse, :personalInit, :calculate]
+  #before_filter :authenticate_user!, :except => [:personalflowXmlParse, :salaryXmlParse, :personalInit, :calculate]
   before_action :change_partName
 
   def change_partName
@@ -15,7 +15,7 @@ class EmployeeController < ApplicationController
   end
 
   def index
-    authorize! :index, self
+    #authorize! :index, self
 
     @standalone_month_names = ["", "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"]
     @plotXAxis = Array.new
