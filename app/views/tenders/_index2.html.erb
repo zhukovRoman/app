@@ -543,13 +543,16 @@
                         var chart = this,
                                 drilldowns = getDrillDownDataForM2Price()[1],
                                 series = drilldowns[e.point.name];
-//                        //price_percent_chart.series[0].setData(series);
-//                        categories = []
-//                        $.(series, function(i,val){
-//                            categories.push (val.name);
-//                        })
                         chart.xAxis[0].setCategories(months);
-                        chart.addSeriesAsDrilldown(e.point, series);
+                        //chart.addSeriesAsDrilldown(e.point, series);
+                        var data = [];
+                        console.log(series.data);
+                        $.each(series.data, function(i,val){
+                           if (val[1]!=null)
+                            data.push([months.indexOf(val[0]), val[1]])
+                        })
+                        console.log({name:e.point.name, data:data})
+                        chart.addSeriesAsDrilldown(e.point, {name:e.point.name, data:data});
                     }
                 },
                 drillup: function(e){
@@ -726,30 +729,6 @@
                     radius: 4,
                     lineColor: '#666666',
                     lineWidth: 1
-                },
-                point: {
-                    events: {
-                        click: function () {
-                            var drilldown = this.drilldown;
-                            var chart = uk_notuk_chart;
-
-                            if (drilldown) {
-                                var drilldowns = getDrillDownDataForM2Price()[3],
-                                        series = drilldowns[this.name];
-                                console.log(series);
-                                uk_notuk_chart.xAxis[0].setCategories(months,false);
-                                uk_notuk_chart.series[0].setData(series['uk'],false)
-                                uk_notuk_chart.series[1].setData(series['notuk'])
-
-                            }
-                            else {
-                                chart.xAxis[0].setCategories(data.years,false);
-                                chart.series[0].setData(getDataForUKM2PriceChart()[0], false)
-                                chart.series[1].setData(getDataForUKM2PriceChart()[1])
-
-                            }
-                        }
-                    }
                 }
             }
         },
