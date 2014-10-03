@@ -51,9 +51,9 @@
       <ul class="nav nav-tabs" role="tablist">
         <li ><a href="#m2_house_price_tab" role="tab" data-toggle="tab">Стоимость кв м жилья</a></li>
         <li><a href="#m2_social_price_tab" role="tab" data-toggle="tab">Стоимость одного места социалки</a></li>
+        <li><a href="#uk_tab" role="tab" data-toggle="tab">Стоимость ед. мощ по УК/не УК</a></li>
         <li class="active"><a href="#price_percent_tab" role="tab" data-toggle="tab">Среднее снижение стоимости</a></li>
         <li><a href="#qty_tab" role="tab" data-toggle="tab">Число заявок</a></li>
-        <li><a href="#uk_tab" role="tab" data-toggle="tab">Стоимость ед. мощности по УК/не УК</a></li>
         <li><a href="#sum_tab" role="tab" data-toggle="tab">Сумма конкурсов</a></li>
         <li><a href="#count_tab" role="tab" data-toggle="tab">Число конкурсов</a></li>
       </ul>
@@ -381,12 +381,18 @@
         filter_tenders();
         m2_price_chart.xAxis[0].setCategories(getDataForHouseM2PriceChart()[0])
         m2_price_chart.series[0].setData(getDataForHouseM2PriceChart()[1]);
-        //m2_social_price_chart.series[0].setData(getDataForM2SocialPriceChart())
+
+        m2_social_price_chart.xAxis[0].setCategories(getDataForSocialM2PriceChart()[0])
+        m2_social_price_chart.series[0].setData(getDataForSocialM2PriceChart()[1])
+
+        uk_notuk_chart.xAxis[0].setCategories(getDataForUKNotUKM2PriceChart()[0])
+        uk_notuk_chart.series[0].setData(getDataForUKNotUKM2PriceChart()[1])
+        uk_notuk_chart.series[1].setData(getDataForUKNotUKM2PriceChart()[2])
+
         price_percent_chart.series[0].setData(getDataForPricePercentChart())
         qty_line_chart.series[0].setData(getDataForQtyLineChart()[0])
         qty_line_chart.series[1].setData(getDataForQtyLineChart()[1])
-        uk_notuk_chart.series[0].setData(getDataForUKM2PriceChart()[0])
-        uk_notuk_chart.series[1].setData(getDataForUKM2PriceChart()[1])
+
         summ_chart.series[0].setData(getDataForSummChart()['sum'][0])
         summ_chart.series[1].setData(getDataForSummChart()['sum'][1])
         summ_chart.series[2].setData(getDataForSummChart()['sum'][2])
@@ -435,7 +441,7 @@
             },
             labels: {
                 formatter: function () {
-                    return this.value/1000 + ' тыс ₽';
+                    return this.value/1000 + 'тыс ₽';
                 }
             },
             min: 0
@@ -448,7 +454,7 @@
                 return "" +
                     "<b>"+this.point.category+"</b><br>" +
                     "<i>"+this.series.name+"</i>: "+
-                        thousands_sep(this.y) + ' тыс ₽'}
+                        thousands_sep(this.y) + '  ₽'}
 
         },
         plotOptions: {
@@ -475,22 +481,7 @@
         },
         chart: {
             type: 'spline',
-            renderTo:'m2_social_price_chart',
-            events: {
-                drilldown: function (e) {
-                    if (!e.seriesOptions) {
-                        var chart = this,
-                                drilldowns = getDrillDownDataForM2Price()[0][1],
-                                series = drilldowns[e.point.name];
-                        chart.addSeriesAsDrilldown(e.point, series);
-                    }
-                },
-                drillup: function(e){
-                    setTimeout(function(){
-                        m2_social_price_chart.series[0].setData(getDataForM2SocialPriceChart())
-                    }, 10)
-                }
-            }
+            renderTo:'m2_social_price_chart'
         },
         title: {
             text: 'Изменение средней стоимости одного места '
@@ -505,14 +496,20 @@
             },
             labels: {
                 formatter: function () {
-                    return this.value/1 + ' тыс. руб';
+                    return this.value/1000000 + ' млн. ₽';
                 }
             },
             min: 0
         },
         tooltip: {
             crosshairs: true,
-            valueSuffix: ' тыс. руб'
+            useHTML: true,
+            //valueSuffix: ' тыс. руб'
+            formatter: function() {
+                return "" +
+                        "<b>"+this.point.category+"</b><br>" +
+                        "<i>"+this.series.name+"</i>: "+
+                        thousands_sep((this.y/1000).toFixed(0)) + ' тыс  ₽'}
 
         },
         plotOptions: {
@@ -525,7 +522,7 @@
             }
         },
         series: [{
-            name: 'средняя стоимость места по годам',
+            name: 'средняя стоимость места по годам ввода',
             data: [{y: 0}]
         }],
         drilldown: {
@@ -546,11 +543,18 @@
                         var chart = this,
                                 drilldowns = getDrillDownDataForM2Price()[1],
                                 series = drilldowns[e.point.name];
+//                        //price_percent_chart.series[0].setData(series);
+//                        categories = []
+//                        $.(series, function(i,val){
+//                            categories.push (val.name);
+//                        })
+                        chart.xAxis[0].setCategories(months);
                         chart.addSeriesAsDrilldown(e.point, series);
                     }
                 },
                 drillup: function(e){
                     setTimeout(function(){
+                        price_percent_chart.xAxis[0].setCategories(data.years);
                         price_percent_chart.series[0].setData(getDataForPricePercentChart())
                     }, 10)
                 }
@@ -636,15 +640,14 @@
                 point: {
                     events: {
                         click: function () {
-                            console.log(this);
                             var drilldown = this.drilldown;
                             var chart = qty_line_chart;
-                            console.log(drilldown)
+
                             if (drilldown) {
 
                                         var drilldowns = getDrillDownDataForM2Price()[2],
                                         series = drilldowns[this.name];
-                                console.log(series, drilldowns);
+                                //console.log(series, drilldowns);
                                 chart.xAxis[0].setCategories(months);
 
 //                                while (chart.series.length > 0) {
@@ -656,7 +659,6 @@
 //                                chart.addSeries({name: 'Среднее число допущенных заявок', data: series['data_accept'] })
                             }
                             else {
-
 //                                while (chart.series.length > 0) {
 //                                    chart.series[0].remove(true);
 //                                }
@@ -702,14 +704,20 @@
             },
             labels: {
                 formatter: function () {
-                    return this.value/1 + ' тыс. руб';
+                    return this.value/1000 + ' тыс  ₽';
                 }
             },
             min: 0
         },
         tooltip: {
             crosshairs: true,
-            valueSuffix: ' тыс. руб'
+            useHTML: true,
+            //valueSuffix: ' тыс. руб'
+            formatter: function() {
+                return "" +
+                        "<b>"+this.point.category+"</b><br>" +
+                        "<i>"+this.series.name+"</i>: "+
+                        thousands_sep((this.y/1000).toFixed(0)) + 'тыс  ₽'}
 
         },
         plotOptions: {
@@ -908,7 +916,37 @@
             prices[year].power+=obj.power
             prices[year].sum+=tenders_sum
         })
+        years = years.sort();
+        var data = [];
+        $.each(years, function(i,year){
+            data[i]= parseFloat((prices[year].sum/(prices[year].power||1)).toFixed(0))
+        })
+        return [years, data];
+    }
 
+    getDataForSocialM2PriceChart = function(){
+        var years = [];
+        var prices = {};
+        $.each(objsData, function (i,obj){
+            if ($.inArray(obj.appointment, getSocialFilter())==-1) return;
+
+
+            var year = obj.year_enter||"----";
+            if (years.indexOf(year)==-1) years.push (year)
+
+            if (prices[year]==null) prices[year] = {power:0, sum: 0};
+            var tenders_sum = 0;
+            $.each(obj.tenders, function(i,tender){
+
+                if ($.inArray(tender.type, getTypeFilter())==-1 )
+                    return;
+                tenders_sum+=tender.sum
+            })
+            prices[year].power+=obj.power
+            prices[year].sum+=tenders_sum
+        })
+        years = years.sort();
+        console.log(prices, years);
         var data = [];
         $.each(years, function(i,year){
             data[i]= parseFloat((prices[year].sum/(prices[year].power||1)).toFixed(0))
@@ -916,6 +954,77 @@
 
 
         return [years, data];
+    }
+
+    objectHaveUKTenderOnly = function(obj){
+        var not_uk_exist = false;
+        $.each(obj.tenders, function(i,tender){
+//             console.log(tender.type, tender.type != 'управляющая компания' )
+            if (tender.type != 'управляющая компания')
+                not_uk_exist = true;
+        })
+       return !not_uk_exist;
+    }
+    objectDontHaveUKTenders = function(obj){
+        var uk_exist = false;
+        $.each(obj.tenders, function(i,tender){
+//            console.log(tender.type, tender.type == 'управляющая компания' )
+            if (tender.type == 'управляющая компания')
+                uk_exist = true;
+        })
+        return !uk_exist;
+    }
+    getDataForUKNotUKM2PriceChart = function(){
+        var years = [];
+        var prices_uk = {};
+        var prices_not_uk = {};
+        $.each(objsData, function (i,obj){
+            if ($.inArray(obj.appointment, appointments)==-1) return;
+            if (objectHaveUKTenderOnly(obj)==false && objectDontHaveUKTenders(obj)==false) return;
+
+            var year = obj.year_enter||"----";
+            if (years.indexOf(year)==-1) years.push (year)
+
+            if (objectHaveUKTenderOnly(obj))
+            {
+//                console.log('uk',obj);
+                if (prices_uk[year]==null) prices_uk[year] = {power:0, sum: 0};
+                var tenders_sum = 0;
+                $.each(obj.tenders, function(i,tender){
+                    if ($.inArray(tender.type, types)==-1 )
+                        return;
+                    tenders_sum+=tender.sum
+                })
+                prices_uk[year].power+=obj.power
+                prices_uk[year].sum+=tenders_sum
+            }
+            if (objectDontHaveUKTenders(obj)){
+//                console.log('not_uk',obj);
+                if (prices_not_uk[year]==null) prices_not_uk[year] = {power:0, sum: 0};
+                var tenders_sum = 0;
+                $.each(obj.tenders, function(i,tender){
+                    if ($.inArray(tender.type, types)==-1 )
+                        return;
+                    tenders_sum+=tender.sum
+                })
+                prices_not_uk[year].power+=obj.power
+                prices_not_uk[year].sum+=tenders_sum
+            }
+
+        })
+        console.log(years)
+        years = years.sort();
+        var data_uk = [];
+        var data_not_uk = [];
+        $.each(years, function(i,year){
+            var price_uk = null;
+            var price_not_uk=null;
+            if (prices_uk[year]!=null)  price_uk = parseFloat((prices_uk[year].sum/(prices_uk[year].power||1)).toFixed(0))
+            if (prices_not_uk[year]!=null) price_not_uk = parseFloat((prices_not_uk[year].sum/(prices_not_uk[year].power||1)).toFixed(0))
+            data_uk[i] = price_uk;
+            data_not_uk[i] = price_not_uk;
+        })
+        return [years, data_uk, data_not_uk];
     }
 
     getDataForM2PriceChart = function()

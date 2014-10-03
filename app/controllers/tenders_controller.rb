@@ -62,8 +62,8 @@ class TendersController < ApplicationController
     end
 
 
-    @result['uk_m2_price']=ObjectTender.uk_m2_price
-    @result['gen_m2_price']=ObjectTender.gen_m2_price
+    #@result['uk_m2_price']=ObjectTender.uk_m2_price
+    #@result['gen_m2_price']=ObjectTender.gen_m2_price
 
     @tenders = Array.new
 
@@ -82,8 +82,8 @@ class TendersController < ApplicationController
       tender['bid_all']=t.bid_all||0
       tender['bid_accept']=t.bid_accept||0
       tender['bid_reject']=(t.bid_all||0)-(t.bid_accept||0)
-      tender['uk_only']=t.isUkOnly
-      tender['without_uk']=t.isWithoutUk
+      tender['uk_only']=false
+      tender['without_uk']=false
 
       if t.obj != nil
         tender['appointment']=t.obj.appointment
@@ -106,11 +106,12 @@ class TendersController < ApplicationController
       object['series']=(obj.seria=='ИНД') ? obj.seria : 'Сер'
       object['tenders']=Array.new
       tenders_sum = 0
-      if (obj.tenders.where(status: 'проведен').count == 0)
+      tenders = obj.tenders.where(status: 'проведен')
+      if (tenders.count == 0)
         next;
       end
 
-      obj.tenders.where(status: 'проведен').each do |t|
+      tenders.each do |t|
         tender = Hash.new
         tender['sum']=t.price_end||0
         tender['type']=t.type
