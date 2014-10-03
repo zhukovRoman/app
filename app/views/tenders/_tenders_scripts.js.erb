@@ -113,7 +113,13 @@ $(function() {
                     style: {
                         textShadow: '0 0 3px black, 0 0 3px black'
                     },
-                formatter: function(){return this.percentage.toFixed(0)+ ' %'}
+                formatter: function(){
+                    if ($("#qty_percent_button").hasClass('btn-danger'))
+                        return this.percentage.toFixed(0)+ ' %'
+                    else
+                        return (this.y||0).toFixed(0)+ ''
+                        //return ""
+                    }
                 }
             }
         },
@@ -282,6 +288,7 @@ $(function () {
     qtyDrilldownCategory = 'sum';
 
     $('#qty_count_button').click(function(){
+        $('#qty_percent_button').click()
         $(this).addClass('btn-danger');
         $('#qty_sum_button').removeClass('btn-danger')
         while(qty_chart.series.length > 0)
@@ -292,11 +299,13 @@ $(function () {
         qty_chart.xAxis[0].setCategories(data.qty_years, false)
         qty_chart.redraw();
         qtyDrilldownCategory = 'count';
+
         $('#qty_chart .highcharts-xaxis-labels > text').click(drilldownQtyChart)
 
     })
 
     $('#qty_sum_button').click(function(){
+        $('#qty_percent_button').click()
         $(this).addClass('btn-danger');
         $('#qty_count_button').removeClass('btn-danger')
 
