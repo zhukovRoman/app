@@ -61,10 +61,10 @@
 <div class="row">
   <div class="pull-left">
     <button type="button" id="qty_count_button" class="btn btn-primary">Число</button>
-    <button type="button" id="qty_sum_button" class="btn btn-primary">Сумма</button>
+    <button type="button" id="qty_sum_button" class="btn  btn-primary btn-danger">Сумма</button>
   </div>
   <div class="pull-right">
-    <button type="button" id="qty_percent_button" onclick="changeType('percent')" class="btn btn-primary">В процентах</button>
+    <button type="button" id="qty_percent_button" onclick="changeType('percent')" class="btn btn-primary btn-danger">В процентах</button>
     <button type="button" id="qty_absolute_button" onclick="changeType('normal')" class="btn btn-primary">В абсолютных значениях</button>
   </div>
 </div>
@@ -76,10 +76,18 @@
                 stacking: type
             }, false);
         }
-        if (type=='percent')
+        if (type=='percent'){
             qty_chart.yAxis[0].setTitle({text: '%'}, false)
+            $("#qty_percent_button").addClass('btn-danger')
+            $("#qty_absolute_button").removeClass('btn-danger')
+        }
         if (type=='normal')
+        {
+            $("#qty_absolute_button").addClass('btn-danger')
+            $("#qty_percent_button").removeClass('btn-danger')
             qty_chart.yAxis[0].setTitle({text: ''}, false)
+        }
+
         qty_chart.redraw();
     };
 </script>

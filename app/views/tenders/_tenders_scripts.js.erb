@@ -282,6 +282,8 @@ $(function () {
     qtyDrilldownCategory = 'sum';
 
     $('#qty_count_button').click(function(){
+        $(this).addClass('btn-danger');
+        $('#qty_sum_button').removeClass('btn-danger')
         while(qty_chart.series.length > 0)
             qty_chart.series[0].remove(false);
         $.each (data.qty, function (i,qty){
@@ -295,6 +297,9 @@ $(function () {
     })
 
     $('#qty_sum_button').click(function(){
+        $(this).addClass('btn-danger');
+        $('#qty_count_button').removeClass('btn-danger')
+
         while(qty_chart.series.length > 0)
             qty_chart.series[0].remove(false);
         $.each (data.qty_sum, function (i,qty){
