@@ -4,6 +4,11 @@
 <script src="http://code.highcharts.com/modules/drilldown.js"></script>
 
 <div class="row">
+  <div class="col-sm-2 col-md-offset-2" >
+    <div class="btn btn-warning" id="show_table_button" data-year="" data-month="">Посмотреть конкурсы</div>
+  </div>
+</div>
+<div class="row">
   <div class="col-sm-2" style="padding-top: 20px">
     <div class="btn-group-vertical">
       <div class="btn btn-default parent_appointment " data-childs="['жилье', 'инженерия']">
@@ -161,6 +166,25 @@
       <button type="button" class="btn btn-default selected">ТЗ СМР</button>
       <button type="button" class="btn btn-default selected">управляющая компания</button>
     </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    <table class="table" id="tenders_table">
+      <thead>
+      <tr>
+        <th>#</th>
+        <th>Дата окончания</th>
+        <th>Организация</th>
+        <th>Число заявок подано/допущено</th>
+        <th>НМЦК</th>
+        <th>%</th>
+      </tr>
+      </thead>
+      <tbody>
+
+      </tbody>
+    </table>
   </div>
 </div>
 
@@ -368,12 +392,44 @@
         $('.tenders_types button').click(type_select);
         $('.house-type > button').click(seriesSelect);
 
+        $('#show_table_button').click(showTable);
+
 //        $('#sum_chart .highcharts-xaxis-labels').click(setDrillDownSummChart);
 
         redrawCharts();
         $('#sum_chart .highcharts-xaxis-labels > text').click(setDrillDownSummChart);
         $('#count_chart .highcharts-xaxis-labels > text').click(setDrillDownCountChart);
     })
+
+
+    showTable = function(){
+        var year = $(this).attr('data-year');
+        var month = $(this).attr('data-month');
+
+        if (year==null || year=='' || month==null || month == ''){
+            alert ('Выберите кликните на месяц и год в графиках');
+            return;
+        }
+
+        console.log('find tenders');
+        var tbody = $("#tenders_table tbody")
+        var rows = '';
+        $.each(filtered_tenders, function(i,t){
+            if(t.year_finish+'' == year+'' && t.month_finish+'' == month+''){
+                console.log('test');
+
+                rows += "<tr><td>"+ t.number+"</td>" +
+                        "<td>"+ t.date_finish+"</td>"+
+                        "<td>"+ t.organization+"</td>"+
+                        "<td>"+ t.bid_accept+"/"+t.bid_all+"</td>"+
+                        "<td>"+ thousands_sep(t.price_start)+" ₽</td>"+
+                        "<td>"+ t.percent.toFixed(2)+"</td></tr>"
+            }
+        })
+        tbody[0].innerHTML = rows;
+        $("#tenders_table").show();
+        $('html,body').animate({scrollTop: $("#tenders_table").offset().top});
+    }
 
     filtered_tenders = [];
 
@@ -540,11 +596,11 @@
             events: {
                 drilldown: function (e) {
                     if (!e.seriesOptions) {
+                        $('#show_table_button').attr('data-year', e.point.name);
                         var chart = this,
                                 drilldowns = getDrillDownDataForM2Price()[1],
                                 series = drilldowns[e.point.name];
                         chart.xAxis[0].setCategories(months);
-                        //chart.addSeriesAsDrilldown(e.point, series);
                         var data = [];
                         console.log(series.data);
                         $.each(series.data, function(i,val){
@@ -557,6 +613,8 @@
                 },
                 drillup: function(e){
                     setTimeout(function(){
+                        $('#show_table_button').attr('data-year', '');
+                        $('#show_table_button').attr('data-month', '');
                         price_percent_chart.xAxis[0].setCategories(data.years);
                         price_percent_chart.series[0].setData(getDataForPricePercentChart())
                     }, 10)
@@ -592,7 +650,18 @@
                     lineColor: '#666666',
                     lineWidth: 1
                 }
+            },
+            series: {
+                cursor: 'pointer',
+                point: {
+                    events:{
+                        click: function(e){
+                            $('#show_table_button').attr('data-month', this.x+1);
+                        }
+                    }
+                }
             }
+
         },
         series: [{
             name: 'Снижение цены',

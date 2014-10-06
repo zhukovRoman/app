@@ -67,7 +67,7 @@ class TendersController < ApplicationController
 
     @tenders = Array.new
 
-    ObjectTender.where('ObjectId IS NOT NULL').includes(:obj).each do |t|
+    ObjectTender.where('ObjectId IS NOT NULL').includes(:obj).includes(:organization).each do |t|
       tender = Hash.new
       tender['status']=t.status
       tender['id']=t.id
@@ -84,6 +84,9 @@ class TendersController < ApplicationController
       tender['bid_reject']=(t.bid_all||0)-(t.bid_accept||0)
       tender['uk_only']=false
       tender['without_uk']=false
+      tender['organization']= t.organization!=nil ? t.organization.name : '-'
+      tender['date_finish'] = Date.parse(t.date_finish.to_s)
+      tender['number'] = t.number
 
       if t.obj != nil
         tender['appointment']=t.obj.appointment

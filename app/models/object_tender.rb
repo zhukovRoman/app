@@ -5,7 +5,7 @@ class ObjectTender < ActiveRecord::Base
   self.primary_key = 'TenderId'
 
   belongs_to :obj, foreign_key: 'ObjectID'
-  has_one :organization, foreign_key: 'OrganizationId'
+  belongs_to :organization, foreign_key: 'TenderOrganization'
 
   alias_attribute 'object_id','ObjectID'
   alias_attribute 'tender_id', 'TenderId'
@@ -22,6 +22,7 @@ class ObjectTender < ActiveRecord::Base
   alias_attribute 'organization_id','TenderOrganization'
   alias_attribute 'bid_all','TenderQtyPresent'
   alias_attribute 'bid_accept','TenderQtyAccept'
+  alias_attribute 'number','TenderNum'
 
   #def obj
   #  return Obj.where(object_id = self.object_id)
