@@ -56,7 +56,8 @@
       <ul class="nav nav-tabs" role="tablist">
         <li ><a href="#m2_house_price_tab" role="tab" data-toggle="tab">Стоимость кв м жилья</a></li>
         <li><a href="#m2_social_price_tab" role="tab" data-toggle="tab">Стоимость одного места социалки</a></li>
-        <li><a href="#uk_tab" role="tab" data-toggle="tab">Стоимость ед. мощ по УК/не УК</a></li>
+        <li><a href="#uk_house_tab" role="tab" data-toggle="tab">Стоимость кв м по УК/не УК </a></li>
+        <li><a href="#uk_social_tab" role="tab" data-toggle="tab">Стоимость места по УК/не УК </a></li>
         <li class="active"><a href="#price_percent_tab" role="tab" data-toggle="tab">Среднее снижение стоимости</a></li>
         <li><a href="#qty_tab" role="tab" data-toggle="tab">Число заявок</a></li>
         <li><a href="#sum_tab" role="tab" data-toggle="tab">Сумма конкурсов</a></li>
@@ -111,7 +112,7 @@
           </div>
           <div id="qty_line_chart" style="width: 750px; height: 500px"></div>
         </div>
-        <div class="tab-pane" id="uk_tab">
+        <div class="tab-pane" id="uk_house_tab">
           <div class="panel panel-default" style="margin-top: 20px">
             <div class="panel-heading">Список вопросов, на которые отвечает график</div>
             <div class="panel-body">
@@ -121,6 +122,17 @@
             </div>
           </div>
           <div id="uk_notuk_chart" style="width: 750px; height: 500px"></div>
+        </div>
+        <div class="tab-pane" id="uk_social_tab">
+          <div class="panel panel-default" style="margin-top: 20px">
+            <div class="panel-heading">Список вопросов, на которые отвечает график</div>
+            <div class="panel-body">
+              <ul>
+                <li>Как изменяется средняя стоимость ед. мощности по годам по конкурсам УК и не УК?</li>
+              </ul>
+            </div>
+          </div>
+          <div id="uk_notuk_social_chart" style="width: 750px; height: 500px"></div>
         </div>
         <div class="tab-pane" id="sum_tab">
           <div class="panel panel-default" style="margin-top: 20px">
@@ -441,9 +453,13 @@
         m2_social_price_chart.xAxis[0].setCategories(getDataForSocialM2PriceChart()[0])
         m2_social_price_chart.series[0].setData(getDataForSocialM2PriceChart()[1])
 
-        uk_notuk_chart.xAxis[0].setCategories(getDataForUKNotUKM2PriceChart()[0])
-        uk_notuk_chart.series[0].setData(getDataForUKNotUKM2PriceChart()[1])
-        uk_notuk_chart.series[1].setData(getDataForUKNotUKM2PriceChart()[2])
+        uk_notuk_chart.xAxis[0].setCategories(getDataForUKNotUKM2HousePriceChart()[0])
+        uk_notuk_chart.series[0].setData(getDataForUKNotUKM2HousePriceChart()[1])
+        uk_notuk_chart.series[1].setData(getDataForUKNotUKM2HousePriceChart()[2])
+
+        uk_notuk_social_chart.xAxis[0].setCategories(getDataForUKNotUKM2SocialPriceChart()[0])
+        uk_notuk_social_chart.series[0].setData(getDataForUKNotUKM2SocialPriceChart()[1])
+        uk_notuk_social_chart.series[1].setData(getDataForUKNotUKM2SocialPriceChart()[2])
 
         price_percent_chart.series[0].setData(getDataForPricePercentChart())
         qty_line_chart.series[0].setData(getDataForQtyLineChart()[0])
@@ -764,15 +780,18 @@
             renderTo:'uk_notuk_chart'
         },
         title: {
-            text: 'Изменение средней стоимости единицы мощности'
+            text: 'Изменение средней стоимости кв м'
         },
         xAxis: {
+            title: {
+                text: 'год ввода'
+            },
             type: 'category'
 //            categories: data.years
         },
         yAxis: {
             title: {
-                text: 'Средняя стоимость единицы мощности'
+                text: 'Средняя стоимость кв м'
             },
             labels: {
                 formatter: function () {
@@ -789,7 +808,7 @@
                 return "" +
                         "<b>"+this.point.category+"</b><br>" +
                         "<i>"+this.series.name+"</i>: "+
-                        thousands_sep((this.y/1000).toFixed(0)) + 'тыс  ₽'}
+                        thousands_sep((this.y/1000).toFixed(0)) + ' тыс ₽'}
 
         },
         plotOptions: {
@@ -802,10 +821,68 @@
             }
         },
         series: [{
-            name: 'средняя стоимость конурсов только с УК',
+            name: 'средняя стоимость кв м объектов только с УК',
             data: []
         },{
-            name: 'средняя стоимость конурсов без УК',
+            name: 'средняя стоимость кв м объектов без УК',
+            data: []
+        }]
+    });
+
+    uk_notuk_social_chart = new Highcharts.Chart({
+        credits:  {
+            enabled: false
+        },
+        chart: {
+            type: 'spline',
+            renderTo:'uk_notuk_social_chart'
+        },
+        title: {
+            text: 'Изменение средней стоимости места'
+        },
+        xAxis: {
+            title: {
+                text: 'год ввода'
+            },
+            type: 'category'
+//            categories: data.years
+        },
+        yAxis: {
+            title: {
+                text: 'Средняя стоимость места'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value/1000 + ' тыс  ₽';
+                }
+            },
+            min: 0
+        },
+        tooltip: {
+            crosshairs: true,
+            useHTML: true,
+            //valueSuffix: ' тыс. руб'
+            formatter: function() {
+                return "" +
+                        "<b>"+this.point.category+"</b><br>" +
+                        "<i>"+this.series.name+"</i>: "+
+                        thousands_sep((this.y/1000).toFixed(0)) + ' тыс ₽'}
+
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        series: [{
+            name: 'средняя стоимость места объектов только с УК',
+            data: []
+        },{
+            name: 'средняя стоимость места объектов без УК',
             data: []
         }]
     });
@@ -1022,12 +1099,14 @@
         })
         return !uk_exist;
     }
-    getDataForUKNotUKM2PriceChart = function(){
+    getDataForUKNotUKM2HousePriceChart = function(){
         var years = [];
         var prices_uk = {};
         var prices_not_uk = {};
         $.each(objsData, function (i,obj){
-            if ($.inArray(obj.appointment, appointments)==-1) return;
+            if ($.inArray(obj.appointment, getHouseFilter())==-1) return;
+            if ($.inArray(obj.series, getHouseTypeFilter())==-1) return;
+
             if (objectHaveUKTenderOnly(obj)==false && objectDontHaveUKTenders(obj)==false) return;
 
             var year = obj.year_enter||"----";
@@ -1060,7 +1139,59 @@
             }
 
         })
-        console.log(years)
+        years = years.sort();
+        var data_uk = [];
+        var data_not_uk = [];
+        $.each(years, function(i,year){
+            var price_uk = null;
+            var price_not_uk=null;
+            if (prices_uk[year]!=null)  price_uk = parseFloat((prices_uk[year].sum/(prices_uk[year].power||1)).toFixed(0))
+            if (prices_not_uk[year]!=null) price_not_uk = parseFloat((prices_not_uk[year].sum/(prices_not_uk[year].power||1)).toFixed(0))
+            data_uk[i] = price_uk;
+            data_not_uk[i] = price_not_uk;
+        })
+        return [years, data_uk, data_not_uk];
+    }
+
+    getDataForUKNotUKM2SocialPriceChart = function(){
+        var years = [];
+        var prices_uk = {};
+        var prices_not_uk = {};
+        $.each(objsData, function (i,obj){
+            if ($.inArray(obj.appointment, getSocialFilter())==-1) return;
+
+            if (objectHaveUKTenderOnly(obj)==false && objectDontHaveUKTenders(obj)==false) return;
+
+            var year = obj.year_enter||"----";
+            if (years.indexOf(year)==-1) years.push (year)
+
+            if (objectHaveUKTenderOnly(obj))
+            {
+//                console.log('uk',obj);
+                if (prices_uk[year]==null) prices_uk[year] = {power:0, sum: 0};
+                var tenders_sum = 0;
+                $.each(obj.tenders, function(i,tender){
+                    if ($.inArray(tender.type, types)==-1 )
+                        return;
+                    tenders_sum+=tender.sum
+                })
+                prices_uk[year].power+=obj.power
+                prices_uk[year].sum+=tenders_sum
+            }
+            if (objectDontHaveUKTenders(obj)){
+//                console.log('not_uk',obj);
+                if (prices_not_uk[year]==null) prices_not_uk[year] = {power:0, sum: 0};
+                var tenders_sum = 0;
+                $.each(obj.tenders, function(i,tender){
+                    if ($.inArray(tender.type, types)==-1 )
+                        return;
+                    tenders_sum+=tender.sum
+                })
+                prices_not_uk[year].power+=obj.power
+                prices_not_uk[year].sum+=tenders_sum
+            }
+
+        })
         years = years.sort();
         var data_uk = [];
         var data_not_uk = [];
