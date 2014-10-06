@@ -88,7 +88,10 @@ class TendersController < ApplicationController
       tender['date_finish'] = Date.parse(t.date_finish.to_s)
       tender['number'] = t.number
 
+
       if t.obj != nil
+        tender['object_address']=t.obj.adress
+        tender['object_power']=t.obj.power
         tender['appointment']=t.obj.appointment
         tender['series']=(t.obj.seria=='ИНД') ? t.obj.seria : 'Сер'
         @tenders.push tender
@@ -106,6 +109,7 @@ class TendersController < ApplicationController
       object['year_enter']=obj.year_correct
       object['appointment']=obj.appointment
       object['power']=obj.power
+      object['address']=obj.adress
       object['series']=(obj.seria=='ИНД') ? obj.seria : 'Сер'
       object['tenders']=Array.new
       tenders_sum = 0
@@ -118,6 +122,13 @@ class TendersController < ApplicationController
         tender = Hash.new
         tender['sum']=t.price_end||0
         tender['type']=t.type
+        tender['organization']=t.organization!=nil ? t.organization.name : '-'
+        tender['date_finish']=Date.parse(t.date_finish.to_s)
+        tender['bid_accept']=t.bid_accept||0
+        tender['bid_all']=t.bid_all||0
+        tender['price_start']=t.price_begin||0
+        tender['price_end']=t.price_end||0
+        tender['percent']=t.percent_decline||0
         tenders_sum += t.price_end||0
         object['tenders'].push tender
       end

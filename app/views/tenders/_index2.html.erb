@@ -5,7 +5,7 @@
 
 <div class="row">
   <div class="col-sm-2 col-md-offset-2" >
-    <div class="btn btn-warning" id="show_table_button" data-year="" data-month="">Посмотреть конкурсы</div>
+    <div class="btn btn-warning" id="show_table_button" data-year="" data-month="" data-year-enter="" data-type="" data-uk="">Посмотреть конкурсы</div>
   </div>
 </div>
 <div class="row">
@@ -185,11 +185,14 @@
     <table class="table" id="tenders_table">
       <thead>
       <tr>
-        <th>#</th>
-        <th>Дата окончания</th>
+        <th>Адрес (серия)</th>
+        <th>Мощность</th>
+        <th>Тип</th>
         <th>Организация</th>
+        <th>Дата окончания</th>
         <th>Число заявок подано/допущено</th>
         <th>НМЦК</th>
+        <th>Итоговая цена (на ед мощности)</th>
         <th>%</th>
       </tr>
       </thead>
@@ -414,33 +417,106 @@
     })
 
 
+    getObjectSeries = function(tender){
+       if(tender.series!=null)
+        return " ("+tender.series+")"
+       return "";
+    }
+
     showTable = function(){
         var year = $(this).attr('data-year');
         var month = $(this).attr('data-month');
+        var enter_year = $(this).attr('data-year-enter');
+        var type = $(this).attr('data-type');
+        var uk_flag = $(this).attr('data-uk')=='true';
+        var tenders_for_table = [];
+//        if (year==null || year=='' ) {
+//            alert ('Выберите год в графиках');
+//            return;
+//        }
 
-        if (year==null || year=='' || month==null || month == ''){
-            alert ('Выберите кликните на месяц и год в графиках');
-            return;
-        }
 
-        console.log('find tenders');
-        var tbody = $("#tenders_table tbody")
-        var rows = '';
-        $.each(filtered_tenders, function(i,t){
-            if(t.year_finish+'' == year+'' && t.month_finish+'' == month+''){
-                console.log('test');
 
-                rows += "<tr><td>"+ t.number+"</td>" +
-                        "<td>"+ t.date_finish+"</td>"+
-                        "<td>"+ t.organization+"</td>"+
-                        "<td>"+ t.bid_accept+"/"+t.bid_all+"</td>"+
-                        "<td>"+ thousands_sep(t.price_start)+" ₽</td>"+
-                        "<td>"+ t.percent.toFixed(2)+"</td></tr>"
-            }
-        })
-        tbody[0].innerHTML = rows;
+//        $.each(filterTendersForTable(type, month, year, enter_year),function(i,t){
+//            if (year!=null && year!='' && t.year_finish+'' == year+''){
+//                if (month==null || month == ''){
+//                    tenders_for_table.push(t)
+//                }
+//                else{
+//                    if (t.month_finish+'' == month+'')
+//                        tenders_for_table.push(t)
+//                }
+//            }
+//        })
+
+
+        bindTableRows(filterTendersForTable(type, month, year, enter_year, uk_flag));
         $("#tenders_table").show();
         $('html,body').animate({scrollTop: $("#tenders_table").offset().top});
+    }
+
+    filterTendersForTable = function(type, month, year, enter_year, uk_flag){
+        console.log(type, month, year, enter_year );
+        tenders = [];
+        if (type!=''){
+            //iterate by objsData and social or house
+            $.each(objsData, function (i,obj){
+
+                var year = obj.year_enter||"----";
+                if (year!=enter_year) return;
+
+                if ( type == 'social'){
+                    if ($.inArray(obj.appointment, getSocialFilter())==-1) return;
+                }
+                if (type == 'house'){
+                    if ($.inArray(obj.appointment, getHouseFilter())==-1) return;
+                    if ($.inArray(obj.series, getHouseTypeFilter())==-1) return;
+                }
+
+
+                if (uk_flag && !(objectHaveUKTenderOnly(obj) || objectDontHaveUKTenders(obj))) return;
+
+                console.log(uk_flag && !(objectHaveUKTenderOnly(obj) || objectDontHaveUKTenders(obj)))
+                $.each(obj.tenders, function(i,t){
+                    if ($.inArray( t.type, types )==-1) return;
+                     tenders.push({
+                         object_address: obj.address,
+                         series: obj.series,
+                         type: t.type,
+                         object_power: obj.power,
+                         organization: t.organization,
+                         date_finish: t.date_finish,
+                         bid_accept: t.bid_accept,
+                         bid_all: t.bid_all,
+                         price_start: t.price_start,
+                         price_end: t.price_end,
+                         percent: t.percent
+                     })
+                })
+
+            })
+            console.log(tenders.length);
+            return tenders;
+        }
+    }
+    bindTableRows = function(data){
+
+        var tbody = $("#tenders_table tbody")
+        var rows = '';
+        $.each(data, function(i,t){
+            rows += "<tr><td>"+ t.object_address+getObjectSeries(t)+"</td>" +
+                    "<td>"+ t.object_power+"</td>"+
+                    "<td>"+ t.type+"</td>"+
+                    "<td>"+ t.organization+"</td>"+
+                    "<td>"+ t.date_finish+"</td>"+
+                    "<td>"+ t.bid_accept+"/"+t.bid_all+"</td>"+
+                    "<td>"+ thousands_sep(t.price_start.toFixed(0))+" ₽</td>"+
+                    "<td>"+ thousands_sep(t.price_end.toFixed(0))+" ("+
+                    thousands_sep((t.price_end/t.object_power).toFixed(0))+") ₽</td>"+
+                    "<td>"+ t.percent.toFixed(2)+"</td></tr>"
+
+        })
+        tbody[0].innerHTML = rows;
     }
 
     filtered_tenders = [];
@@ -492,6 +568,13 @@
 
     }
 
+    setEnterYearForTable = function (type, year, uk_flag){
+        uk_flag = uk_flag||false;
+        $('#show_table_button').attr('data-year-enter', year);
+        $('#show_table_button').attr('data-type', type);
+        $('#show_table_button').attr('data-uk', uk_flag);
+    }
+
     m2_price_chart = new Highcharts.Chart({
         credits:  {
             enabled: false
@@ -535,6 +618,16 @@
                     radius: 4,
                     lineColor: '#666666',
                     lineWidth: 1
+                }
+            },
+            series: {
+                cursor: 'pointer',
+                point: {
+                    events:{
+                        click: function(e){
+                            setEnterYearForTable('house', this.category);
+                        }
+                    }
                 }
             }
         },
@@ -590,6 +683,16 @@
                     radius: 4,
                     lineColor: '#666666',
                     lineWidth: 1
+                }
+            },
+            series: {
+                cursor: 'pointer',
+                point: {
+                    events:{
+                        click: function(e){
+                            setEnterYearForTable('social', this.category);
+                        }
+                    }
                 }
             }
         },
@@ -818,6 +921,16 @@
                     lineColor: '#666666',
                     lineWidth: 1
                 }
+            },
+            series: {
+                cursor: 'pointer',
+                point: {
+                    events:{
+                        click: function(e){
+                            setEnterYearForTable('house',  this.category,true);
+                        }
+                    }
+                }
             }
         },
         series: [{
@@ -875,6 +988,16 @@
                     radius: 4,
                     lineColor: '#666666',
                     lineWidth: 1
+                }
+            },
+            series: {
+                cursor: 'pointer',
+                point: {
+                    events:{
+                        click: function(e){
+                            setEnterYearForTable('social', this.category, true);
+                        }
+                    }
                 }
             }
         },
