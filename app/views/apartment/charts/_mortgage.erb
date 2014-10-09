@@ -67,12 +67,13 @@
           }
 
           // Create the chart
-          $('#apartment-mortgage').highcharts({
+          mortrage_chart = new Highcharts.Chart({
               credits:  {
                   enabled: false
               },
               chart: {
-                  type: 'pie'
+                  type: 'pie',
+                  renderTo: 'apartment-mortgage'
               },
               title: {
                   text: 'Распространенность ипотеки'
@@ -89,11 +90,11 @@
                   }
               },
               tooltip: {
-                  valueSuffix: '%'
+                  valueSuffix: ' квартир'
               },
               series: [{
                   name: 'Как покупают',
-                  data: browserData,
+                  data: [],
                   size: '60%',
                   dataLabels: {
                       formatter: function() {
@@ -104,7 +105,7 @@
                   }
               }, {
                   name: 'Доля',
-                  data: versionsData,
+                  data: [],
                   size: '80%',
                   innerSize: '60%',
                   dataLabels: {
@@ -115,6 +116,45 @@
                   }
               }]
           });
+
+          redrawMortrageChart = function(){
+
+              var data = getDataForMortrageChart()
+              mortrage_chart.series[0].setData(data.common_data,false)
+              mortrage_chart.series[1].setData(data.detail_data,false)
+              mortrage_chart.redraw()
+          }
+
+
+          getDataForMortrageChart = function (){
+
+              var mortrage_count = 0;
+              var not_mortrage_count = 0;
+
+              var detail = {};
+              $.each (filtered_apartments, function(i, a){
+                  if (!(a.status=='ПС' || a.status=='ДКП' )) return;
+                  if (a.hypotec)
+                      mortrage_count++;
+                  else not_mortrage_count++;
+
+                  if (detail[a.bankName]==null) detail[a.bankName] = 0;
+                  detail[a.bankName]++;
+
+              })
+
+              var details = [];
+              $.each (detail, function(name,count){
+                  details.push ([name, count]);
+              })
+
+              return {
+                  common_data: [['Ипотека', mortrage_count],['Личные средства', not_mortrage_count]],
+                  detail_data: details
+              }
+          }
+
+          redrawMortrageChart();
       });
 
 
