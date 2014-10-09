@@ -73,15 +73,16 @@ class EmployeeController < ApplicationController
     @plotDataDepEmployeeStats['vacancy'] = (Array.new)
     @plotDataDepEmployeeStats['employee_count'] = (Array.new)
 
-    if(EmployeeStatsDepartments.where(month: (Date.current).at_beginning_of_month..(Date.current).at_end_of_month).count == 0)
-      #EmployeeStatsDepartments.fillCurrentMonth()
-    end
+    #if(EmployeeStatsDepartments.where(month: (Date.current).at_beginning_of_month..(Date.current).at_end_of_month).count == 0)
+    #  #EmployeeStatsDepartments.fillCurrentMonth()
+    #end
 
 
     interval = (Date.current-1.month).at_beginning_of_month..(Date.current-1.month).at_end_of_month;
-    if (Date.current.day<8)
+    if (Date.current.day<8 || EmployeeStatsDepartments.where(month: interval).count==0)
       interval = (Date.current-2.month).at_beginning_of_month..(Date.current-2.month).at_end_of_month;
     end
+
 
     EmployeeStatsDepartments.where(month: interval).each do |s|
       dep = Department.find(s.department_id)
