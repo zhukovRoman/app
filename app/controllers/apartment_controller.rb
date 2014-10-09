@@ -34,50 +34,55 @@ class ApartmentController < ApplicationController
 
     rooms = Hash.new
 
-    data['GetBuildingGroupsResult']['buildinggroups'].each do |pro|
-      finish[pro['name']] = 0
-      notFinish[pro['name']] = 0
-      rooms[pro['name']] = Hash.new
-
-      pro['buildings'].each do |b|
-        b['sections'].each do |s|
-          s['apartments'].each do |a|
-            if (a['status']=='ПС' || a['status']=='ДКП')
-              finish[pro['name']] += a['finishingLevel']==true ? 1 : 0
-              notFinish[pro['name']] += a['finishingLevel']==true ? 0 : 1
-
-              times = Hash.new
-              times['reserveFactData']=a['reserveFactData']
-              times['auctionEndFactDate']=a['auctionEndFactDate']
-              times['dpDateForRegistration']=a['dpDateForRegistration']
-              times['dpDateForRegistrationPlanned']=a['dpDateForRegistrationPlanned']
-              times['ownCertificateDateOfIssue']=a['ownCertificateDateOfIssue']
-              times['sertificateDateOfIssue']=a['certificateDateOfIssue']
-              puts times
+    @apartmetns = Array.new
+    @objects = Array.new
+    data['GetBuildingGroupsResult']['buildinggroups'].each do |obj|
+      @objects.push obj['name']
+      obj['buildings'].each do |build|
+        build['sections'].each do |sec|
+          sec['apartments'].each do |apart|
+            a = Hash.new
+            a['id']=apart['id']
+            a['floor']=apart['floor']
+            a['max_floor']=sec['floors']
+            a['rooms']=apart['rooms']
+            a['square']=apart['spaceDesign']
+            #a['price_m2_start']=apart['cost']
+            #a['price_m2_end']=apart['dpCost']
+            a['price_m2_start']=(apart['sum']||0)/(apart['spaceDesign']||1)
+            a['price_m2_contract']=(apart['orderSum']||0)/(apart['spaceDesign']||1)
+            a['price_m2_end']=(apart['dpSum']||0)/(apart['spaceDesign']||1)
+            a['free_date']=apart['apIsFreeDate']
+            a['has_qty_date']=apart['apHasDemandDate']
+            a['in_sing_date']=apart['apInSignDate']
+            a['auction_date']=apart['auctionDateTime']
+            a['sale_plan_date']=apart['salesOrderPlanDate']
+            a['dkp_date']=apart['salesOrderDate']
+            a['ps_date']=apart['ownCertificateDateOfIssue']
+            a['sum']=apart['sum']
+            a['order_sum']=apart['orderSum']
+            a['end_sum']=apart['dpSum']
+            a['hypotec']=apart['isHypothec']
+            a['bankName'] = apart['hypothecBankid']||'Личные средства'
+            a['finishing']=apart['finishingLevel']
+            a['fee']=apart['brokersFeeWithNDS']
+            a['status']=apart['status']
+            #if (a['auction_date']!=nil && Date.parse(a['auction_date'].to_s)>(Date.current - 5.day))
+            #  puts a
+            #end
+            if (a['hypotec']==true)
+              puts a
             end
-
-            if rooms[pro['name']][a['rooms']]==nil
-              rooms[pro['name']][a['rooms']] = Hash.new
-              rooms[pro['name']][a['rooms']]['sell'] = 0
-              rooms[pro['name']][a['rooms']]['notsell'] = 0;
-            end
-
-            if (a['status']=='ДКП' || a['status']=='ПС' || a['status']=='Аукцион' )
-              rooms[pro['name']][a['rooms']]['sell'] += 1
-            else
-              rooms[pro['name']][a['rooms']]['notsell'] += 1
-            end
-
-
+            @apartmetns.push(a)
           end
         end
       end
     end
+    @objects.sort
 
-    @apartmetns = Array.new
-    Apartment.all.each do |apart|
-      @apartmetns.push apart.to_json
-    end
+    #Apartment.all.each do |apart|
+    #  @apartmetns.push apart.to_json
+    #end
 
     #puts finish
     #puts notFinish

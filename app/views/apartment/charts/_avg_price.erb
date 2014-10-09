@@ -26,83 +26,49 @@
                   renderTo:'apartment-m2-avg'
               },
               title: {
-                  text: 'Стоимость кв м '
+                  text: 'Стоимость кв м'
               },
 
               xAxis: {
                   categories: getWeeksCategories()
+                  //tickmarkPlacement: 'on'
               },
 
               yAxis: {
                   title: {
-                      text: 'Тыс рублей'
+                      text: 'тыс ₽'
                   },
-                  formatter: function(){return value/1000;},
-                  min:0
+                  labels: {
+                      formatter: function () {
+                          return this.value/1000 + ' тыс ₽';
+                      }
+                  }
               },
-
               tooltip: {
-                  crosshairs: true,
+                  formatter: function() {
+                      var result = '<b>' + this.x + '</b>';
+                      $.each(this.points, function(i, datum) {
+                          if (i%2==0)
+                              result += '<br /> <i style="color: '+datum.point.series.color+'">'
+                                      + datum.series.name + '</i>: '
+                                      + thousands_sep(datum.y.toFixed(0)) + ' ₽ ';
+                          else
+                              result += '<br /> <i style="color: '+datum.point.series.color+'">'
+                                      + datum.series.name + '</i>: '
+                                      + thousands_sep(datum.point.low.toFixed(0)) + ' - '
+                                      + thousands_sep(datum.point.high.toFixed(0)) + ' ₽ ';
+                      });
+                      return result;
+                  },
                   shared: true,
-                  valueSuffix: ' тыс. руб.'
+                  useHTML: true
               },
 
               legend: {
               },
-              series: []
-
-          });
-
-          redrawAvgChart = function(){
-              weeks_group = []
-
-              $.each(filtered_apartments, function(i,val){
-                  if (!(val.status=='ДКП' || val.status == 'ПС'))
-                      return;
-                  apart_date = moment(val.ps_date||val.dkp_date)
-
-                  $.each(getWeeksStarts(), function(t,week){
-                      if(weeks_group[t]==null) weeks_group[t]=[]
-                      if (apart_date.diff(week, 'days')>=0 && apart_date.diff(week, 'days')<7)
-                      {
-                          weeks_group[t].push(val)
-                      }
-                  })
-              })
-
-              weeks_data = [];
-              $.each (weeks_group, function(i,group){
-                  if (weeks_data[i]==null)
-                      weeks_data[i]={count:0, first_price:0, end_price:0, max_first_price:0, max_end_price:0,
-                          avg_first_price:0, avg_end_price:0, min_first_price: 100000000, min_end_price:100000000}
-                  $.each(group, function(t,apart){
-
-                      weeks_data[i]['count']++;
-                      weeks_data[i]['first_price']+=apart.start_m2;
-                      weeks_data[i]['end_price']+=apart.end_m2;
-                      if(apart.start_m2>weeks_data[i].max_first_price) weeks_data[i].max_first_price= apart.start_m2
-                      if(apart.end_m2>weeks_data[i].max_end_price) weeks_data[i].max_end_price= apart.end_m2
-
-                      if(apart.start_m2<weeks_data[i].min_first_price)   weeks_data[i].min_first_price=apart.start_m2
-                      if(apart.end_m2<weeks_data[i].min_end_price) weeks_data[i].min_end_price=apart.end_m2
-                  })
-                  weeks_data[i].avg_first_price = weeks_data[i].first_price/(weeks_data[i].count*1000)
-                  weeks_data[i].avg_end_price = weeks_data[i].end_price/(weeks_data[i].count*1000)
-                  weeks_data[i].max_first_price /= 1000
-                  weeks_data[i].max_end_price /= 1000
-                  weeks_data[i].min_first_price /= 1000
-                  weeks_data[i].min_end_price /= 1000
-                  if (weeks_data[i].min_first_price>1000)
-                  {
-                      weeks_data[i].min_first_price=0;
-                      weeks_data[i].min_end_price=0;
-                  }
-
-              })
-
-              series = [{
+              series: [{
                   name: 'Начальная стоимость',
-                  data: [],
+                  data: [1,1,1,1,1],
                   zIndex: 10,
                   marker: {
                       fillColor: 'white',
@@ -119,6 +85,25 @@
                   color: Highcharts.getOptions().colors[0],
                   fillOpacity: 0.15
               },{
+                  name: 'Средняя по приказу',
+                  data: [],
+                  zIndex: 6,
+                  marker: {
+                      fillColor: 'white',
+                      lineWidth: 2,
+                      lineColor: Highcharts.getOptions().colors[2]
+                  },
+                  color: Highcharts.getOptions().colors[2]
+              },{
+                  name: 'Диапазон (по приказу)',
+                  data: [],
+                  type: 'arearange',
+                  lineWidth: 0,
+                  linkedTo: ':previous',
+                  color: Highcharts.getOptions().colors[2],
+                  zIndex: 2,
+                  fillOpacity: 0.15
+              },{
                   name: 'Средняя итоговая',
                   data: [],
                   zIndex: 8,
@@ -126,7 +111,8 @@
                       fillColor: 'white',
                       lineWidth: 2,
                       lineColor: Highcharts.getOptions().colors[1]
-                  }
+                  },
+                  color: Highcharts.getOptions().colors[1]
               },{
                   name: 'Диапазон (итоговая)',
                   data: [],
@@ -138,26 +124,96 @@
                   fillOpacity: 0.15
               }]
 
-              $.each(weeks_data, function(i,val){
-                  series['0'].data.push(val.avg_first_price||0)
-                  series['1'].data.push([val.min_first_price||0, val.max_first_price||0])
-                  series['2'].data.push(val.avg_end_price||0)
-                  series['3'].data.push([val.min_end_price||0, val.max_end_price||0]);
-              })
 
-              while(m2_chart.series.length > 0)
-                  m2_chart.series[0].remove(false);
-              $.each (series, function (i,ser){
-                  m2_chart.addSeries(ser, false);
-              })
+          });
+
+          redrawAvgChart = function(){
+
+              var data = getDataForAvgPriceChart();
+              m2_chart.series[0].setData(data.start_price, false)
+              m2_chart.series[1].setData(data.start_price_range, false)
+
+              m2_chart.series[2].setData(data.contract_price, false)
+              m2_chart.series[3].setData(data.contract_price_range, false)
+
+              m2_chart.series[4].setData(data.end_price, false)
+              m2_chart.series[5].setData(data.end_price_range, false)
               m2_chart.redraw();
-          }
+          };
 
+          getDataForAvgPriceChart = function(){
+              var weeks_group = []
+
+              $.each(filtered_apartments, function(i,val){
+                  if (!(val.status=='ДКП' || val.status == 'ПС'))
+                      return;
+                  apart_date = moment(val.ps_date||val.dkp_date)
+
+                  $.each(getWeeksStarts(), function(t,week){
+                      if(weeks_group[t]==null) weeks_group[t]=[]
+                      if (apart_date.diff(week, 'days')>=0 && apart_date.diff(week, 'days')<7)
+                      {
+                          weeks_group[t].push(val)
+                      }
+                  })
+              })
+
+              var weeks_data = [];
+              $.each (weeks_group, function(i,group){
+                  if (weeks_data[i]==null)
+                      weeks_data[i]={count:0, first_price:0, end_price:0, max_first_price:0, max_end_price:0,
+                          avg_first_price:0, avg_end_price:0, min_first_price: 100000000, min_end_price:100000000,
+                          contract_price:0, max_contract_price:0, avg_contract_price:0, min_contract_price:1000000  }
+                  $.each(group, function(t,apart){
+                      weeks_data[i]['count']++;
+                      weeks_data[i]['first_price']+=apart.price_m2_start;
+                      weeks_data[i]['end_price']+=apart.price_m2_end;
+                      weeks_data[i]['contract_price']+=apart.price_m2_contract;
+
+                      if(apart.price_m2_start>weeks_data[i].max_first_price) weeks_data[i].max_first_price= apart.price_m2_start
+                      if(apart.price_m2_end>weeks_data[i].max_end_price) weeks_data[i].max_end_price= apart.price_m2_end
+                      if(apart.price_m2_contract>weeks_data[i].max_contract_price) weeks_data[i].max_contract_price= apart.price_m2_contract
+
+                      if(apart.price_m2_start<weeks_data[i].min_first_price)   weeks_data[i].min_first_price=apart.price_m2_start
+                      if(apart.price_m2_end<weeks_data[i].min_end_price) weeks_data[i].min_end_price=apart.price_m2_end
+                      if(apart.price_m2_contract<weeks_data[i].min_contract_price) weeks_data[i].min_contract_price=apart.price_m2_contract
+                  })
+                  weeks_data[i].avg_first_price = weeks_data[i].first_price/(weeks_data[i].count)
+                  weeks_data[i].avg_end_price = weeks_data[i].end_price/(weeks_data[i].count)
+                  weeks_data[i].avg_contract_price = weeks_data[i].contract_price/(weeks_data[i].count)
+                  console.log (weeks_data[i], group);
+                  if (weeks_data[i].count == 0)
+                  {
+                      weeks_data[i]={count:0, first_price:null, end_price:null, max_first_price:null, max_end_price:null,
+                          avg_first_price:null, avg_end_price:null, min_first_price: null, min_end_price:null,
+                          contract_price:null, max_contract_price:null, avg_contract_price:null, min_contract_price:null  }
+                  }
+
+
+              })
+
+              var res={
+                  start_price: [],
+                  start_price_range: [],
+                  end_price: [],
+                  end_price_range: [],
+                  contract_price: [],
+                  contract_price_range: []
+              }
+
+              $.each(weeks_data, function(i,val){
+                  res.start_price.push(val.avg_first_price)
+                  res.start_price_range.push([val.min_first_price, val.max_first_price])
+                  res.end_price.push(val.avg_end_price)
+                  res.end_price_range.push([val.min_end_price, val.max_end_price]);
+                  res.contract_price.push(val.avg_contract_price)
+                  res.contract_price_range.push([val.min_contract_price, val.max_contract_price]);
+              })
+              return res;
+
+          }
           redrawAvgChart();
       });
-
-
-
   </script>
 </div>
 
