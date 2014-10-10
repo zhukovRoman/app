@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<data>
+	<directorate id="000000100" name="Директорат">
+		<employee FIO="Васильцова Марина Александровна" id="642" post="Советник генерального директора по бизнес-процессам" date="08.09.2014" type="Увольнение" stavka="1"/>
+	</directorate>
+	<directorate id="000001026" name="Отдел по проведению торгов">
+		<employee FIO="Власов Игорь Павлович" id="652" post="Специалист" date="05.09.2014" type="Увольнение" stavka="1"/>
+		<employee FIO="Никишова Алевтина Викторовна" id="671" post="Заместитель начальника отдела" date="25.09.2014" type="Прием на работу" stavka="1"/>
+	</directorate>
+	<directorate id="000000500" name="Правовое управление">
+		<department id="0000500.6" name="Сектор претензионно-исковой работы">
+			<employee FIO="Акимова Анастасия Николаевна" id="669" post="Главный специалист" date="01.09.2014" type="Прием на работу" stavka="1"/>
+		</department>
+	</directorate>
+	<directorate id="000001013" name="Территориальное управление № 2">
+		<employee FIO="Витвицкий Антон Дмитриевич" id="670" post="Инженер проектов" date="19.09.2014" type="Прием на работу" stavka="1"/>
+	</directorate>
+	<directorate id="000001014" name="Территориальное управление № 3">
+		<employee FIO="Цыганкова Светлана Сергеевна" id="634" post="Главный специалист" date="17.09.2014" type="Увольнение" stavka="1"/>
+	</directorate>
+	<directorate id="000001002" name="Управление бухгалтерского учета и отчетности">
+		<department id="0001002.2" name="Финансово-бухгалтерский отдел">
+			<employee FIO="Селиванова Александра Сергеевна" id="641" post="Главный специалист" date="11.09.2014" type="Перемещение" stavka="1"/>
+		</department>
+	</directorate>
+	<directorate id="000001004" name="Управление делами">
+		<department id="0001004.3" name="Административный отдел">
+			<employee FIO="Агаджанян Шушаник Арутюновна" id="453" post="Секретарь" date="30.09.2014" type="Увольнение" stavka="1"/>
+			<employee FIO="Гирник Ольга Витальевна" id="378" post="Главный специалист" date="30.09.2014" type="Увольнение" stavka="1"/>
+			<employee FIO="Щербакова Анна Витальевна" id="379" post="Главный специалист" date="30.09.2014" type="Увольнение" stavka="1"/>
+		</department>
+	</directorate>
+	<directorate id="000000700" name="Управление подготовки строительства жилых объектов">
+		<employee FIO="Петин Константин Владимирович" id="566" post="Главный специалист" date="23.09.2014" type="Увольнение" stavka="1"/>
+	</directorate>
+	<directorate id="000001001" name="Финансовое управление">
+		<department id="0001001.2" name="Отдел расчетов">
+			<sector id="01001.2.1" name="Сектор безналичных расчетов">
+				<employee FIO="Ковалёва Ирина Евгеньевна" id="672" post="Главный специалист" date="29.09.2014" type="Прием на работу" stavka="1"/>
+			</sector>
+		</department>
+	</directorate>
+</data>
