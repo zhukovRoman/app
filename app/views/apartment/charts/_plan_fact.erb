@@ -5,19 +5,18 @@
       <ul>
         <li>Сколько и каких квартир (комнатность) планировали продать на прошлых/текущей неделе и сколько продали по всем объектам/по каждому объекту в штуках/м2/финансах?</li>
       </ul>
-      <i style="color:red">Примечание: так как данные случайны, то фильтры не будут приводить к изменению графика</i>
     </div>
   </div>
   <div class="col-sm-12" style="margin-top: 20px">
     <div class="col-sm-6 ">
-      <div class="btn-group" data-toggle="buttons" id="value_filter">
-        <label label-default="" id="in-pcs" class="btn btn-default active" data="pcs_status_data">
+      <div class="btn-group" data-toggle="buttons" id="value_filter_planFact">
+        <label label-default="" id="in-pcs" class="btn btn-default active" data="pcs">
           <input name="options"  type="radio" checked="checked">В квартирах
         </label>
-        <label label-default=""  id="in-m2" class="btn btn-default" data="m2_status_data">
+        <label label-default=""  id="in-m2" class="btn btn-default" data="m2">
           <input name="options"  type="radio">В м<sup>2</sup>
         </label>
-        <label label-default="" id="in-fin" class="btn btn-default " data="finance_status_data">
+        <label label-default="" id="in-fin" class="btn btn-default " data="fin">
           <input name="options"  type="radio">В финанасах
         </label>
       </div>
@@ -29,18 +28,29 @@
   </div>
   <script type="application/javascript">
       $(function () {
-          $('#apartment-plan-fact').highcharts({
+
+
+          var active_measure = 'pcs';
+
+          setNewValuesForPlanFact = function () {
+              active_measure =  $(this).parent().attr("data")
+              redrawPlanFactChart();
+          }
+
+          $('#value_filter_planFact input').change(setNewValuesForPlanFact);
+          plan_fact_chart = new  Highcharts.Chart({
               credits:  {
                   enabled: false
               },
               chart: {
-                  type: 'column'
+                  type: 'column',
+                  renderTo: 'apartment-plan-fact'
               },
               title: {
                   text: 'План выполнения продаж'
               },
               xAxis: {
-                  categories: ['Неделя 1', 'Неделя 2', 'Неделя 3', 'Неделя 4', 'Неделя 5']
+                  categories: getWeeksCategories()
               },
               yAxis: {
                   min: 0,
@@ -63,15 +73,79 @@
 
               },
               series: [{
-                  name: 'План ',
-                  data: [25, 35, 40, 30, 45]
+                  name: 'Планировалось заключить ДКП ',
+                  data: []
 
               }, {
-                  name: 'Факт',
-                  data: [25, 32, 40, 28, 42]
+                  name: 'Фактически заключено ДКП',
+                  data: []
 
               }]
           });
+
+          redrawPlanFactChart = function (){
+              var data = getDataForPlanFactChart();
+              plan_fact_chart.series[0].setData(data[active_measure]['plan'],false);
+              plan_fact_chart.series[1].setData(data[active_measure]['fact'],false);
+              plan_fact_chart.redraw();
+          }
+
+          getDataForPlanFactChart= function(){
+              weeks_group_plan = []
+              weeks_group_fact = []
+
+              $.each(filtered_apartments, function(i,val){
+                  apart_date_fact = moment(val.dkp_date)
+                  apart_date_plan = moment(val.sale_plan_date)
+
+                  $.each(getWeeksStarts(), function(t,week){
+                      if(weeks_group_fact[t]==null) weeks_group_fact[t]=[]
+                      if (apart_date_fact.diff(week, 'days')>=0 && apart_date_fact.diff(week, 'days')<7)
+                      {
+                          weeks_group_fact[t].push(val)
+                      }
+                      if(weeks_group_plan[t]==null) weeks_group_plan[t]=[]
+                      if (apart_date_plan.diff(week, 'days')>=0 && apart_date_plan.diff(week, 'days')<7)
+                      {
+                          weeks_group_plan[t].push(val)
+                      }
+                  })
+              })
+
+              series =  {'m2': {plan:[],fact:[]}, 'fin': {plan:[],fact:[]}, 'pcs':{plan:[],fact:[]}};
+
+
+              series['m2']['plan'] = [0,0,0,0,0]
+              series['fin']['plan'] = [0,0,0,0,0]
+              series['pcs']['plan'] = [0,0,0,0,0]
+              $.each(weeks_group_plan, function(gi, week_data){
+
+                  $.each(week_data, function(i,val){
+
+                     series['m2']['plan'][gi] = (series['m2']['plan'][gi]==null ? val.square : series['m2']['plan'][gi]+val.square)
+                     series['fin']['plan'][gi] = (series['fin']['plan'][gi]==null ? val.order_sum : series['fin']['plan'][gi]+val.order_sum)
+                     series['pcs']['plan'][gi] = (series['pcs']['plan'][gi]==null ? 0 : series['pcs']['plan'][gi]+1)
+
+                  })
+              })
+              series['m2']['fact'] = [0,0,0,0,0]
+              series['fin']['fact'] = [0,0,0,0,0]
+              series['pcs']['fact'] = [0,0,0,0,0]
+              $.each(weeks_group_fact, function(gi, week_data){
+
+                  $.each(week_data, function(i,val){
+
+                      series['m2']['fact'][gi] = (series['m2']['fact'][gi]==null ? 0 : series['m2']['fact'][gi]+val.square)
+                      series['fin']['fact'][gi] = (series['fin']['fact'][gi]==null ? 0 : series['fin']['fact'][gi]+val.order_sum)
+                      series['pcs']['fact'][gi] = (series['pcs']['fact'][gi]==null ? 0 : series['pcs']['fact'][gi]+1)
+                  })
+              })
+
+
+              return series;
+          }
+          redrawPlanFactChart();
+
       });
   </script>
 </div>

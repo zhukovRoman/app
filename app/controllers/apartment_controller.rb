@@ -41,6 +41,9 @@ class ApartmentController < ApplicationController
       obj['buildings'].each do |build|
         build['sections'].each do |sec|
           sec['apartments'].each do |apart|
+            if apart['status']=='Другое'
+              next
+            end
             a = Hash.new
             a['id']=apart['id']
             a['floor']=apart['floor']
@@ -50,7 +53,7 @@ class ApartmentController < ApplicationController
             #a['price_m2_start']=apart['cost']
             #a['price_m2_end']=apart['dpCost']
             a['price_m2_start']=(apart['sum']||0)/(apart['spaceDesign']||1)
-            a['price_m2_contract']=(apart['orderSum']||0)/(apart['spaceDesign']||1)
+            a['price_m2_contract']=(apart['orderSum']||(apart['sum']||0))/(apart['spaceDesign']||1)
             a['price_m2_end']=(apart['dpSum']||0)/(apart['spaceDesign']||1)
             a['free_date']=apart['apIsFreeDate']
             a['has_qty_date']=apart['apHasDemandDate']
@@ -60,7 +63,7 @@ class ApartmentController < ApplicationController
             a['dkp_date']=apart['salesOrderDate']
             a['ps_date']=apart['ownCertificateDateOfIssue']
             a['sum']=apart['sum']
-            a['order_sum']=apart['orderSum']
+            a['order_sum']=apart['orderSum']||apart['sum']
             a['end_sum']=apart['dpSum']
             a['hypotec']=apart['isHypothec']
             a['bankName'] = apart['hypothecBankid']||'Личные средства'

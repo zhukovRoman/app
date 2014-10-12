@@ -145,9 +145,8 @@
               var weeks_group = []
 
               $.each(filtered_apartments, function(i,val){
-                  if (!(val.status=='ДКП' || val.status == 'ПС'))
-                      return;
-                  apart_date = moment(val.ps_date||val.dkp_date)
+
+                  apart_date = moment(val.dkp_date)
 
                   $.each(getWeeksStarts(), function(t,week){
                       if(weeks_group[t]==null) weeks_group[t]=[]
@@ -181,7 +180,7 @@
                   weeks_data[i].avg_first_price = weeks_data[i].first_price/(weeks_data[i].count)
                   weeks_data[i].avg_end_price = weeks_data[i].end_price/(weeks_data[i].count)
                   weeks_data[i].avg_contract_price = weeks_data[i].contract_price/(weeks_data[i].count)
-                  console.log (weeks_data[i], group);
+//                  console.log (weeks_data[i], group);
                   if (weeks_data[i].count == 0)
                   {
                       weeks_data[i]={count:0, first_price:null, end_price:null, max_first_price:null, max_end_price:null,
@@ -202,13 +201,14 @@
               }
 
               $.each(weeks_data, function(i,val){
-                  res.start_price.push(val.avg_first_price)
-                  res.start_price_range.push([val.min_first_price, val.max_first_price])
-                  res.end_price.push(val.avg_end_price)
-                  res.end_price_range.push([val.min_end_price, val.max_end_price]);
-                  res.contract_price.push(val.avg_contract_price)
-                  res.contract_price_range.push([val.min_contract_price, val.max_contract_price]);
+                  if (val.avg_first_price!=null)  res.start_price.push ([i, val.avg_first_price]);
+                  if (val.min_first_price!=null && val.max_first_price!=null) res.start_price_range.push([i, val.min_first_price, val.max_first_price])
+                  if (val.avg_end_price!=null) res.end_price.push([i, val.avg_end_price])
+                  if (val.min_end_price!=null && val.max_end_price!=null) res.end_price_range.push([i, val.min_end_price, val.max_end_price]);
+                  if (val.avg_contract_price) res.contract_price.push([i, val.avg_contract_price])
+                  if (val.min_contract_price!=null &&  val.max_contract_price!=null ) res.contract_price_range.push([i, val.min_contract_price, val.max_contract_price]);
               })
+              console.log(res);
               return res;
 
           }
@@ -216,6 +216,5 @@
       });
   </script>
 </div>
-
 
 

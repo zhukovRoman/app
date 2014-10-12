@@ -1,27 +1,4 @@
-function getRandomInt(min, max)
-{
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
 
-function getRandomArray (size, min, max ){
-    min = min || 0;
-    max = max || 250
-    res = Array();
-    while (size-- > 0)
-    {
-        res.push (getRandomInt(min,max))
-    }
-    return res;
-}
-
-addArrays = function (arr1, arr2)
-{
-    for (i=0; i < arr1.length; i++){
-        arr1[i] += arr2[i];
-    }
-    //console.log (arr1)
-    return arr1;
-}
 
 current_value = 'fin'
 var setNewValues = function () {
@@ -44,7 +21,8 @@ $(function (){
             text: 'Статусы квартир'
         },
         xAxis: {
-            categories: getWeeksCategories()
+            categories: getWeeksStartsForCategories(),
+            tickmarkPlacement: 'on'
         },
         yAxis:{
             title: {
@@ -65,7 +43,26 @@ $(function (){
 //            }
 //              valueSuffix: 'млн рублей'
         },
-        series: []
+        series: [{
+            name: 'ПС',
+            data: []
+        },
+        {
+            name: 'ДКП',
+            data: []
+        },
+        {
+            name: 'Аукцион',
+            data: []
+        },
+        {
+            name: 'Имеет заявку',
+            data: []
+        },
+        {
+            name: 'Свободна',
+            data: []
+        }]
     });
 
     redrawStatusChart = function(){
@@ -78,53 +75,63 @@ $(function (){
         };
         $.each(filtered_apartments, function(i,val){
 
-            ps_date = moment(val.ps_date||0)
-            dkp_date = moment(val.dkp_date||0)
-            auk_date = moment(val.auction_date||0)
-            has_qty_date = moment(val.has_qty_date||0)
-            free_date = moment(val.free_date||0)
+            ps_date = moment(val.ps_date)
+            dkp_date = moment(val.dkp_date)
+            auk_date = moment(val.auction_date)
+            has_qty_date = moment(val.has_qty_date)
+            free_date = moment(val.free_date)
             $.each(getWeeksStarts(), function(t,week){
+                //опрделяем статус квартиры на текущей неделе
+
                 if (weeks_group['ПС'][t]==null) weeks_group['ПС'][t]={count:0, fin:0, m2:0}
-                if (ps_date.diff(week, 'days')>=0 && ps_date.diff(week, 'days')<7)
+                if (weeks_group['ДКП'][t]==null) weeks_group['ДКП'][t]={count:0, fin:0, m2:0}
+                if (weeks_group['Аукцион'][t]==null) weeks_group['Аукцион'][t]={count:0, fin:0, m2:0}
+                if (weeks_group['Имеет заявку'][t]==null) weeks_group['Имеет заявку'][t]={count:0, fin:0, m2:0}
+                if (weeks_group['Свободна'][t]==null) weeks_group['Свободна'][t]={count:0, fin:0, m2:0}
+
+                //доавляем квартиру в статус ПС если дата была когда либо до этой даты.
+                if (ps_date.diff(week, 'days')<0)
                 {
                     weeks_group['ПС'][t]['count']++;
-                    weeks_group['ПС'][t]['fin']+=val.end_summ
+                    weeks_group['ПС'][t]['fin']+=val.end_sum
                     weeks_group['ПС'][t]['m2']+=val.square
                 }
-                if (weeks_group['ДКП'][t]==null) weeks_group['ДКП'][t]={count:0, fin:0, m2:0}
-                if (dkp_date.diff(week, 'days')>=0 && dkp_date.diff(week, 'days')<7)
+
+                //добавляем квартиру в дкп если дата у нее дата дкп была до это недели и она еще не перешла в статус ПС
+                if (dkp_date.diff(week, 'days')<0 && (ps_date.diff(week, 'days')>=0 || ps_date==null))
                 {
                     weeks_group['ДКП'][t]['count']++;
-                    weeks_group['ДКП'][t]['fin']+=val.end_summ
+                    weeks_group['ДКП'][t]['fin']+=val.end_sum
                     weeks_group['ДКП'][t]['m2']+=val.square
                 }
-                if (weeks_group['Аукцион'][t]==null) weeks_group['Аукцион'][t]={count:0, fin:0, m2:0}
-                if (dkp_date.diff(week, 'days')>=0 && dkp_date.diff(week, 'days')<7)
+
+                //добавляем квартиру в аук если дата у нее дата аук была до это недели и она еще не перешла в статус ДКП
+                if (auk_date.diff(week, 'days')<0 && (dkp_date.diff(week, 'days')>=0 || dkp_date==null))
                 {
                     weeks_group['Аукцион'][t]['count']++;
-                    weeks_group['Аукцион'][t]['fin']+=val.end_summ
+                    weeks_group['Аукцион'][t]['fin']+=val.end_sum
                     weeks_group['Аукцион'][t]['m2']+=val.square
                 }
-                if (weeks_group['Имеет заявку'][t]==null) weeks_group['Имеет заявку'][t]={count:0, fin:0, m2:0}
-                if (dkp_date.diff(week, 'days')>=0 && dkp_date.diff(week, 'days')<7)
+
+                if (has_qty_date.diff(week, 'days')<0 && (auk_date.diff(week, 'days')>=0 || auk_date==null))
                 {
                     weeks_group['Имеет заявку'][t]['count']++;
-                    weeks_group['Имеет заявку'][t]['fin']+=val.end_summ
+                    weeks_group['Имеет заявку'][t]['fin']+=val.end_sum
                     weeks_group['Имеет заявку'][t]['m2']+=val.square
                 }
-                if (weeks_group['Свободна'][t]==null) weeks_group['Свободна'][t]={count:0, fin:0, m2:0}
-                if (dkp_date.diff(week, 'days')>=0 && dkp_date.diff(week, 'days')<7)
+
+                if (free_date.diff(week, 'days')<0 && (has_qty_date.diff(week, 'days')<7 || has_qty_date==null))
                 {
                     weeks_group['Свободна'][t]['count']++;
-                    weeks_group['Свободна'][t]['fin']+=val.end_summ
+                    weeks_group['Свободна'][t]['fin']+=val.end_sum
                     weeks_group['Свободна'][t]['m2']+=val.square
                 }
             })
         })
-
+        // object {status: array[counts, fin, m2 in weeks]}
 
         weeks_data = {};
-        console.log(weeks_group)
+
         $.each(weeks_group, function(i,status_data){
             console.log(status_data)
             if(weeks_data[i]==null) weeks_data[i]={name: i,data:[]}
@@ -135,10 +142,9 @@ $(function (){
 
         })
 
-        while(status_chart.series.length > 0)
-            status_chart.series[0].remove(false);
+        var t = 0
         $.each (weeks_data, function (i,ser){
-            status_chart.addSeries(ser, false);
+            status_chart.series[t++].setData(ser.data, false);
         })
         status_chart.redraw();
     }

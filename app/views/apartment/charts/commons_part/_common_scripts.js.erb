@@ -1,5 +1,6 @@
 apartments= <%= @apartmetns.to_json.html_safe %>;
 filtered_apartments = <%= @apartmetns.to_json.html_safe %>;
+objects = <%= @objects.to_json.html_safe %>;
 
 getWeeksCategories = function(){
     res = []
@@ -22,6 +23,16 @@ getWeeksStarts = function(){
     return res;
 }
 
+getWeeksStartsForCategories = function (){
+    res = []
+    for (var i=4; i>=0; i--)
+    {
+        var start = moment().subtract(i, 'week').startOf('isoweek')
+        res.push(start.get('date')+"."+(start.month()+1))
+    }
+    return res;
+}
+
 filterRooms = function(){
     console.log(this);
     filtered_apartments.length=0;
@@ -36,7 +47,7 @@ filterRooms = function(){
                 filtered_apartments.push(val)
         })
     }
-    console.log(filtered_apartments)
+    //console.log(filtered_apartments)
     redrawAllCharts();
 
 }
@@ -45,6 +56,8 @@ redrawAllCharts=function(){
     redrawAvgChart();
     redrawAddPriceChart();
     redrawFinanceRealtorChart();
+    redrawPlanFactChart();
+    redrawFloorPriceChart();
 }
 
 

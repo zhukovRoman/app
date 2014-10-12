@@ -31,7 +31,8 @@
                   text: 'Накопительное получение финансов'
               },
               xAxis: {
-                  categories: getWeeksCategories()
+                  categories: getWeeksStartsForCategories(),
+                  tickmarkPlacement: 'on'
               },
               yAxis: {
                   title: {
@@ -39,7 +40,7 @@
                   },
                   labels: {
                       formatter: function() {
-                          return this.value / 1;
+                          return this.value / 1000000;
                       }
                   },
                   stackLabels: {
@@ -87,13 +88,10 @@
 
           redrawFinanceRealtorChart = function(){
               $.each(filtered_apartments, function(i,val){
-                  if (!(val.status=='ДКП' || val.status == 'ПС'))
-                      return;
-                  apart_date = moment(val.ps_date||val.dkp_date)
-
+                  apart_date = moment(val.dkp_date)
                   $.each(getWeeksStarts(), function(t,week){
                       if(weeks_group[t]==null) weeks_group[t]=[]
-                      if (apart_date.diff(week, 'days')>=0 && apart_date.diff(week, 'days')<7)
+                      if (apart_date.diff(week, 'days')<0)
                       {
                           weeks_group[t].push(val)
                       }
@@ -104,8 +102,8 @@
                   if (weeks_data[i]==null) weeks_data[i]={getFinance:0, fee:0}
 
                   $.each(group, function(t,apart){
-                      weeks_data[i]['fee']+=apart.realtor_fee;
-                      weeks_data[i]['getFinance']+=apart.end_summ
+                      weeks_data[i]['fee']+=apart.fee;
+                      weeks_data[i]['getFinance']+=apart.end_sum
                   })
 
               })
@@ -118,13 +116,13 @@
                       series_get.push(val.getFinance)
                   }
                   else{
-                      series_fee.push(val.fee+series_fee[i-1])
-                      series_get.push(val.getFinance+series_get[i-1])
+                      series_fee.push(val.fee)
+                      series_get.push(val.getFinance)
                   }
               })
               $.each(series_fee, function(i,val){
-                  series_fee[i]=parseFloat((series_fee[i]/100000).toFixed(0))
-                  series_get[i]=parseFloat((series_get[i]/100000).toFixed(0))
+                  series_fee[i]=parseFloat((series_fee[i]).toFixed(0))
+                  series_get[i]=parseFloat((series_get[i]).toFixed(0))
               })
               finance_realtor_chart.series[0].setData(series_fee)
               finance_realtor_chart.series[1].setData(series_get)

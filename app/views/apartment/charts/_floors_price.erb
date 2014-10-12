@@ -6,7 +6,7 @@
         <li>Как зависит средняя/минимальная/максимальная оценочная стоимость от этажа по всем объектам/по каждому объекту с учетом комнатности/без нее?</li>
         <li>Как зависит средняя/минимальная/максимальная итоговая стоимость от этажа по всем объектам/по каждому объекту с учетом комнатности/без нее?</li>
       </ul>
-      <i style="color: red">Примечание: так как данные случайны, то фильтры не будут приводить к изменению графика</i>
+
     </div>
   </div>
   <div class="col-sm-12" style="margin-top: 20px">
@@ -18,103 +18,17 @@
   <script type="application/javascript">
       $(function () {
 
-          var ranges = [
-                      [1, 14.3, 27.7],
-                      [2, 14.5, 27.8],
-                      [3, 15.5, 29.6],
-                      [4, 16.7, 30.7],
-                      [5, 16.5, 25.0],
-                      [6, 17.8, 25.7],
-                      [7, 13.5, 24.8],
-                      [8, 10.5, 21.4],
-                      [9, 9.2, 23.8],
-                      [10, 11.6, 21.8],
-                      [11, 10.7, 23.7],
-                      [12, 11.0, 23.3],
-                      [13, 11.6, 23.7],
-                      [14, 11.8, 20.7],
-                      [15, 12.6, 22.4],
-                      [16, 13.6, 19.6],
-                      [17, 11.4, 22.6],
-                      [18, 13.2, 25.0],
-                      [19, 14.2, 21.6],
-                      [20, 13.1, 17.1]
-                  ],
-                  averages = [
-                      [1, 21.5],
-                      [2, 22.1],
-                      [3, 23],
-                      [4, 23.8],
-                      [5, 21.4],
-                      [6, 21.3],
-                      [7, 18.3],
-                      [8, 15.4],
-                      [9, 16.4],
-                      [10, 17.7],
-                      [11, 17.5],
-                      [12, 17.6],
-                      [13, 17.7],
-                      [14, 16.8],
-                      [15, 17.7],
-                      [16, 16.3],
-                      [17, 17.8],
-                      [18, 18.1],
-                      [19, 17.2],
-                      [20, 14.4]
-                  ];
-
-          var ranges2 = [
-                      [1, 14.3, 28.7],
-                      [2, 14.5, 29.8],
-                      [3, 15.5, 29.6],
-                      [4, 16.7, 31.7],
-                      [5, 16.5, 25.0],
-                      [6, 17.8, 26.7],
-                      [7, 13.5, 25.8],
-                      [8, 10.5, 23.4],
-                      [9, 9.2, 24.8],
-                      [10, 11.6, 23.8],
-                      [11, 10.7, 22.7],
-                      [12, 11.0, 24.3],
-                      [13, 11.6, 24.7],
-                      [14, 11.8, 22.7],
-                      [15, 12.6, 23.4],
-                      [16, 13.6, 20.6],
-                      [17, 11.4, 21.6],
-                      [18, 13.2, 26.0],
-                      [19, 14.2, 23.6],
-                      [20, 13.1, 18.1]
-                  ],
-                  averages2 = [
-                      [1, 22.5],
-                      [2, 23.1],
-                      [3, 25],
-                      [4, 23.8],
-                      [5, 24.4],
-                      [6, 22.3],
-                      [7, 19.3],
-                      [8, 16.4],
-                      [9, 17.4],
-                      [10, 18.7],
-                      [11, 18.5],
-                      [12, 18.6],
-                      [13, 18.7],
-                      [14, 17.8],
-                      [15, 18.7],
-                      [16, 17.3],
-                      [17, 18.8],
-                      [18, 19.1],
-                      [19, 18.2],
-                      [20, 16.4]
-                  ];
-
-
-          $('#apartment-floor-price').highcharts({
-
+          floorPriceChart = new Highcharts.Chart({
+              credits:  {
+                  enabled: false
+              },
               title: {
                   text: 'Стоимость м2 от этажа'
               },
-
+              chart: {
+                  //type: 'column',
+                  renderTo:'apartment-floor-price'
+              },
               xAxis: {
                   min: 1,
                   max: 20,
@@ -125,11 +39,11 @@
 
               yAxis: {
                   title: {
-                      text: 'тыс. рублей'
+                      text: 'Стоимость квадратного метра'
                   }
               },
               xAxis: {
-
+                  tickmarkPlacement: 'on',
                   title: {
                       text: 'Этаж'
                       //align: 'center'
@@ -146,7 +60,7 @@
 
               series: [{
                   name: 'Оценочная',
-                  data: averages,
+                  data: [],
                   zIndex: 1,
                   marker: {
                       fillColor: 'white',
@@ -155,7 +69,7 @@
                   }
               }, {
                   name: 'Корридор оценочной цены',
-                  data: ranges,
+                  data: [],
                   type: 'arearange',
                   lineWidth: 0,
                   linkedTo: ':previous',
@@ -164,7 +78,7 @@
                   zIndex: 0
               },{
                   name: 'Итоговая',
-                  data: averages2,
+                  data: [],
                   zIndex: 1,
                   marker: {
                       fillColor: 'white',
@@ -173,7 +87,7 @@
                   }
               }, {
                   name: 'Корридор итоговой цены',
-                  data: ranges2,
+                  data: [],
                   type: 'arearange',
                   lineWidth: 0,
                   linkedTo: ':previous',
@@ -183,6 +97,70 @@
               }]
 
           });
+
+          redrawFloorPriceChart = function(){
+              var data =  getDataForFloorPriceChart();
+              console.log(data.range_start)
+              floorPriceChart.xAxis[0].setCategories(data.cat,false)
+              floorPriceChart.series[0].setData(data.avgs_start,false)
+              floorPriceChart.series[2].setData(data.avgs_end, false)
+              floorPriceChart.series[1].setData(data.range_start, false)
+              floorPriceChart.series[3].setData(data.range_end, false)
+
+              floorPriceChart.redraw();
+          }
+
+          getDataForFloorPriceChart = function (){
+              var floors = []
+              var data_avg = {first_price:[],end_price:[], count:[]};
+              var data_range = {first_price:[],end_price:[]};
+
+              $.each(filtered_apartments, function(i, val){
+                  if (val.dkp_date==null) return;
+
+                  var floor = val['floor']
+                  if (floors.indexOf(floor)==-1) floors.push(floor);
+                  if (data_range.first_price[floor]==null) data_range.first_price[floor] = [10000000, 0]
+                  if(data_range.first_price[floor][0]>val.price_m2_start) data_range.first_price[floor][0]=val.price_m2_start
+                  if(data_range.first_price[floor][1]<val.price_m2_start) data_range.first_price[floor][1]=val.price_m2_start
+
+                  if (data_range.end_price[floor]==null) data_range.end_price[floor] = [10000000, 0];
+                  if(data_range.end_price[floor][0]>val.price_m2_end) data_range.end_price[floor][0]=val.price_m2_end
+                  if(data_range.end_price[floor][1]<val.price_m2_end) data_range.end_price[floor][1]=val.price_m2_end
+
+                  if(data_avg.count[floor]==null) data_avg.count[floor]=0
+                  data_avg.count[floor]++
+                  data_avg.first_price[floor]=val.price_m2_start+(data_avg.first_price[floor]||0)
+                  data_avg.end_price[floor]=val.price_m2_end+(data_avg.end_price[floor]||0)
+
+              })
+
+              floors= floors.sort(function(a,b){return a-b;});
+              var avgs_start = [];
+              var avgs_end = [];
+              var range_start = [];
+              var range_end = [];
+              $.each(data_avg.first_price, function(i,price){
+                  if(price == null) return;
+                  avgs_start.push([floors.indexOf(i),data_avg.first_price[i]/data_avg.count[i]])
+              })
+              $.each(data_avg.end_price, function(i,price){
+                    if(price == null) return;
+                  avgs_end.push ([floors.indexOf(i),data_avg.end_price[i]/data_avg.count[i]])
+              })
+
+              $.each(data_range.first_price, function(i,range){
+                  if(range == null) return;
+                  range_start.push ([floors.indexOf(i), range[0], range[1]])
+              })
+              $.each(data_range.end_price, function(i,range){
+                  if(range == null) return;
+                  range_end.push ([floors.indexOf(i), range[0], range[1]])
+              })
+
+              return {cat: floors, avgs_start: avgs_start, avgs_end: avgs_end, range_start: range_start, range_end: range_end};
+          }
+          redrawFloorPriceChart();
 
       });
   </script>

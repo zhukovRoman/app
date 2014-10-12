@@ -36,7 +36,7 @@
                   },
                   labels: {
                       formatter: function() {
-                          return this.value / 1;
+                          return this.value / 1000000;
                       }
                   },
                   stackLabels: {
@@ -53,7 +53,7 @@
               },
               plotOptions: {
                   column: {
-                      stacking: 'normal',
+                      //stacking: 'normal',
                       dataLabels: {
                           enabled: true,
                           color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
@@ -63,7 +63,10 @@
                       }
                   }
               },
-              series: []
+              series: [
+                  {name: 'Добавочная стоимость',data: [0,0,0,0,0]},
+                  {name: 'Начальная стоимость',data: [0,0,0,0,0]}
+              ]
           });
 
 
@@ -73,9 +76,8 @@
           weeks_group = []
 
           $.each(filtered_apartments, function(i,val){
-              if (!(val.status=='ДКП' || val.status == 'ПС'))
-                  return;
-              apart_date = moment(val.ps_date||val.dkp_date)
+
+              apart_date = moment(val.dkp_date)
 
               $.each(getWeeksStarts(), function(t,week){
                   if(weeks_group[t]==null) weeks_group[t]=[]
@@ -86,25 +88,24 @@
               })
           })
 
-          series = [
+          series =  [
               {name: 'Добавочная стоимость',data: [0,0,0,0,0]},
               {name: 'Начальная стоимость',data: [0,0,0,0,0]}
           ];
 
           $.each(weeks_group, function(gi, week_data){
               $.each(week_data, function(i,val){
-                  series[1]['data'][gi]+=parseFloat((val.summ/1000000).toFixed(3))
-                  series[0]['data'][gi]+=parseFloat((val.price_diff/1000000).toFixed(3))
+                  series[1]['data'][gi]+=parseFloat((val.sum))
+                  series[0]['data'][gi]+=parseFloat((val.end_sum))
               })
           })
 
           series[0]['data'][1]= parseFloat((series[0]['data'][1]).toFixed(3))
           series[1]['data'][1]= parseFloat((series[1]['data'][1]).toFixed(3))
 
-          while(apartment_add_price.series.length > 0)
-              apartment_add_price.series[0].remove(false);
+          var t=0;
           $.each (series, function (i,ser){
-              apartment_add_price.addSeries(ser, false);
+              apartment_add_price.series[i].setData(ser.data, false);
           })
           apartment_add_price.redraw();
 
