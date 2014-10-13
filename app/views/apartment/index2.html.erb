@@ -27,11 +27,11 @@
   </div>
   <div class="col-sm-2" id="objects_filter">
     <div id="all-objects" class="btn btn-default btn-xs" style="margin-top: 40px">Все объекты</div>
-    <div><input id="nekrasovka1" type="checkbox" checked> Некрасовка 1</div>
-    <div><input id="nekrasovka2" type="checkbox" checked> Некрасовка 2</div>
-    <div><input id="solncevo" type="checkbox" checked> Солнцево</div>
-    <div><input id="basovskaya" type="checkbox" checked> Базовская</div>
-    <div><input id="zelenograd" type="checkbox" checked> Зеленоград</div>
+    <!--<div><input id="nekrasovka1" type="checkbox" checked> Некрасовка 1</div>-->
+    <!--<div><input id="nekrasovka2" type="checkbox" checked> Некрасовка 2</div>-->
+    <!--<div><input id="solncevo" type="checkbox" checked> Солнцево</div>-->
+    <!--<div><input id="basovskaya" type="checkbox" checked> Базовская</div>-->
+    <!--<div><input id="zelenograd" type="checkbox" checked> Зеленоград</div>-->
   </div>
 </div>
 
@@ -60,15 +60,19 @@
 <div id="apartment-finishing-sell-chart" style="width: 1100px; height: 500px;"></div>
 <script type="application/javascript">
     $(function () {
-        $('#apartment-finishing-sell-chart').highcharts({
+        finishing_sell_chart = new Highcharts.Chart({
             credits:  {
                 enabled: false
+            },
+            chart: {
+
+                renderTo: 'apartment-finishing-sell-chart'
             },
             title: {
                 text: 'Продано квартир с отделкой и без'
             },
             xAxis: {
-                categories: ['Некрасовка', 'Сочинская', 'Покровская']
+                categories: objects
             },
             yAxis: {
                 min: 0,
@@ -116,7 +120,7 @@
                         textShadow: '0 0 3px black, 0 0 3px black'
                     }
                 },
-                data: [0,0,0]
+                data: []
             }, {
                 type: 'column',
                 name: 'Без отделки',
@@ -127,9 +131,40 @@
                         textShadow: '0 0 3px black, 0 0 3px black'
                     }
                 },
-                data: [84, 0, 44]
+                data: []
             }]
         });
+
+        redrawFinishingLevelChart = function () {
+            var data = getDataForFinishingChart();
+            finishing_sell_chart.series[0].setData(data[0], false);
+            finishing_sell_chart.series[1].setData(data[1], false);
+            finishing_sell_chart.redraw();
+
+        }
+
+        getDataForFinishingChart = function () {
+            data = {};
+            $.each(apartments, function(i,apart){
+                if (apart.dkp_date==null) return;
+
+                if(data[apart.object]==null) data[apart.object]={finish:0, not_finish:0}
+                if (apart.finishing) data[apart.object]['finish']++;
+                else data[apart.object]['not_finish']++;
+            })
+
+
+            finishing = [];
+            not_finishing = [];
+            $.each (data, function(i,obj){
+
+                finishing.push([objects.indexOf(i), obj.finish ])
+                not_finishing.push([objects.indexOf(i), obj.not_finish ])
+            })
+            return [finishing, not_finishing];
+        }
+
+        redrawFinishingLevelChart();
     });
 </script>
 
@@ -160,15 +195,19 @@
 <div id="apartment-all-sell-status-chart2" style="width: 1100px; height: 500px; padding-top: 50px"></div>
 <script type="application/javascript">
     $(function () {
-        $('#apartment-all-sell-status-chart2').highcharts({
+        apartment_all_sell_status_chart = new Highcharts.Chart({
             credits:  {
                 enabled: false
+            },
+            chart: {
+                type: 'column',
+                renderTo:'apartment-all-sell-status-chart2'
             },
             title: {
                 text: 'Всего продано квартир'
             },
             xAxis: {
-                categories: ['Некрасовка', 'Сочинская', 'Покровская']
+                categories: objects
             },
             tooltip:{
                 shared: true
@@ -177,9 +216,6 @@
                 column: {
                     stacking: 'percent'
                 }
-            },
-            chart: {
-                type: 'column'
             },
             series: [{
                 name: '1-ком осталось',
@@ -214,17 +250,75 @@
                 color: "rgb(144, 237, 125)"
             }]
         });
+
+        redrawAllStatusChart = function () {
+            var data = getDataForAllStatusChart();
+            apartment_all_sell_status_chart.xAxis[0].setCategories(data[6]);
+            apartment_all_sell_status_chart.series[0].setData(data[0]);
+            apartment_all_sell_status_chart.series[1].setData(data[1]);
+            apartment_all_sell_status_chart.series[2].setData(data[2]);
+            apartment_all_sell_status_chart.series[3].setData(data[3]);
+            apartment_all_sell_status_chart.series[4].setData(data[4]);
+            apartment_all_sell_status_chart.series[5].setData(data[5]);
+
+            console.log(data);
+        }
+
+        getDataForAllStatusChart = function () {
+            var data = {}
+
+            $.each(apartments, function(i,apart){
+                if(data[apart.object]==null) data[apart.object]={sell:[0,0,0,0], not_sell:[0,0,0,0]}
+                if (apart.status=="ДКП" || apart.status=="ПС")
+                    data[apart.object]['sell'][apart.rooms-1]++ ;
+                else data[apart.object]['not_sell'][apart.rooms-1]++;
+            })
+
+            var k1_sell = [];
+            var k2_sell = [];
+            var k3_sell = [];
+            var k1_not_sell = [];
+            var k2_not_sell = [];
+            var k3_not_sell = [];
+            var objs = []
+            $.each (data, function(obj,val){
+                objs.push(obj);
+                k1_sell.push(val.sell[0]);
+                k2_sell.push(val.sell[1]);
+                k3_sell.push(val.sell[2]);
+
+                k1_not_sell.push( val.not_sell[0]);
+                k2_not_sell.push( val.not_sell[1]);
+                k3_not_sell.push( val.not_sell[2]);
+            })
+            return [k1_not_sell, k1_sell, k2_not_sell, k2_sell, k3_not_sell, k3_sell, objs];
+        }
+
+        redrawAllStatusChart();
     });
 </script>
 
 
 <script type="application/javascript">
     $(function(){
+
+        selectAllObjects = function (){
+            $('#objects_filter input').prop('checked', true);
+            filterObjects();
+        }
+
+        $.each(objects, function(i,val){
+
+            $('#objects_filter').append("<div><input type='checkbox' checked>"+val+"</div>");
+
+        })
         //навешиваем обработчики
-        //$("#all-objects").on('click', selectAllObjects);
-        //$("#objects_filter input").change(redrawChart);
+        $("#all-objects").on('click', selectAllObjects);
+        $("#objects_filter input").change(filterObjects);
         $("#rooms_filter input").change(filterRooms);
         $("#value_filter input").change(setNewValues);
        // createChart();
+
+
     });
 </script>

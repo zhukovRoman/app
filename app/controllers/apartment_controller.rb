@@ -46,6 +46,7 @@ class ApartmentController < ApplicationController
             end
             a = Hash.new
             a['id']=apart['id']
+            a['object']=obj['name']
             a['floor']=apart['floor']
             a['max_floor']=sec['floors']
             a['rooms']=apart['rooms']

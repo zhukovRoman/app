@@ -34,7 +34,8 @@ getWeeksStartsForCategories = function (){
 }
 
 filterRooms = function(){
-    console.log(this);
+
+
     filtered_apartments.length=0;
     if ($(this).attr('data-room')=='all')
         $.each(apartments, function(i,val){
@@ -51,6 +52,27 @@ filterRooms = function(){
     redrawAllCharts();
 
 }
+filterObjects= function(){
+
+    var objs = []
+    $.each($('#objects_filter input:checked'), function (i,obj){
+        objs.push($(obj).parent().text());
+    })
+    var tmp = []
+    $.each(filtered_apartments, function(i, a){
+        if (objs.indexOf(a.object)!=-1)
+            tmp.push(a);
+    })
+//    filtered_apartments.length=0;
+      filtered_apartments = tmp;
+//    $.each(tmp, function(i, a){
+//        filtered_apartments.push(a)
+//    })
+    redrawAllCharts();
+
+}
+
+
 redrawAllCharts=function(){
     redrawStatusChart();
     redrawAvgChart();
