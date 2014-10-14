@@ -8,7 +8,7 @@ getWeeksCategories = function(){
     {
         var start = moment().subtract(i, 'week').startOf('isoweek')
         var end = moment().subtract(i, 'week').endOf('isoweek')
-        res.push(start.get('date')+"/"+(start.month()+1)+"-"+end.get('date')+"/"+(end.month()+1))
+        res.push(start.format("DD.MM")+"-"+end.format("DD.MM"))
     }
     return res;
 }
@@ -28,7 +28,8 @@ getWeeksStartsForCategories = function (){
     for (var i=4; i>=0; i--)
     {
         var start = moment().subtract(i, 'week').startOf('isoweek')
-        res.push(start.get('date')+"."+(start.month()+1))
+        res.push(start.format("DD.MM"));
+//        res.push(start.get('date')+"."+(start.month()+1))
     }
     return res;
 }

@@ -1,14 +1,37 @@
 
 
-current_value = 'fin'
-var setNewValues = function () {
-    current_value =  $(this).parent().attr("data")
-    redrawStatusChart();
-}
+
+
 
 
 //var current_status_data = finance_status_data;
 $(function (){
+
+    var setNewValuesForStatusesChart = function () {
+
+        active_measure =  $(this).parent().attr("data");
+        active_title = $(this).parent().attr("data-label");
+        console.log(active_measure, active_title)
+        redrawStatusChart();
+    }
+
+    var active_measure = 'pcs';
+    var active_title = 'Количество';
+
+    $('#value_filter_statuses input').change(setNewValuesForStatusesChart);
+
+    var AxisFormatters = {
+        pcs: function(value){return value+''},
+        m2: function(value){return value/1000+' тыс кв.м.'},
+        fin: function(value){return value/1000000+' млн. ₽'}
+    }
+
+    var TooltipFormatters = {
+        pcs: function(value){return value+' квартир'},
+        m2: function(value){return thousands_sep(value.toFixed(0))+' кв.м.'},
+        fin: function(value){return thousands_sep((value/1000000).toFixed(3))+' млн. ₽'}
+    }
+
     status_chart=new Highcharts.Chart({
         credits:  {
             enabled: false
@@ -24,24 +47,30 @@ $(function (){
             categories: getWeeksStartsForCategories(),
             tickmarkPlacement: 'on'
         },
-        yAxis:{
+        yAxis: {
+            //min: 0,
+            allowDecimals: false,
             title: {
-                text: ''
+                text: active_title
+            },
+            labels:{
+                formatter: function(){return AxisFormatters[active_measure](this.value);}
             }
         },
         tooltip: {
-            shared: true
-//            formatter: function() {
-//                var s = '<b>'+ this.x +'</b>';
-//
-//                $.each(this.points, function(i, point) {
-//                    s += '<br/>'+ point.series.name +': '+
-//                            point.y + " " + current_status_data['valueSuffix'];
-//                });
-//
-//                return s;
-//            }
-//              valueSuffix: 'млн рублей'
+            shared: true,
+            useHTML: true,
+            formatter: function() {
+                var result = '<b>' + this.x + '</b>';
+                $.each(this.points, function(i, datum) {
+
+                    result += '<br /> <i style="color: '+datum.point.series.color+'">'
+                            + datum.series.name + '</i>: '
+                            + TooltipFormatters[active_measure](datum.y);
+
+                });
+                return result;
+            }
         },
         series: [{
             name: 'ПС',
@@ -83,16 +112,16 @@ $(function (){
             $.each(getWeeksStarts(), function(t,week){
                 //опрделяем статус квартиры на текущей неделе
 
-                if (weeks_group['ПС'][t]==null) weeks_group['ПС'][t]={count:0, fin:0, m2:0}
-                if (weeks_group['ДКП'][t]==null) weeks_group['ДКП'][t]={count:0, fin:0, m2:0}
-                if (weeks_group['Аукцион'][t]==null) weeks_group['Аукцион'][t]={count:0, fin:0, m2:0}
-                if (weeks_group['Имеет заявку'][t]==null) weeks_group['Имеет заявку'][t]={count:0, fin:0, m2:0}
-                if (weeks_group['Свободна'][t]==null) weeks_group['Свободна'][t]={count:0, fin:0, m2:0}
+                if (weeks_group['ПС'][t]==null) weeks_group['ПС'][t]={pcs:0, fin:0, m2:0}
+                if (weeks_group['ДКП'][t]==null) weeks_group['ДКП'][t]={pcs:0, fin:0, m2:0}
+                if (weeks_group['Аукцион'][t]==null) weeks_group['Аукцион'][t]={pcs:0, fin:0, m2:0}
+                if (weeks_group['Имеет заявку'][t]==null) weeks_group['Имеет заявку'][t]={pcs:0, fin:0, m2:0}
+                if (weeks_group['Свободна'][t]==null) weeks_group['Свободна'][t]={pcs:0, fin:0, m2:0}
 
                 //доавляем квартиру в статус ПС если дата была когда либо до этой даты.
                 if (ps_date.diff(week, 'days')<0)
                 {
-                    weeks_group['ПС'][t]['count']++;
+                    weeks_group['ПС'][t]['pcs']++;
                     weeks_group['ПС'][t]['fin']+=val.end_sum
                     weeks_group['ПС'][t]['m2']+=val.square
                 }
@@ -100,7 +129,7 @@ $(function (){
                 //добавляем квартиру в дкп если дата у нее дата дкп была до это недели и она еще не перешла в статус ПС
                 if (dkp_date.diff(week, 'days')<0 && (ps_date.diff(week, 'days')>=0 || ps_date==null))
                 {
-                    weeks_group['ДКП'][t]['count']++;
+                    weeks_group['ДКП'][t]['pcs']++;
                     weeks_group['ДКП'][t]['fin']+=val.end_sum
                     weeks_group['ДКП'][t]['m2']+=val.square
                 }
@@ -108,21 +137,21 @@ $(function (){
                 //добавляем квартиру в аук если дата у нее дата аук была до это недели и она еще не перешла в статус ДКП
                 if (auk_date.diff(week, 'days')<0 && (dkp_date.diff(week, 'days')>=0 || dkp_date==null))
                 {
-                    weeks_group['Аукцион'][t]['count']++;
+                    weeks_group['Аукцион'][t]['pcs']++;
                     weeks_group['Аукцион'][t]['fin']+=val.end_sum
                     weeks_group['Аукцион'][t]['m2']+=val.square
                 }
 
                 if (has_qty_date.diff(week, 'days')<0 && (auk_date.diff(week, 'days')>=0 || auk_date==null))
                 {
-                    weeks_group['Имеет заявку'][t]['count']++;
+                    weeks_group['Имеет заявку'][t]['pcs']++;
                     weeks_group['Имеет заявку'][t]['fin']+=val.end_sum
                     weeks_group['Имеет заявку'][t]['m2']+=val.square
                 }
 
                 if (free_date.diff(week, 'days')<0 && (has_qty_date.diff(week, 'days')<7 || has_qty_date==null))
                 {
-                    weeks_group['Свободна'][t]['count']++;
+                    weeks_group['Свободна'][t]['pcs']++;
                     weeks_group['Свободна'][t]['fin']+=val.end_sum
                     weeks_group['Свободна'][t]['m2']+=val.square
                 }
@@ -137,7 +166,7 @@ $(function (){
             if(weeks_data[i]==null) weeks_data[i]={name: i,data:[]}
 
             $.each(status_data, function(t, week_status_data){
-                weeks_data[i]['data'].push(week_status_data[current_value])
+                weeks_data[i]['data'].push(week_status_data[active_measure])
             })
 
         })
@@ -150,6 +179,142 @@ $(function (){
     }
 
     redrawStatusChart();
+
+    getDataForObject = function(obj, btn){
+        var weeks_group={
+            'ПС':[],
+            'ДКП':[],
+            'Аукцион':[],
+            'Имеет заявку': [],
+            'Свободна': []
+        };
+        $.each(filtered_apartments, function(i,val){
+            if(obj != val.object) return;
+            ps_date = moment(val.ps_date)
+            dkp_date = moment(val.dkp_date)
+            auk_date = moment(val.auction_date)
+            has_qty_date = moment(val.has_qty_date)
+            free_date = moment(val.free_date)
+            $.each(getWeeksStarts(), function(t,week){
+                //опрделяем статус квартиры на текущей неделе
+                if (weeks_group['ПС'][t]==null) weeks_group['ПС'][t]={pcs:0, fin:0, m2:0}
+                if (weeks_group['ДКП'][t]==null) weeks_group['ДКП'][t]={pcs:0, fin:0, m2:0}
+                if (weeks_group['Аукцион'][t]==null) weeks_group['Аукцион'][t]={pcs:0, fin:0, m2:0}
+                if (weeks_group['Имеет заявку'][t]==null) weeks_group['Имеет заявку'][t]={pcs:0, fin:0, m2:0}
+                if (weeks_group['Свободна'][t]==null) weeks_group['Свободна'][t]={pcs:0, fin:0, m2:0}
+
+                //доавляем квартиру в статус ПС если дата была когда либо до этой даты.
+                if (ps_date.diff(week, 'days')<0)
+                {
+                    weeks_group['ПС'][t]['pcs']++;
+                    weeks_group['ПС'][t]['fin']+=val.end_sum
+                    weeks_group['ПС'][t]['m2']+=val.square
+                }
+
+                //добавляем квартиру в дкп если дата у нее дата дкп была до это недели и она еще не перешла в статус ПС
+                if (dkp_date.diff(week, 'days')<0 && (ps_date.diff(week, 'days')>=0 || ps_date==null))
+                {
+                    weeks_group['ДКП'][t]['pcs']++;
+                    weeks_group['ДКП'][t]['fin']+=val.end_sum
+                    weeks_group['ДКП'][t]['m2']+=val.square
+                }
+
+                //добавляем квартиру в аук если дата у нее дата аук была до это недели и она еще не перешла в статус ДКП
+                if (auk_date.diff(week, 'days')<0 && (dkp_date.diff(week, 'days')>=0 || dkp_date==null))
+                {
+                    weeks_group['Аукцион'][t]['pcs']++;
+                    weeks_group['Аукцион'][t]['fin']+=val.end_sum
+                    weeks_group['Аукцион'][t]['m2']+=val.square
+                }
+
+                if (has_qty_date.diff(week, 'days')<0 && (auk_date.diff(week, 'days')>=0 || auk_date==null))
+                {
+                    weeks_group['Имеет заявку'][t]['pcs']++;
+                    weeks_group['Имеет заявку'][t]['fin']+=val.end_sum
+                    weeks_group['Имеет заявку'][t]['m2']+=val.square
+                }
+
+                if (free_date.diff(week, 'days')<0 && (has_qty_date.diff(week, 'days')<7 || has_qty_date==null))
+                {
+                    weeks_group['Свободна'][t]['pcs']++;
+                    weeks_group['Свободна'][t]['fin']+=val.end_sum
+                    weeks_group['Свободна'][t]['m2']+=val.square
+                }
+            })
+
+
+        })
+
+        var res = []
+        $.each(weeks_group[$(btn).attr('data-status')],function(i,val){
+            res.push(val[active_measure])
+        })
+        return res;
+
+    }
+
+    getSeriesForChart = function(btn){
+        var series = [];
+        $.each(objects, function(i,obj){
+            series.push({name: obj, data: getDataForObject(obj, btn)})
+        })
+        return series;
+    }
+
+    showDetailChart = function (btn){
+        //console.log($(btn).text())
+        $("#container-for-detail-chart").toggle();
+
+        apartment_status_detail_chart = new Highcharts.Chart({
+            chart: {
+                type: 'column',
+                renderTo: 'apartment-status-detail'
+            },
+            credits:  {
+                enabled: false
+            },
+            title: {
+                text: 'Данамика статуса "'+$(btn).text()+'"'
+            },
+            xAxis: {
+                categories: getWeeksStartsForCategories(),
+                tickmarkPlacement: 'on'
+            },
+            yAxis: {
+                //min: 0,
+                allowDecimals: false,
+                title: {
+                    text: active_title
+                },
+                labels:{
+                    formatter: function(){return AxisFormatters[active_measure](this.value);}
+                }
+            },
+            tooltip: {
+                shared: true,
+                useHTML: true,
+                formatter: function() {
+                    var result = '<b>' + this.x + '</b>';
+                    $.each(this.points, function(i, datum) {
+
+                        result += '<br /> <i style="color: '+datum.point.series.color+'">'
+                                + datum.series.name + '</i>: '
+                                + TooltipFormatters[active_measure](datum.y);
+
+                    });
+                    return result;
+                }
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: getSeriesForChart(btn)
+        });
+    }
+
 });
 
 

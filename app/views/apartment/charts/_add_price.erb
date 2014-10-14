@@ -32,11 +32,11 @@
               },
               yAxis: {
                   title: {
-                      text: 'Миллионов'
+                      text: ''
                   },
                   labels: {
                       formatter: function() {
-                          return this.value / 1000000;
+                          return this.value / 1000000 + ' млн ₽';
                       }
                   },
                   stackLabels: {
@@ -48,8 +48,19 @@
                   }
               },
               tooltip: {
+                  formatter: function() {
+                      var result = '<b>' + this.x + '</b>';
+                      $.each(this.points, function(i, datum) {
+
+                              result += '<br /> <i style="color: '+datum.point.series.color+'">'
+                                      + datum.series.name + '</i>: '
+                                      + thousands_sep((datum.y/1000000).toFixed(3)) + ' млн ₽ ';
+
+                      });
+                      return result;
+                  },
                   shared: true,
-                  valueSuffix: ' млн'
+                  useHTML: true
               },
               plotOptions: {
                   column: {
@@ -59,13 +70,14 @@
                           color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
                           style: {
                               textShadow: '0 0 3px black, 0 0 3px black'
-                          }
+                          },
+                          formatter: function() {return thousands_sep((this.y/1000000).toFixed(3))}
                       }
                   }
               },
               series: [
-                  {name: 'Добавочная стоимость',data: [0,0,0,0,0]},
-                  {name: 'Начальная стоимость',data: [0,0,0,0,0]}
+                  {name: 'Добавочная стоимость',data: []},
+                  {name: 'Начальная стоимость',data: []}
               ]
           });
 

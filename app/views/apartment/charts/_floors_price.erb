@@ -40,6 +40,11 @@
               yAxis: {
                   title: {
                       text: 'Стоимость квадратного метра'
+                  },
+                  labels: {
+                      formatter: function () {
+                          return this.value/1000 + ' тыс ₽';
+                      }
                   }
               },
               xAxis: {
@@ -50,9 +55,23 @@
                   }
               },
               tooltip: {
-                  crosshairs: true,
+                  formatter: function() {
+                      var result = '<b>' + this.x + '</b>';
+                      $.each(this.points, function(i, datum) {
+                          if (i%2==0)
+                              result += '<br /> <i style="color: '+datum.point.series.color+'">'
+                                      + datum.series.name + '</i>: '
+                                      + thousands_sep(datum.y.toFixed(0)) + ' ₽ ';
+                          else
+                              result += '<br /> <i style="color: '+datum.point.series.color+'">'
+                                      + datum.series.name + '</i>: '
+                                      + thousands_sep(datum.point.low.toFixed(0)) + ' - '
+                                      + thousands_sep(datum.point.high.toFixed(0)) + ' ₽ ';
+                      });
+                      return result;
+                  },
                   shared: true,
-                  valueSuffix: 'тыс руб'
+                  useHTML: true
               },
 
               legend: {

@@ -10,18 +10,18 @@
   <div class="col-sm-12" style="margin-top: 20px">
     <div class="col-sm-4 ">
       <div class="btn-group" data-toggle="buttons" id="value_filter_planFact">
-        <label label-default="" id="in-pcs" class="btn btn-default active" data="pcs">
+        <label label-default="" id="in-pcs" class="btn btn-default active" data="pcs" data-label="Количество квартир">
           <input name="options"  type="radio" checked="checked">В квартирах
         </label>
-        <label label-default=""  id="in-m2" class="btn btn-default" data="m2">
+        <label label-default=""  id="in-m2" class="btn btn-default" data="m2" data-label="Кв метров">
           <input name="options"  type="radio">В м<sup>2</sup>
         </label>
-        <label label-default="" id="in-fin" class="btn btn-default " data="fin">
+        <label label-default="" id="in-fin" class="btn btn-default " data="fin" data-label="Рублей">
           <input name="options"  type="radio">В финанасах
         </label>
       </div>
     </div>
-    <div class="col-sm-6 ">
+    <div class="col-sm-6">
       <div class="btn-group" data-toggle="buttons" id="interval_choosen">
         <label label-default="" id="in-pcs" class="btn btn-default active" data="week">
           <input name="options"  type="radio" checked="checked">Неделя
@@ -50,9 +50,30 @@
       $(function () {
           var months = ["", "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
           var active_measure = 'pcs';
+          var active_title = 'Количество';
+
+          var AxisFormatters = {
+              pcs: function(value){return value+''},
+              m2: function(value){return value+' кв.м.'},
+              fin: function(value){return value/1000000+' млн. ₽'}
+          }
+
+          var DatalabelsFormatters = {
+              pcs: function(value){return value+''},
+              m2: function(value){return thousands_sep(value.toFixed(0))+''},
+              fin: function(value){return thousands_sep((value/1000000).toFixed(3))+''}
+          }
+
+          var TooltipFormatters = {
+              pcs: function(value){return value+' квартир'},
+              m2: function(value){return thousands_sep(value.toFixed(0))+' кв.м.'},
+              fin: function(value){return thousands_sep((value/1000000).toFixed(3))+' млн. ₽'}
+          }
+
 
           setNewValuesForPlanFact = function () {
-              active_measure =  $(this).parent().attr("data")
+              active_measure =  $(this).parent().attr("data");
+              active_title = $(this).parent().attr("data-label");
               redrawPlanFactChart();
           }
 
@@ -123,7 +144,7 @@
                           case 'week':
                               start = moment().subtract(i, 'week').startOf('isoweek')
                               var end = moment().subtract(i, 'week').endOf('isoweek')
-                              res.push(start.get('date')+"/"+(months[start.month()+1])+"-"+end.get('date')+"/"+(months[end.month()+1]))
+                              res.push(start.format("DD.MM")+"-"+end.format("DD.MM"))
                               break;
                           case 'month':
                               res.push (months[moment().subtract(i, 'month').get('month')+1])
@@ -151,7 +172,7 @@
                           default:
                               start = moment().subtract(i, 'week').startOf('isoweek')
                               var end = moment().subtract(i, 'week').endOf('isoweek')
-                              res.push(start.get('date')+"/"+(months[start.month()+1])+"-"+end.get('date')+"/"+(months[end.month()+1]))
+                              res.push(start.format("DD.MM")+"-"+end.format("DD.MM"))
                               break;
                       }
 
@@ -177,21 +198,37 @@
                   categories: getIntervalCategories()
               },
               yAxis: {
-                  min: 0,
+                  //min: 0,
+                  allowDecimals: false,
                   title: {
-                      text: 'Количество'
+                      text: active_title
+                  },
+                  labels:{
+                      formatter: function(){return AxisFormatters[active_measure](this.value);}
                   }
               },
               tooltip: {
                   shared: true,
-                  useHTML: true
+                  useHTML: true,
+                  formatter: function() {
+                      var result = '<b>' + this.x + '</b>';
+                      $.each(this.points, function(i, datum) {
+
+                              result += '<br /> <i style="color: '+datum.point.series.color+'">'
+                                      + datum.series.name + '</i>: '
+                                      + TooltipFormatters[active_measure](datum.y);
+
+                      });
+                      return result;
+                  }
               },
               plotOptions: {
                   column: {
                       pointPadding: .1,
                       borderWidth: 0,
                       dataLabels: {
-                          enabled: true
+                          enabled: true,
+                          formatter: function () {return DatalabelsFormatters[active_measure](this.y)}
                       }
                   }
 
@@ -210,6 +247,7 @@
           redrawPlanFactChart = function (){
               var data = getDataForPlanFactChart();
               plan_fact_chart.xAxis[0].setCategories(getIntervalCategories(),false);
+              plan_fact_chart.yAxis[0].setTitle({text: active_title})
               plan_fact_chart.series[0].setData(data[active_measure]['plan'],false);
               plan_fact_chart.series[1].setData(data[active_measure]['fact'],false);
               plan_fact_chart.redraw();

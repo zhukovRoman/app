@@ -14,14 +14,14 @@
   </div>
   <div class="col-sm-12" style="margin-top: 20px">
       <div class="col-sm-6 ">
-        <div class="btn-group" data-toggle="buttons" id="value_filter">
-          <label label-default="" id="in-pcs" class="btn btn-default " data="count">
+        <div class="btn-group" data-toggle="buttons" id="value_filter_statuses">
+          <label label-default="" id="in-pcs" class="btn btn-default active" data="pcs" data-label="Количество квартир">
             <input name="options"  type="radio" checked="checked">В квартирах
           </label>
-          <label label-default=""  id="in-m2" class="btn btn-default" data="m2">
+          <label label-default=""  id="in-m2" class="btn btn-default" data="m2" data-label="Кв метров">
             <input name="options"  type="radio">В м<sup>2</sup>
           </label>
-          <label label-default="" id="in-fin" class="btn btn-default active" data="fin">
+          <label label-default="" id="in-fin" class="btn btn-default " data="fin" data-label="Рублей">
             <input name="options"  type="radio">В финанасах
           </label>
         </div>
@@ -38,126 +38,10 @@
       <button type="button" class="btn btn-default" onclick="showDetailChart(this)" data-status="ПС">Передано ПС</button>
     </div>
 
-  <div id="container-for-detatil-chart" style="display: none">
+  <div id="container-for-detail-chart" style="display: none">
     <div id="apartment-status-detail" class="chart" style="height: 500px; width: 900px;"></div>
   </div>
   </div>
-  <script type="application/javascript">
-     var showDetailChart = function (btn){
-        //console.log($(btn).text())
-
-        getSeriesForChart = function(){
-            var series = [];
-            $.each(objects, function(i,obj){
-                series.push({name: obj, data: getDataForObject(obj)})
-            })
-
-            return series;
-        }
-
-        getDataForObject = function(obj){
-            var weeks_group={
-                'ПС':[],
-                'ДКП':[],
-                'Аукцион':[],
-                'Имеет заявку': [],
-                'Свободна': []
-            };
-            $.each(filtered_apartments, function(i,val){
-                if(obj != val.object) return;
-                ps_date = moment(val.ps_date)
-                dkp_date = moment(val.dkp_date)
-                auk_date = moment(val.auction_date)
-                has_qty_date = moment(val.has_qty_date)
-                free_date = moment(val.free_date)
-                $.each(getWeeksStarts(), function(t,week){
-                    //опрделяем статус квартиры на текущей неделе
-                    if (weeks_group['ПС'][t]==null) weeks_group['ПС'][t]={count:0, fin:0, m2:0}
-                    if (weeks_group['ДКП'][t]==null) weeks_group['ДКП'][t]={count:0, fin:0, m2:0}
-                    if (weeks_group['Аукцион'][t]==null) weeks_group['Аукцион'][t]={count:0, fin:0, m2:0}
-                    if (weeks_group['Имеет заявку'][t]==null) weeks_group['Имеет заявку'][t]={count:0, fin:0, m2:0}
-                    if (weeks_group['Свободна'][t]==null) weeks_group['Свободна'][t]={count:0, fin:0, m2:0}
-
-                    //доавляем квартиру в статус ПС если дата была когда либо до этой даты.
-                    if (ps_date.diff(week, 'days')<0){
-                        weeks_group['ПС'][t]['count']++;
-                        weeks_group['ПС'][t]['fin']+=val.end_sum
-                        weeks_group['ПС'][t]['m2']+=val.square
-                    }
-
-                    //добавляем квартиру в дкп если дата у нее дата дкп была до это недели и она еще не перешла в статус ПС
-                    if (dkp_date.diff(week, 'days')<0 && (ps_date.diff(week, 'days')>=0 || ps_date==null)){
-                        weeks_group['ДКП'][t]['count']++;
-                        weeks_group['ДКП'][t]['fin']+=val.end_sum
-                        weeks_group['ДКП'][t]['m2']+=val.square
-                    }
-
-                    //добавляем квартиру в аук если дата у нее дата аук была до это недели и она еще не перешла в статус ДКП
-                    if (auk_date.diff(week, 'days')<0 && (dkp_date.diff(week, 'days')>=0 || dkp_date==null)){
-                        weeks_group['Аукцион'][t]['count']++;
-                        weeks_group['Аукцион'][t]['fin']+=val.end_sum
-                        weeks_group['Аукцион'][t]['m2']+=val.square
-                    }
-
-                    if (has_qty_date.diff(week, 'days')<0 && (auk_date.diff(week, 'days')>=0 || auk_date==null)){
-                        weeks_group['Имеет заявку'][t]['count']++;
-                        weeks_group['Имеет заявку'][t]['fin']+=val.end_sum
-                        weeks_group['Имеет заявку'][t]['m2']+=val.square
-                    }
-
-                    if (free_date.diff(week, 'days')<0 && (has_qty_date.diff(week, 'days')<7 || has_qty_date==null)){
-                        weeks_group['Свободна'][t]['count']++;
-                        weeks_group['Свободна'][t]['fin']+=val.end_sum
-                        weeks_group['Свободна'][t]['m2']+=val.square
-                    }
-                })
-
-
-            })
-            
-            var res = []
-            $.each(weeks_group[$(btn).attr('data-status')],function(i,val){
-                res.push(val[current_value])
-            })
-            return res;
-
-        }
-
-        $("#container-for-detatil-chart").toggle();
-         apartment_status_detail_chart = new Highcharts.Chart({
-             chart: {
-                 type: 'column',
-                 renderTo: 'apartment-status-detail'
-             },
-             credits:  {
-                 enabled: false
-             },
-             title: {
-                 text: 'Данамика статуса "'+$(btn).text()+'"'
-             },
-             xAxis: {
-                 categories: getWeeksStartsForCategories(),
-                 tickmarkPlacement: 'on'
-             },
-             yAxis: {
-                 min: 0,
-                 title: {
-                     text: 'Квартир'
-                 }
-             },
-             tooltip: {
-                 shared: true
-             },
-             plotOptions: {
-                 column: {
-                     pointPadding: 0.2,
-                     borderWidth: 0
-                 }
-             },
-             series: getSeriesForChart()
-         });
-     }
-  </script>
   <script type="application/javascript">
     <%= render "apartment/charts/apartment_status.js" %>
   </script>

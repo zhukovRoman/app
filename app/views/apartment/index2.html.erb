@@ -209,8 +209,14 @@
             xAxis: {
                 categories: objects
             },
+            yAxis: {
+                title: {
+                    text: 'Количество'
+                }
+            },
             tooltip:{
-                shared: true
+                shared: true,
+                valueSuffix: " кв"
             },
             plotOptions: {
                 column: {
@@ -316,7 +322,7 @@
         $("#all-objects").on('click', selectAllObjects);
         $("#objects_filter input").change(filterObjects);
         $("#rooms_filter input").change(filterRooms);
-        $("#value_filter input").change(setNewValues);
+
        // createChart();
 
 
