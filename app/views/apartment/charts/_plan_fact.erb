@@ -8,7 +8,7 @@
     </div>
   </div>
   <div class="col-sm-12" style="margin-top: 20px">
-    <div class="col-sm-6 ">
+    <div class="col-sm-4 ">
       <div class="btn-group" data-toggle="buttons" id="value_filter_planFact">
         <label label-default="" id="in-pcs" class="btn btn-default active" data="pcs">
           <input name="options"  type="radio" checked="checked">В квартирах
@@ -21,6 +21,26 @@
         </label>
       </div>
     </div>
+    <div class="col-sm-6 ">
+      <div class="btn-group" data-toggle="buttons" id="interval_choosen">
+        <label label-default="" id="in-pcs" class="btn btn-default active" data="week">
+          <input name="options"  type="radio" checked="checked">Неделя
+        </label>
+        <label label-default=""  id="in-m2" class="btn btn-default" data="month">
+          <input name="options"  type="radio">Месяц
+        </label>
+        <label label-default=""  id="in-m2" class="btn btn-default" data="qartal">
+          <input name="options"  type="radio">Квартал
+        </label>
+        <label label-default="" id="in-fin" class="btn btn-default " data="half_year">
+          <input name="options"  type="radio">Полугодие
+        </label>
+        <label label-default="" id="in-fin" class="btn btn-default " data="year">
+          <input name="options"  type="radio">Год
+        </label>
+      </div>
+    </div>
+
     <%= render "apartment/charts/commons_part/rooms_filter" %>
   </div>
   <div class="row">
@@ -28,14 +48,118 @@
   </div>
   <script type="application/javascript">
       $(function () {
-
-
+          var months = ["", "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
           var active_measure = 'pcs';
 
           setNewValuesForPlanFact = function () {
               active_measure =  $(this).parent().attr("data")
               redrawPlanFactChart();
           }
+
+          interval = 'week';
+          setNewInterval = function (){
+              interval = $(this).parent().attr("data");
+              redrawPlanFactChart();
+          }
+
+
+          $('#interval_choosen input').change(setNewInterval);
+
+          getIntervalStarts= function (){
+              res = []
+              for (var i=4; i>=0; i--)
+              {
+                  var start;
+                  var end;
+                  switch (interval) {
+                      case 'week':
+                          start = moment().subtract(i, 'week').startOf('isoweek');
+                          end = moment().subtract(i-1, 'week').startOf('isoweek');
+                          break;
+                      case 'month':
+                          start = moment().subtract(i, 'month').startOf('month');
+                          end = moment().subtract(i-1, 'month').startOf('month');
+                          break;
+                      case 'qartal':
+                          start = moment().subtract(i*3, 'month').startOf('quarter');
+                          end = moment().subtract((i-1)*3, 'month').startOf('quarter');
+                          break;
+                      case 'half_year':
+                          start_of_current_quarter =
+                                  (moment().quarter()%2==1) ?
+                                          moment().startOf('quarter') :
+                                          moment().add(3, 'month').startOf('quarter') ;
+                          end_of_current_quarter =
+                                  (moment().quarter()%2==0) ?
+                                     moment().endOf('quarter') :
+                                    moment().subtract(3, 'month').endOf('quarter') ;
+
+                          start = start_of_current_quarter.subtract((i+1)*6, 'month');
+                          end = end_of_current_quarter.subtract((i)*6, 'month');
+                          break;
+                      case 'year':
+                          start = moment().subtract(i, 'year').startOf('year');
+                          end = moment().subtract(i-1, 'year').startOf('year');
+                          break;
+                      default:
+                          start = moment().subtract(i, 'week').startOf('isoweek');
+                          end = moment().subtract(i-1, 'week').startOf('isoweek');
+                          break;
+                  }
+                  res.push({start: start, end: end})
+              }
+              console.log('intervals', res);
+              return res;
+          }
+
+          getIntervalCategories = function (){
+
+                  res = []
+                  for (var i=4; i>=0; i--)
+                  {
+                      var start;
+
+                      switch (interval) {
+                          case 'week':
+                              start = moment().subtract(i, 'week').startOf('isoweek')
+                              var end = moment().subtract(i, 'week').endOf('isoweek')
+                              res.push(start.get('date')+"/"+(months[start.month()+1])+"-"+end.get('date')+"/"+(months[end.month()+1]))
+                              break;
+                          case 'month':
+                              res.push (months[moment().subtract(i, 'month').get('month')+1])
+                              break;
+                          case 'qartal':
+                              res.push(moment().subtract(i*3, 'month').format("Q/YYYY"));
+                              break;
+                          case 'half_year':
+                              start_of_current_quarter =
+                                      (moment().quarter()%2==1) ?
+                                              moment().startOf('quarter') :
+                                              moment().add(3, 'month').startOf('quarter') ;
+                              end_of_current_quarter =
+                                      (moment().quarter()%2==0) ?
+                                              moment().endOf('quarter') :
+                                              moment().subtract(3, 'month').endOf('quarter') ;
+
+                              start = start_of_current_quarter.subtract((i+1)*6, 'month');
+                              end = end_of_current_quarter.subtract((i)*6, 'month');
+                              res.push((months[start.month()+1])+"/"+start.format('YY')+"-"+months[end.month()+1]+"/"+end.format('YY'))
+                              break;
+                          case 'year':
+                              res.push(moment().subtract(i, 'year').format("YYYY"));
+                              break;
+                          default:
+                              start = moment().subtract(i, 'week').startOf('isoweek')
+                              var end = moment().subtract(i, 'week').endOf('isoweek')
+                              res.push(start.get('date')+"/"+(months[start.month()+1])+"-"+end.get('date')+"/"+(months[end.month()+1]))
+                              break;
+                      }
+
+                  }
+                  return res;
+
+          }
+
 
           $('#value_filter_planFact input').change(setNewValuesForPlanFact);
           plan_fact_chart = new  Highcharts.Chart({
@@ -50,7 +174,7 @@
                   text: 'План выполнения продаж'
               },
               xAxis: {
-                  categories: getWeeksCategories()
+                  categories: getIntervalCategories()
               },
               yAxis: {
                   min: 0,
@@ -85,6 +209,7 @@
 
           redrawPlanFactChart = function (){
               var data = getDataForPlanFactChart();
+              plan_fact_chart.xAxis[0].setCategories(getIntervalCategories(),false);
               plan_fact_chart.series[0].setData(data[active_measure]['plan'],false);
               plan_fact_chart.series[1].setData(data[active_measure]['fact'],false);
               plan_fact_chart.redraw();
@@ -94,18 +219,19 @@
               weeks_group_plan = []
               weeks_group_fact = []
 
+              var intervals =  getIntervalStarts()
               $.each(filtered_apartments, function(i,val){
                   apart_date_fact = moment(val.dkp_date)
                   apart_date_plan = moment(val.sale_plan_date)
 
-                  $.each(getWeeksStarts(), function(t,week){
+                  $.each(intervals, function(t,week){
                       if(weeks_group_fact[t]==null) weeks_group_fact[t]=[]
-                      if (apart_date_fact.diff(week, 'days')>=0 && apart_date_fact.diff(week, 'days')<7)
+                      if (apart_date_fact.diff(week.start, 'days')>=0 && apart_date_fact.diff(week.end, 'days')<0)
                       {
                           weeks_group_fact[t].push(val)
                       }
                       if(weeks_group_plan[t]==null) weeks_group_plan[t]=[]
-                      if (apart_date_plan.diff(week, 'days')>=0 && apart_date_plan.diff(week, 'days')<7)
+                      if (apart_date_plan.diff(week.start, 'days')>=0 && apart_date_plan.diff(week.end, 'days')<0)
                       {
                           weeks_group_plan[t].push(val)
                       }
@@ -113,7 +239,6 @@
               })
 
               series =  {'m2': {plan:[],fact:[]}, 'fin': {plan:[],fact:[]}, 'pcs':{plan:[],fact:[]}};
-
 
               series['m2']['plan'] = [0,0,0,0,0]
               series['fin']['plan'] = [0,0,0,0,0]
