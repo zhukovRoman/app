@@ -326,27 +326,26 @@
             if (!$(val).hasClass('selected')){
                 all = false;
             }
-            //console.log(val, all)
         })
 
         if (all){
             $.each (buttons, function(i,val){
-               // console.log("delete")
                 $(val).removeClass('selected')
             })
         }
         else
             $.each (buttons, function(i,val){
-                //console.log("add")
                 $(val).addClass('selected')
             })
         redrawCharts();
     }
 
+    ///
     setDrillDownSummChart = function(){
         var year=$(this).text()
+        chartIsDrilldown = true;
         var data= getDrillDownDataForSummChart(year);
-        console.log(data)
+
 
         summ_chart.xAxis[0].setCategories(months,false)
         summ_chart.series[0].setData(data['sum'][0],false)
@@ -359,10 +358,10 @@
                 returnYearSummChart).add();
 
     }
-
+    ///
     setDrillDownCountChart = function(){
         var year=$(this).text()
-
+        chartIsDrilldown = true;
         count_chart.renderer.button('Назад',
                 200,
                 10,
@@ -379,8 +378,46 @@
 
 
     }
+    ///
+    setDrillDownQtyChart = function(){
+        var year=$(this).text()
+        chartIsDrilldown = true;
+        qty_line_chart.renderer.button('Назад',
+                200,
+                10,
+                returnYearQtyLineChart).add();
+        qty_line_chart.xAxis[0].setCategories(months,false);
+        var series = getDrillDownDataForM2Price()[2][year];
+        qty_line_chart.series[0].setData(series['data_all'], false)
+        qty_line_chart.series[1].setData(series['data_accept'] )
+
+    }
+
+    ///
+    setDrillDownPercentChart = function(){
+        var year=$(this).text()
+        chartIsDrilldown = true;
+        price_percent_chart.renderer.button('Назад',
+                150,
+                10,
+                returnYearPercentChart).add();
+
+        price_percent_chart.xAxis[0].setCategories(months,false);
+
+        var series = getDrillDownDataForM2Price()[1][year]
+
+        var data = [];
+
+        $.each(series.data, function(i,val){
+            if (val[1]!=null)
+                data.push([months.indexOf(val[0]), val[1]])
+        })
+        //console.log({name:e.point.name, data:data})
+        price_percent_chart.series[0].setData(data);
+    }
 
     returnYearSummChart = function(){
+        chartIsDrilldown = false;
         summ_chart.series[0].setData(getDataForSummChart()['sum'][0],false)
         summ_chart.series[1].setData(getDataForSummChart()['sum'][1],false)
         summ_chart.series[2].setData(getDataForSummChart()['sum'][2],false)
@@ -389,6 +426,7 @@
     }
 
     returnYearCountChart = function(){
+        chartIsDrilldown = false;
         while(count_chart.series.length > 0)
             count_chart.series[0].remove(false);
         count_data=getDataForCountChart();
@@ -397,6 +435,24 @@
         })
         count_chart.redraw();
         $('#count_chart .highcharts-xaxis-labels > text').click(setDrillDownCountChart);
+    }
+
+    returnYearPercentChart = function(){
+
+        chartIsDrilldown = false;
+        price_percent_chart.xAxis[0].setCategories(data.years,false);
+        price_percent_chart.series[0].setData(getDataForPricePercentChart(),false)
+        price_percent_chart.redraw();
+        $('#price_percent_chart .highcharts-xaxis-labels > text').click(setDrillDownPercentChart);
+    }
+
+    returnYearQtyLineChart = function(){
+        chartIsDrilldown = false;
+        qty_line_chart.xAxis[0].setCategories(data.years,false);
+        qty_line_chart.series[0].setData(getDataForQtyLineChart()[0],false)
+        qty_line_chart.series[1].setData(getDataForQtyLineChart()[1],false)
+        qty_line_chart.redraw();
+        $('#qty_line_chart .highcharts-xaxis-labels > text').click(setDrillDownQtyChart);
     }
 
     $(function(){
@@ -414,6 +470,8 @@
         redrawCharts();
         $('#sum_chart .highcharts-xaxis-labels > text').click(setDrillDownSummChart);
         $('#count_chart .highcharts-xaxis-labels > text').click(setDrillDownCountChart);
+        $('#qty_line_chart .highcharts-xaxis-labels > text').click(setDrillDownQtyChart);
+        $('#price_percent_chart .highcharts-xaxis-labels > text').click(setDrillDownPercentChart);
     })
 
 
@@ -423,6 +481,7 @@
        return "";
     }
 
+    var chartIsDrilldown = false;
     showTable = function(){
         var year = $(this).attr('data-year');
         var month = $(this).attr('data-month');
@@ -476,7 +535,7 @@
 
                 if (uk_flag && !(objectHaveUKTenderOnly(obj) || objectDontHaveUKTenders(obj))) return;
 
-                console.log(uk_flag && !(objectHaveUKTenderOnly(obj) || objectDontHaveUKTenders(obj)))
+//                console.log(uk_flag && !(objectHaveUKTenderOnly(obj) || objectDontHaveUKTenders(obj)))
                 $.each(obj.tenders, function(i,t){
                     if ($.inArray( t.type, types )==-1) return;
                      tenders.push({
@@ -495,9 +554,28 @@
                 })
 
             })
-            console.log(tenders.length);
+//            console.log(tenders.length);
             return tenders;
         }
+        $.each(filtered_tenders, function (i, t){
+            if(year!='' && t.year_finish!=year) return;
+            if (month!='' && t.month_finish!=month) return;
+            tenders.push({
+                object_address: t.object_address,
+                series: t.series,
+                type: t.type,
+                object_power: t.object_power,
+                organization: t.organization,
+                date_finish: t.date_finish,
+                bid_accept: t.bid_accept,
+                bid_all: t.bid_all,
+                price_start: t.price_start,
+                price_end: t.price_end,
+                percent: t.percent
+            })
+        })
+        console.log(tenders)
+        return tenders;
     }
     bindTableRows = function(data){
 
@@ -573,6 +651,13 @@
         $('#show_table_button').attr('data-year-enter', year);
         $('#show_table_button').attr('data-type', type);
         $('#show_table_button').attr('data-uk', uk_flag);
+    }
+
+    setAttrYearOrMonthFotTable = function (value){
+        if (chartIsDrilldown)
+            $('#show_table_button').attr('data-month', months.indexOf(value)+1);
+        else
+            $('#show_table_button').attr('data-year', value);
     }
 
     m2_price_chart = new Highcharts.Chart({
@@ -711,34 +796,7 @@
         },
         chart: {
             type: 'spline',
-            renderTo:'price_percent_chart',
-            events: {
-                drilldown: function (e) {
-                    if (!e.seriesOptions) {
-                        $('#show_table_button').attr('data-year', e.point.name);
-                        var chart = this,
-                                drilldowns = getDrillDownDataForM2Price()[1],
-                                series = drilldowns[e.point.name];
-                        chart.xAxis[0].setCategories(months);
-                        var data = [];
-                        console.log(series.data);
-                        $.each(series.data, function(i,val){
-                           if (val[1]!=null)
-                            data.push([months.indexOf(val[0]), val[1]])
-                        })
-                        console.log({name:e.point.name, data:data})
-                        chart.addSeriesAsDrilldown(e.point, {name:e.point.name, data:data});
-                    }
-                },
-                drillup: function(e){
-                    setTimeout(function(){
-                        $('#show_table_button').attr('data-year', '');
-                        $('#show_table_button').attr('data-month', '');
-                        price_percent_chart.xAxis[0].setCategories(data.years);
-                        price_percent_chart.series[0].setData(getDataForPricePercentChart())
-                    }, 10)
-                }
-            }
+            renderTo:'price_percent_chart'
         },
         title: {
             text: 'Среднее снижение цены от НМЦК'
@@ -775,7 +833,7 @@
                 point: {
                     events:{
                         click: function(e){
-                            $('#show_table_button').attr('data-month', this.x+1);
+                            setAttrYearOrMonthFotTable(this.category);
                         }
                     }
                 }
@@ -785,10 +843,7 @@
         series: [{
             name: 'Снижение цены',
             data: [{y: 0}]
-        }],
-        drilldown: {
-            series: []
-        }
+        }]
     });
 
     qty_line_chart = new Highcharts.Chart({
@@ -827,37 +882,15 @@
                     radius: 4,
                     lineColor: '#666666',
                     lineWidth: 1
-                },
+                }
+
+            },
+            series: {
+                cursor: 'pointer',
                 point: {
-                    events: {
-                        click: function () {
-                            var drilldown = this.drilldown;
-                            var chart = qty_line_chart;
-
-                            if (drilldown) {
-
-                                        var drilldowns = getDrillDownDataForM2Price()[2],
-                                        series = drilldowns[this.name];
-                                //console.log(series, drilldowns);
-                                chart.xAxis[0].setCategories(months);
-
-//                                while (chart.series.length > 0) {
-//                                    chart.series[0].remove(true);
-//                                }
-                                chart.series[0].setData(series['data_all'], false)
-                                chart.series[1].setData(series['data_accept'] )
-//                                chart.addSeries({name: 'Среднее число поданных заявок', data: series['data_all'] })
-//                                chart.addSeries({name: 'Среднее число допущенных заявок', data: series['data_accept'] })
-                            }
-                            else {
-//                                while (chart.series.length > 0) {
-//                                    chart.series[0].remove(true);
-//                                }
-                                chart.xAxis[0].setCategories(data.years);
-                                chart.series[0].setData(getDataForQtyLineChart()[0], false)
-                                chart.series[1].setData(getDataForQtyLineChart()[1])
-
-                            }
+                    events:{
+                        click: function(e){
+                            setAttrYearOrMonthFotTable(this.category);
                         }
                     }
                 }
@@ -1058,16 +1091,18 @@
             shared: true,
             useHTML: true
         },
-//        tooltip: {
-//            //pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>' +thousands_sep(point.y)+'</b> ({point.percentage:.0f}%)<br/>',
-//            shared: true,
-//            //crosshairs: true,
-//            valueSuffix: ' млн. руб',
-//            valueDecimals: 1,
-//            formatter:
-//
-//        },
+
         plotOptions: {
+            series: {
+                cursor: 'pointer',
+                point: {
+                    events:{
+                        click: function(e){
+                            setAttrYearOrMonthFotTable(this.category);
+                        }
+                    }
+                }
+            }
 //            column: {
 //                stacking: 'none'
 //            }
@@ -1135,6 +1170,16 @@
             useHTML: true
         },
         plotOptions: {
+            series: {
+                cursor: 'pointer',
+                point: {
+                    events:{
+                        click: function(e){
+                            setAttrYearOrMonthFotTable(this.category);
+                        }
+                    }
+                }
+            }
 //            column: {
 //                stacking: 'percent'
 //            }
@@ -1418,7 +1463,7 @@
             tmp_res[val.year_finish]['count'] ++;
         })
         $.each(tmp_res, function(i,val){
-            res.push({y:parseFloat((val.percent/val.count).toFixed(0)), name: i, drilldown:true});
+            res.push({y:parseFloat((val.percent/val.count).toFixed(0)), name: i});
         })
         return res
     }
@@ -1497,8 +1542,8 @@
         $.each(tmp_res, function(i,val){
             //res_all.push(parseFloat((val.all/val.count).toFixed(3)));
             //res_accept.push(parseFloat((val.accept/val.count).toFixed(3)));
-            res_all.push({y:parseFloat((val.all/val.count).toFixed(1)), name: i, drilldown:true});
-            res_accept.push({y:parseFloat((val.accept/val.count).toFixed(1)), name: i, drilldown:true});
+            res_all.push({y:parseFloat((val.all/val.count).toFixed(1)), name: i});
+            res_accept.push({y:parseFloat((val.accept/val.count).toFixed(1)), name: i});
         });
 
         return [res_all, res_accept];
