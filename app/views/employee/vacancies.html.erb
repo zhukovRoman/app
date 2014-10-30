@@ -13,6 +13,8 @@
 <a href="<%= url_for(:controller => "employee", :action => "vacancies",
                      :month => (Date.current).month, :year => (Date.current).year) %>">
   (текущий месяц)</a>
+  <br>
+  <span id="all_count1">Всего вакансий: 0</span>
 <%= form_tag("vacancies", method: "post", class:"form-horizontal form-vacancies") do %>
     <%= hidden_field_tag "year", @year%>
     <%= hidden_field_tag  "month", @month %>
@@ -28,11 +30,23 @@
     <% end -%>
     <%= submit_tag("Cохранить", class: "btn btn-success btn-sm") %>
 <% end %>
+  <br>
+  <span id="all_count2">Всего вакансий: 0</span>
 </div>
 <script src="http://code.highcharts.com/highcharts.js"></script>
 <div class="col-md-6" id="chart"></div>
 <script type="application/javascript">
     $(function (){
+
+        function calcAllCount() {
+            var sum =0;
+            $.each($('input.form-control'), function(i,val){
+                sum+= parseInt($(val).val())
+            })
+            $('#all_count1').text('Всего вакансий: ' + sum);
+            $('#all_count2').text('Всего вакансий: ' + sum);
+        }
+        $('input[type=text]').change(calcAllCount)
 
         $('#chart').highcharts({
             chart: {
@@ -64,5 +78,7 @@
             }]
         });
     });
+
+
 
 </script>
