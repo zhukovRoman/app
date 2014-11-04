@@ -1,6 +1,6 @@
 class ApiController < ApplicationController
   before_action 'checkID'
-  protect_from_forgery :except => [:employee, :tenders]
+  protect_from_forgery :except => [:employee, :tenders, :apartments, :objects, :organizations]
   #xhr :get, :employee, format: :js
 
   def checkID
@@ -137,7 +137,7 @@ class ApiController < ApplicationController
 
   end
 
-  def apartment
+  def apartments
     data = ''
     file = File.new("test.json", "r")
     while (line = file.gets)
@@ -197,9 +197,15 @@ class ApiController < ApplicationController
     @objects.sort
 
     res = ''
-    res += 'var apratmets_objects='+@objects.to_json.html_safe
-    res += ';var apartments='+@apartmetns.to_json.html_safe
-    render :plain => res
+    res += 'apratmets_objects:'+@objects.to_json.html_safe
+    res += ',var apartments:'+@apartmetns.to_json.html_safe
+
+    response=params['callback']+'({'
+    response+= res
+    response += '})'
+
+    render :js => response
+
   end
 
   def objects
@@ -249,16 +255,22 @@ class ApiController < ApplicationController
     @appointments = Obj.getAllAppointmentType
 
     res = '';
-    res += 'var objects='+@objects.to_json.html_safe
-    res += 'var objects_year-enter='+@years.to_json.html_safe
-    res += 'var objects_appointments='+@appointments.to_json.html_safe
-    res += 'var objects_districs='+@districts.to_json.html_safe
-    res += 'var objects_data='+@data.to_json.html_safe
-    res += 'var objects_detail_info='+ObjectController.getJSONData
-    render :plain => res
+    res += 'objects:'+@objects.to_json.html_safe
+    res += ',objects_year-enter:'+@years.to_json.html_safe
+    res += ',objects_appointments:'+@appointments.to_json.html_safe
+    res += ',objects_districs:'+@districts.to_json.html_safe
+    res += ',objects_data:'+@data.to_json.html_safe
+    res += ',objects_detaile_info:'+ObjectController.getJSONData
+
+    response=params['callback']+'({'
+    response+= res
+    response += '})'
+
+    render :js => response
+
   end
 
-  def organization
+  def organizations
     require 'json'
 
     allTendersByYears = Hash.new
@@ -326,7 +338,12 @@ class ApiController < ApplicationController
       @organizations.push(temporary_obj)
     end
 
-    render :plain => 'var organizations='+@organizations.to_json.html_safe
+
+    response=params['callback']+'({'
+    response+= 'organizations:'+@organizations.to_json.html_safe
+    response += '})'
+
+    render :js => response
   end
 
   def tenders
