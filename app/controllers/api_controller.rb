@@ -256,11 +256,11 @@ class ApiController < ApplicationController
 
     res = '';
     res += 'objects:'+@objects.to_json.html_safe
-    res += ',objects_year-enter:'+@years.to_json.html_safe
+    res += ',objects_year_enter:'+@years.to_json.html_safe
     res += ',objects_appointments:'+@appointments.to_json.html_safe
     res += ',objects_districs:'+@districts.to_json.html_safe
     res += ',objects_data:'+@data.to_json.html_safe
-    #res += ',objects_detaile_info:'+ObjectController.getJSONData.to_json.html_safe
+    res += ',objects_detaile_info:'+ObjectController.getJSONData.to_json.html_safe
 
     response=(params['callback']||'')+'({'
     response+= res
