@@ -22,13 +22,6 @@ class ApartmentController < ApplicationController
     require 'json'
     data = JSON.parse(data)
 
-    #finance_status_data = Hash.new
-    #finance_status_data['valueSuffix']='млн руб';
-    #finance_status_data['y-axis-label']='Млн рублей';
-    #finance_status_data['all-rooms']=Hash.new
-    #finance_status_data['1-rooms']=Hash.new
-    #finance_status_data['2-rooms']=Hash.new
-    #finance_status_data['3-rooms']=Hash.new
     finish = Hash.new;
     notFinish = Hash.new;
 
@@ -71,12 +64,6 @@ class ApartmentController < ApplicationController
             a['finishing']=apart['finishingLevel']
             a['fee']=apart['brokersFeeWithNDS']
             a['status']=apart['status']
-            #if (a['auction_date']!=nil && Date.parse(a['auction_date'].to_s)>(Date.current - 5.day))
-            #  puts a
-            #end
-            if (a['hypotec']==true)
-              puts a
-            end
             @apartmetns.push(a)
           end
         end
@@ -84,9 +71,9 @@ class ApartmentController < ApplicationController
     end
     @objects.sort
 
-    #Apartment.all.each do |apart|
-    #  @apartmetns.push apart.to_json
-    #end
+    puts @objects.to_json.html_safe
+    puts @apartmetns.to_json.html_safe
+
 
     #puts finish
     #puts notFinish

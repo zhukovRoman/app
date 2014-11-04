@@ -3,9 +3,15 @@ Rails.application.routes.draw do
 
   get 'tenders/index'
 
+
   get 'api/getchart'
+  get 'api/employee'
+  get 'api/apartment'
+  get 'api/objects'
+  get 'api/tenders'
+  get 'api/organization'
 
-
+  get 'object/getJSONData'
   get 'apartment/index'
 
   devise_for :users
@@ -14,6 +20,7 @@ Rails.application.routes.draw do
   get 'object/view'
   get 'object/overdue'
   get 'object/organizations'
+
 
   get 'employee/vacancies'
   post 'employee/vacancies'
