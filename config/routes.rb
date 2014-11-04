@@ -6,10 +6,10 @@ Rails.application.routes.draw do
 
   get 'api/getchart'
   get 'api/employee'
-  get 'api/apartment'
+  get 'api/apartments'
   get 'api/objects'
   get 'api/tenders'
-  get 'api/organization'
+  get 'api/organizations'
 
   get 'object/getJSONData'
   get 'apartment/index'
