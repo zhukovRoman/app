@@ -198,7 +198,7 @@ class ApiController < ApplicationController
 
     res = ''
     res += 'apratmets_objects:'+@objects.to_json.html_safe
-    res += ',var apartments:'+@apartmetns.to_json.html_safe
+    res += ',apartments:'+@apartmetns.to_json.html_safe
 
     response=params['callback']+'({'
     response+= res
@@ -262,7 +262,7 @@ class ApiController < ApplicationController
     res += ',objects_data:'+@data.to_json.html_safe
     res += ',objects_detaile_info:'+ObjectController.getJSONData.to_json.html_safe
 
-    response=params['callback']+'({'
+    response=(params['callback']||'')+'({'
     response+= res
     response += '})'
 
