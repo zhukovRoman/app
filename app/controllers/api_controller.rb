@@ -1,6 +1,6 @@
 class ApiController < ApplicationController
   before_action 'checkID'
-  protect_from_forgery :except => [:employee, :tenders, :apartments, :objects, :organizations, :getHash]
+  protect_from_forgery :except => [:employee, :tenders, :apartments, :objects, :organizations, :gethash]
   #xhr :get, :employee, format: :js
 
   @@fileNames = {
@@ -19,7 +19,7 @@ class ApiController < ApplicationController
     render :json => string
   end
 
-  def getHash
+  def gethash
     require 'digest/md5'
     if (!params['part'])
       render :json => ''

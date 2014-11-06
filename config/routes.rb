@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   get 'api/objects'
   get 'api/tenders'
   get 'api/organizations'
-  get 'api/getHash'
+  get 'api/gethash'
 
 
   get 'object/getJSONData'
