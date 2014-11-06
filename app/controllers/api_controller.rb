@@ -25,8 +25,8 @@ class ApiController < ApplicationController
       render :json => ''
     end
     md5 = Digest::MD5.hexdigest(File.read(@@fileNames[params['part']]))
-
-    render :json => md5
+    
+    render :json => params['callback']+'({'+md5+'})'
 
   end
 
