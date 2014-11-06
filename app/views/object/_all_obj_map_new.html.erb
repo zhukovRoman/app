@@ -30,7 +30,6 @@ ymaps.ready(init_map_all_object);
 filter_map_points = function(){
     points.length = 0;
     $.each(filteredObjects, function(i, val){
-        //console.log(val.appointment);
         if (val.lat != null && val.lng != null)
             points.push(new ymaps.Placemark([val.lat,val.lng], {
                 name: "Объект №012-0896",
@@ -45,34 +44,7 @@ filter_map_points = function(){
     })
 }
 
-//    addMarker = function (object){
-//        if (object.lat == null || object.lng == null)
-//        return;
-//        var marker = new ymaps.GeoObject({
-//            geometry: {
-//                type: "Point",
-//                coordinates: [object.lat,object.lng],
-//                options:{
-//                    preset: 'islands#redIcon'
-//                }
-//            }
-//        });
-//
-//        marker.options.preset = 'islands#redIcon'
-//        markers.push(marker);
-//        //console.log(marker);
-//    }
-//
-//
-//
-//    function getPopupContent(id, adr, power, edIzm, AIP, kontrakt, invest)
-//    {
-//        return "<div><a href='/object/view?id="+id+"'>"+adr+"</a></div>"+
-//                "<div> <b> Мощность: </b>"+power+" "+edIzm+"</div>"+
-//                "<div> <b> Срок ввода по АИП: </b>"+AIP+"</div>"
-//                //"<div> <b> Срок ввода по контракту: </b>"+kontrakt+"</div>"+
-//                //"<div> <b> Предельный объем инвестиций: </b>"+invest+" млн </div>"
-//    }
+
 
 
 

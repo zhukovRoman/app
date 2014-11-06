@@ -923,7 +923,6 @@
                 text: 'год ввода'
             },
             type: 'category'
-//            categories: data.years
         },
         yAxis: {
             title: {
@@ -1252,7 +1251,6 @@
     objectHaveUKTenderOnly = function(obj){
         var not_uk_exist = false;
         $.each(obj.tenders, function(i,tender){
-//             console.log(tender.type, tender.type != 'управляющая компания' )
             if (tender.type != 'управляющая компания')
                 not_uk_exist = true;
         })
@@ -1261,7 +1259,6 @@
     objectDontHaveUKTenders = function(obj){
         var uk_exist = false;
         $.each(obj.tenders, function(i,tender){
-//            console.log(tender.type, tender.type == 'управляющая компания' )
             if (tender.type == 'управляющая компания')
                 uk_exist = true;
         })
@@ -1282,7 +1279,6 @@
 
             if (objectHaveUKTenderOnly(obj))
             {
-//                console.log('uk',obj);
                 if (prices_uk[year]==null) prices_uk[year] = {power:0, sum: 0};
                 var tenders_sum = 0;
                 $.each(obj.tenders, function(i,tender){
@@ -1294,7 +1290,6 @@
                 prices_uk[year].sum+=tenders_sum
             }
             if (objectDontHaveUKTenders(obj)){
-//                console.log('not_uk',obj);
                 if (prices_not_uk[year]==null) prices_not_uk[year] = {power:0, sum: 0};
                 var tenders_sum = 0;
                 $.each(obj.tenders, function(i,tender){

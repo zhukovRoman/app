@@ -281,7 +281,6 @@ rebind_markers = function(){
 }
 
 function init_map_all_object() {
-    console.log("yamaps init");
     var center = [55.76954, 37.621587];
     myMap = new ymaps.Map('map', {
             center: center,

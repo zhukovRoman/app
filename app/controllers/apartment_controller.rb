@@ -87,7 +87,7 @@ class ApartmentController < ApplicationController
       render plain: 'error (get_token)'
     else
       data = ApartmentController.get_apartments_json(token)
-      puts data.to_json
+      #puts data.to_json
       File.open('test.json', 'w') { |file| file.write(data.to_json) }
       data['GetBuildingGroupsResult']['buildinggroups'].each do |pro|
         Buildinggroup.create_or_update_from_json pro
