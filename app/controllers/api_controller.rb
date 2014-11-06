@@ -1,7 +1,15 @@
 class ApiController < ApplicationController
   before_action 'checkID'
-  protect_from_forgery :except => [:employee, :tenders, :apartments, :objects, :organizations]
+  protect_from_forgery :except => [:employee, :tenders, :apartments, :objects, :organizations, :getHash]
   #xhr :get, :employee, format: :js
+
+  @@fileNames = {
+      'employee' => 'employees.json',
+      'tenders' => 'tenders.json',
+      'apartments' => 'apartments.json',
+      'organizations' => 'organizations.json',
+      'objects' => 'objects.json'
+  }
 
   def checkID
     key = params['key']
@@ -9,6 +17,17 @@ class ApiController < ApplicationController
   def getchart
     string = render_to_string('/employee/charts/_employee_common_scripts.js')
     render :json => string
+  end
+
+  def getHash
+    require 'digest/md5'
+    if (!params['part'])
+      render :json => ''
+    end
+    md5 = Digest::MD5.hexdigest(File.read(@@fileNames[params['part']]))
+
+    render :json => md5
+
   end
 
   def employee
@@ -126,7 +145,7 @@ class ApiController < ApplicationController
 
     res += ",drilldown_data : "+@drilldownData.to_json.html_safe
     res += ",months_empl_count : "+@departmentsEmployeesMonthsCounts.to_json.html_safe
-
+    File.open(@@fileNames['employee'], 'w') { |file| file.write(res.to_json) }
 
 
     response=params['callback']+'({'
@@ -200,6 +219,8 @@ class ApiController < ApplicationController
     res += 'apratmets_objects:'+@objects.to_json.html_safe
     res += ',apartments:'+@apartmetns.to_json.html_safe
 
+    File.open(@@fileNames['sales'], 'w') { |file| file.write(res.to_json) }
+
     response=params['callback']+'({'
     response+= res
     response += '})'
@@ -261,6 +282,8 @@ class ApiController < ApplicationController
     res += ',objects_districs:'+@districts.to_json.html_safe
     res += ',objects_data:'+@data.to_json.html_safe
     res += ',objects_detaile_info:'+ObjectController.getJSONData.to_json.html_safe
+
+    File.open(@@fileNames['objects'], 'w') { |file| file.write(res.to_json) }
 
     response=(params['callback']||'')+'({'
     response+= res
@@ -338,9 +361,11 @@ class ApiController < ApplicationController
       @organizations.push(temporary_obj)
     end
 
+    res ='organizations:'+ @organizations.to_json.html_safe
+    File.open(@@fileNames['organizations'], 'w') { |file| file.write(res.to_json) }
 
     response=params['callback']+'({'
-    response+= 'organizations:'+@organizations.to_json.html_safe
+    response+= res
     response += '})'
 
     render :js => response
@@ -464,6 +489,7 @@ class ApiController < ApplicationController
     res+= ',objects_tenders:'+@objectTenders.to_json.html_safe
     res += ',tenders_data:'+ @result.to_json.html_safe
 
+    File.open(@@fileNames['tenders'], 'w') { |file| file.write(res.to_json) }
 
     response=params['callback']+'({'
     response+= res
