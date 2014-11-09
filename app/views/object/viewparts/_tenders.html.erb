@@ -28,7 +28,7 @@
         <td><%= ObjectTender.frendly_date (t.date_finish) %></td>
         <td><%= number_to_currency(t.price_begin, unit: "₽", separator: ",", delimiter: " ", format: "%n %u", precision:0) %></td>
         <td><%= number_to_currency(t.price_end, unit: "₽", separator: ",", delimiter: " ", format: "%n %u", precision:0) %></td>
-        <td><%= (t.percent_decline).round 2 %></td>
+        <td><%= (t.percent_decline||0).round 2 %></td>
         <td><%= t.bid_all %> / <%= t.bid_accept %></td>
       </tr>
   <% end %>
