@@ -4,7 +4,7 @@ $(function () {
             enabled: false
         },
         chart: {
-            type: 'column'
+            type: 'bar'
         },
         title: {
             text: 'Число сотрудников и вакансий по подразделениям'
@@ -12,7 +12,7 @@ $(function () {
         xAxis: {
             categories: JSON.parse('<%= @plotXAxisDep.to_json.html_safe %>'),
             labels: {
-                rotation: -65,
+                rotation: -0,
                 formatter: formatterFunction
             }
         },
@@ -52,9 +52,9 @@ $(function () {
             shadow: false
         },
         plotOptions: {
-            column: {
-                pointPadding: 0.2,
-                borderWidth: 0,
+            bar: {
+//                pointPadding: 0.2,
+//                borderWidth: 0,
                 stacking: 'normal',
                 minPointLength: 2
             }
