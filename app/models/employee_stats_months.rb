@@ -6,22 +6,23 @@ class EmployeeStatsMonths < ActiveRecord::Base
       stat = EmployeeStatsMonths.create(month: for_date.at_beginning_of_month+14.day)
     end
 
+    stat.employee_count = Employee.get_real_count_of_employees
     #calc salary
     monthsSalaries = Salary.where(salary_date: for_date.at_beginning_of_month..for_date.at_end_of_month)
     stat.salary = monthsSalaries.sum("salary") + monthsSalaries.sum("retention")
     stat.tax = monthsSalaries.sum("NDFL") + monthsSalaries.sum("tax")
     stat.bonus = monthsSalaries.sum("bonus")
     #avg_salary = monthsSalaries.average("salary")!=nil ? monthsSalaries.average("salary") : 0
-    avg_salary = monthsSalaries.sum("salary")/Employee.get_real_count_of_employees
-    avg_retention = monthsSalaries.average("retention") != nil ? monthsSalaries.average("retention") : 0
-    stat.avg_salary = avg_salary  + avg_retention
-    #stat.avg_salary = monthsSalaries.average("salary")+monthsSalaries.average("retention")
+    stat.avg_salary  = stat.salary/stat.employee_count
+    #avg_retention = monthsSalaries.average("retention") != nil ? monthsSalaries.average("retention") : 0
+    #stat.avg_salary = avg_salary  + avg_retention
+    ##stat.avg_salary = monthsSalaries.average("salary")+monthsSalaries.average("retention")
 
     #calc employee flow
-    stat.employee_count = Employee.get_real_count_of_employees
+
     personalFlows = PersonalFlow.where(flow_date: for_date.at_beginning_of_month..for_date.at_end_of_month)
-                                .where.not(flow_date: for_date.at_beginning_of_year)
-                                .where.not(flow_date: for_date.at_end_of_year)
+                                .where.not(flow_date: for_date.at_beginning_of_year) # никто не увольянет 1 января
+                                .where.not(flow_date: for_date.at_end_of_year) # никто не принимает и не увольняет 31 декабря
 
     stat.employee_adds = personalFlows.where(operation_type: "Прием на работу").count
     stat.employee_dismiss = personalFlows.where(operation_type: "Увольнение").count
@@ -42,14 +43,14 @@ class EmployeeStatsMonths < ActiveRecord::Base
     stat.salary_manage = managersMonthSalaries.sum("salary") + managersMonthSalaries.sum("retention")
     stat.tax_manage = managersMonthSalaries.sum("NDFL")+managersMonthSalaries.sum("tax")
     stat.bonus_manage = managersMonthSalaries.sum("bonus")
-    avg_m_salary = managersMonthSalaries.average("salary") != nil ? managersMonthSalaries.average("salary") : 0
-    avg_m_retention = managersMonthSalaries.average("retention") != nil ? managersMonthSalaries.average("retention") : 0
+    #avg_m_salary = managersMonthSalaries.average("salary") != nil ? managersMonthSalaries.average("salary") : 0
+    #avg_m_retention = managersMonthSalaries.average("retention") != nil ? managersMonthSalaries.average("retention") : 0
     #stat.avg_salary_manage = avg_m_salary + avg_m_retention
-    puts "------"
-    puts stat.salary_manage
-    puts Employee::get_managers_count
-    stat.avg_salary_manage = stat.salary_manage/Employee::get_managers_count
+    #puts "------"
+    #puts stat.salary_manage
+    #puts Employee::get_managers_count
     stat.AUP_count = Employee::get_managers_count
+    stat.avg_salary_manage = stat.salary_manage/stat.AUP_count
     stat.save
     return stat
   end

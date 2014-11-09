@@ -15,8 +15,7 @@ class Department < ActiveRecord::Base
   #validates :vacancy_count, numericality: { only_integer: true, :message =>  " должно быть целым числом!" }
 
   def calc_employee_count
-
-    count = self.employees.where.not(FIO: 'empty').count
+    count = self.employees.where.not(FIO: 'empty').where(dismiss_date: nil).count
     self.childs.each do |child|
       count = count + child.calc_employee_count
     end
@@ -36,6 +35,7 @@ class Department < ActiveRecord::Base
     count = 0
     Department.where(parent_id:  nil, department_type: type).each do |dep|
       count = count + dep.calc_employee_count
+      #puts "#{type} #{count} #{dep.id}"
     end
     return count
   end

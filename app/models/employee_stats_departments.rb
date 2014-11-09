@@ -19,9 +19,9 @@ class EmployeeStatsDepartments < ActiveRecord::Base
         stat.bonus = monthsSalaries.sum("bonus")
         avg_salary = monthsSalaries.average("salary")!=nil ? monthsSalaries.average("salary") : 0
         avg_retention = monthsSalaries.average("retention") != nil ? monthsSalaries.average("retention") : 0
-        puts "----------#{avg_salary}------------"
-        puts "----------#{avg_retention}------------"
-        puts "----------#{avg_salary+avg_retention}------------"
+        #puts "----------#{avg_salary}------------"
+        #puts "----------#{avg_retention}------------"
+        #puts "----------#{avg_salary+avg_retention}------------"
         stat.avg_salary = avg_salary  + avg_retention
 
 
@@ -29,8 +29,9 @@ class EmployeeStatsDepartments < ActiveRecord::Base
 
     #  get manager fio
       stat.manager = dep.get_manager_fio
-
+      stat.dep_name = dep.name
       stat.employee_count = dep.calc_employee_count
+      Vacancies.fill_empty_vac for_date
       stat.vacancy_count = Vacancies.where(for_date: for_date.at_beginning_of_month..for_date.at_end_of_month,
                             department_id: dep.id).take.count
       stat.save

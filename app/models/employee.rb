@@ -5,7 +5,8 @@ class Employee < ActiveRecord::Base
   has_many :salaries, class_name: "Salary", foreign_key: "employee_id"
   has_many :flows, class_name: "PersonalFlow", foreign_key: "employee_id"
 
-  REPORTSPATH = "/tmp/employee/reports/"
+  #REPORTSPATH = "/tmp/employee/reports/"
+  REPORTSPATH = ""
 
   POSTMANAGER = "Начальник управления"
   POSTMANAGERALTERNATE = "Заместитель начальника управления"
@@ -31,7 +32,8 @@ class Employee < ActiveRecord::Base
   end
 
   def self.get_real_count_of_employees
-    return  Employee.where("stavka > 0 and FIO not like '#{OUTPOST}' and is_delete = 0").count
+    #return  Employee.where("stavka > 0 and FIO not like '#{OUTPOST}' and dismiss_date IS NULL").count
+    return  Employee.where("stavka > 0 and dismiss_date IS NULL").count
   end
 
   def self.get_managers_count
@@ -39,7 +41,7 @@ class Employee < ActiveRecord::Base
   end
 
   def self.get_managers
-    return Employee.where(is_delete: 0).joins("JOIN departments ON departments.id = employees.department_id and "+
+    return Employee.where(dismiss_date: nil).joins("JOIN departments ON departments.id = employees.department_id and "+
                               "departments.parent_id ISNULL AND "+QueryStringManagersAndAlternate)
     #return Employee.where(QueryStringManagersAndAlternate)
   end
@@ -66,9 +68,10 @@ class Employee < ActiveRecord::Base
     else
       empl_id = empl.id
       department_id = empl.department_id
-      #empl.is_delete = 1
-      #empl.save
-      empl.destroy
+      empl.is_delete = 1
+      empl.dismiss_date = date_of_operation
+      empl.save
+      #empl.destroy
     end
     PersonalFlow.create(operation_type: FLOWDISMISSTYPE,
                         old_post: old_post,
@@ -80,7 +83,7 @@ class Employee < ActiveRecord::Base
 
   def self.add_employee (fio, tab_number, new_post, stavka, new_dep_out_id, date_of_operation, departmentNode)
     logger = Logger.new("#{Rails.root}/log/employee_transfer_#{Date.current.year}_#{Date.current.month}.log")
-    empl = Employee.find_by tab_number: tab_number, is_delete: 0
+    empl = Employee.find_by tab_number: tab_number, dismiss_date: nil
     department_id = nil
     if empl != nil
       logger.warn "СОТРУДНИК С ТАБЕЛЬНЫМ НОМЕРОМ #{tab_number} УЖЕ СУЩЕСТВУЕТ! НЕВОЗМОЖНО ПРИНЯТЬ НА РАБОТУ"
@@ -89,8 +92,11 @@ class Employee < ActiveRecord::Base
       dep = Department.find_by out_number: new_dep_out_id
       if dep == nil
         logger.warn "НЕ НАЙДЕН ДЕПАРТАМЕНТ С ID = #{new_dep_out_id} В КОТОРЫЙ ПРИНЯТ СОТРУДНИК #{tab_number}"
+
         #  создаем новое подразделение
-        # todo надо создавать новое подразделение куда принимать сотрудников
+        new_department = Department.createDepartmentFromXML(departmentNode)
+        department_id= new_department.id
+
       else
         department_id = dep.id
       end
@@ -103,15 +109,20 @@ class Employee < ActiveRecord::Base
                         employee: empl,
                         new_department_id: department_id)
     logger.info "ПРИНЯТ НА РАБОТУ СОТРУДНИК #{empl.attributes}"
+    return empl;
   end
 
-  def self.transfer_employee (tab_number, new_post, stavka, date_of_operation, new_dep_out_id, post, departmentNode)
+  def self.transfer_employee (tab_number, new_post, stavka, date_of_operation, new_dep_out_id, post, fio, departmentNode)
     logger = Logger.new("#{Rails.root}/log/employee_transfer_#{Date.current.year}_#{Date.current.month}.log")
     empl_id = nil
     old_dep = nil
     new_dep = nil
     old_post = nil
     empl = Employee.find_by tab_number: tab_number
+    if empl==nil
+        empl = Employee.add_employee fio, tab_number, new_post, stavka, new_dep_out_id, date_of_operation, departmentNode
+    end
+
     if empl!=nil
       empl_id = empl.id
       old_dep = empl.department_id
@@ -134,6 +145,7 @@ class Employee < ActiveRecord::Base
 
     else
       logger.warn "Не найден сотрудник с табельным номером #{tab_number} для перевода"
+
     end
     if new_department != nil
       old_post = empl.post

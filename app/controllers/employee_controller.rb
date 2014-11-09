@@ -101,6 +101,37 @@ class EmployeeController < ApplicationController
     @drilldownData = EmployeeStatsDepartments.get_data_for_drilldown
     @departmentsEmployeesMonthsCounts = EmployeeStatsDepartments.getMonthsEmployeesCounts
 
+    @standalone_month_names = ["", "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"]
+    puts "var xaxis = "+@plotXAxis.to_json.html_safe
+    puts "var salary = "+@plotDataSalary.to_json.html_safe
+    puts "var bonus = "+@plotDataBonus.to_json.html_safe
+    puts "var tax = "+@plotDataTax.to_json.html_safe
+    puts "var avg_salary = "+@plotDataAvgSalary.to_json.html_safe
+
+    puts "var empl_counts = "+@plotDataEmployeeCount.to_json.html_safe
+    puts "var empl_dismiss = "+@plotDataEmployeeDismiss.to_json.html_safe
+    puts "var empl_add = "+@plotDataEmployeeAdd.to_json.html_safe
+    puts "var vacancy_counts = "+@plotDataVacancyCount.to_json.html_safe
+
+    puts "var k_tek = "+@plotDatakTek.to_json.html_safe
+    puts "var k_neuk = "+@plotDatakNeuk.to_json.html_safe
+
+    puts "var mamnger_counts = "+@plotDataManageCount.to_json.html_safe
+    puts "var prod_counts = "+@plotDataProdCount.to_json.html_safe
+
+    puts "var manager_salary = "+@plotDataManageSalary.to_json.html_safe
+    puts "var manager_tax = "+@plotDataManageTax.to_json.html_safe
+    puts "var manager_bonus = "+@plotDataManageBonus.to_json.html_safe
+    puts "var manager_avg_salary = "+@plotDataManageAvg.to_json.html_safe
+    puts "var aup_counts = "+@plotDataAUPCount.to_json.html_safe
+
+    puts "var departments = "+@plotXAxisDep.to_json.html_safe
+    puts "var deps_infos = "+@plotDataDepEmployeeStats.to_json.html_safe
+
+    puts "var drilldown_data = "+@drilldownData.to_json.html_safe
+    puts "var months_empl_count = "+@departmentsEmployeesMonthsCounts.to_json.html_safe
+
+
   end
 
   def editmanagment
@@ -150,14 +181,9 @@ class EmployeeController < ApplicationController
         end
       end
       #@departments = Department.where(parent_id:  nil)
-      date = Date.parse(@year.to_s+"-"+@month.to_s+"-28")
-      Department.where(parent_id:  nil).each do |dep|
-        vac = dep.vacancies.where(for_date: date.at_beginning_of_month..date).take
-        if (vac == nil)
-          dep.vacancies.create(count: 0, for_date: date.at_beginning_of_month+14.day)
-        end
-      end
-      @vacancies = Vacancies.where(for_date: date.at_beginning_of_month..date)
+      date = Date.parse(@year.to_s+"-"+@month.to_s+"-15")
+      Vacancies.fill_empty_vac date
+      @vacancies = Vacancies.where(for_date: date.at_beginning_of_month..date.at_end_of_month)
       # выборка данных для графика
       @plotXAxis = Array.new
       @plotData = Array.new
@@ -315,6 +341,7 @@ class EmployeeController < ApplicationController
                                      node.attribute('date').inner_text(),
                                      node.parent.attribute('id').inner_text(),
                                      node.attribute('post').inner_text(),
+                                     node.attribute('FIO').inner_text(),
                                      node.parent)
       end
     end
