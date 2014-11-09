@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140821082855) do
+ActiveRecord::Schema.define(version: 20141109152205) do
 
   create_table "apartments", force: true do |t|
     t.string   "out_id",                limit: 500
@@ -88,6 +88,7 @@ ActiveRecord::Schema.define(version: 20140821082855) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "manager",        limit: 500
+    t.string   "dep_name",       limit: 500
   end
 
   create_table "employee_stats_months", force: true do |t|
@@ -123,6 +124,8 @@ ActiveRecord::Schema.define(version: 20140821082855) do
     t.datetime "updated_at"
     t.integer  "department_id"
     t.integer  "is_delete",                 default: 0
+    t.date     "dismis_date"
+    t.date     "dismiss_date"
   end
 
   create_table "personal_flows", force: true do |t|
