@@ -80,7 +80,10 @@ class EmployeeController < ApplicationController
 
     interval = (Date.current-1.month).at_beginning_of_month..(Date.current-1.month).at_end_of_month;
     if (Date.current.day<8 || EmployeeStatsDepartments.where(month: interval).count==0)
-      interval = (Date.current-2.month).at_beginning_of_month..(Date.current-2.month).at_end_of_month;
+      #interval = (Date.current-2.month).at_beginning_of_month..(Date.current-2.month).at_end_of_month;
+      last_date = EmployeeStatsMonths.order(month: :desc).take(1)
+      last_date = last_date[0].month
+      interval = last_date.at_beginning_of_month..(last_date).at_end_of_month;
     end
 
 
