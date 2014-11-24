@@ -35,21 +35,7 @@ class TendersController < ApplicationController
 
 
     @result['years']=years
-    #@result['types_chart_data']=Array.new
-    #ObjectTender.group('TenderSName').sum(:price_end).each do |k, v|
-    #  tmp = Array.new
-    #  tmp.push (k)
-    #  tmp.push((v/1000000).round)
-    #  @result['types_chart_data'].push(tmp)
-    #end
-    #
-    #@result['types_chart_count_data']=Array.new
-    #ObjectTender.group('TenderSName').count(:object_id).each do |k, v|
-    #  tmp = Array.new
-    #  tmp.push (k)
-    #  tmp.push(v.round)
-    #  @result['types_chart_count_data'].push(tmp)
-    #end
+
 
     @result['qty'] = ObjectTender.get_qty_tenders_count
     @result['qty_sum'] = ObjectTender.get_qty_tenders_sum
@@ -60,11 +46,6 @@ class TendersController < ApplicationController
       @result['qty_drilldowns'][y.year]=ObjectTender.get_qty_tenders_drilldown_by_year y.year
 
     end
-
-
-    #@result['uk_m2_price']=ObjectTender.uk_m2_price
-    #@result['gen_m2_price']=ObjectTender.gen_m2_price
-
     @tenders = Array.new
 
     ObjectTender.where('ObjectId IS NOT NULL').includes(:obj).includes(:organization).each do |t|
@@ -138,7 +119,9 @@ class TendersController < ApplicationController
       @objectTenders.push(object);
     end
 
-
+    puts @tenders.to_json.html_safe
+    puts @objectTenders.to_json.html_safe
+    puts @result.to_json.html_safe
     #@result[]
   end
 end

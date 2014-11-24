@@ -175,4 +175,33 @@ class ObjectTender < ActiveRecord::Base
     return res;
   end
 
+  def self.get_summ_drilldown_by_year year
+    data = [{"y"=>0, "percent"=>0},
+            {"y"=>0, "percent"=>0},
+            {"y"=>0, "percent"=>0},
+            {"y"=>0, "percent"=>0},
+            {"y"=>0, "percent"=>0},
+            {"y"=>0, "percent"=>0},
+            {"y"=>0, "percent"=>0},
+            {"y"=>0, "percent"=>0},
+            {"y"=>0, "percent"=>0},
+            {"y"=>0, "percent"=>0},
+            {"y"=>0, "percent"=>0},
+            {"y"=>0, "percent"=>0},
+          ]
+    res = [data,data]
+
+
+    ObjectTender.select('MONTH(DataFinish) as month, sum(TenderPriceBegin) as summ_begin, avg(TenderProcentDecline) as pp, sum(TenderPriceEnd) as summ_end')
+                .where('YEAR(DataFinish)='+year.to_s)
+                .group('MONTH(DataFinish)')
+                .each do |data|
+                  res[0][data.month-1]['y']=data.summ_begin
+                  res[0][data.month-1]['percent']=data.pp
+                  res[1][data.month-1]['y']=data.summ_end
+
+    end
+    #puts res[0]#.to_json.html_safe
+    return res
+  end
 end

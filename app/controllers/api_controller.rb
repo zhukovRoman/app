@@ -8,7 +8,8 @@ class ApiController < ApplicationController
       'tenders' => 'tenders.json',
       'apartments' => 'apartments.json',
       'organizations' => 'organizations.json',
-      'objects' => 'objects.json'
+      'objects' => 'objects.json',
+
   }
 
   def checkID
@@ -221,8 +222,8 @@ class ApiController < ApplicationController
     res = ''
     res += 'apratmets_objects:'+@objects.to_json.html_safe
     res += ',apartments:'+@apartmetns.to_json.html_safe
-
-    File.open(@@fileNames['sales'], 'w') { |file| file.write(res.to_json) }
+    puts res
+    File.open(@@fileNames['apartments'], 'w') { |file| file.write(res.to_json) }
 
     response=params['callback']+'({'
     response+= res
@@ -409,17 +410,22 @@ class ApiController < ApplicationController
     @result['qty_sum'] = ObjectTender.get_qty_tenders_sum
     @result['qty_years'] = Array.new
     @result['qty_drilldowns'] = Hash.new
+    @result['summ_drilldown_data'] = Hash.new
     ObjectTender.select('YEAR(DataFinish) as year').distinct.each do |y|
       @result['qty_years'].push y.year
       @result['qty_drilldowns'][y.year]=ObjectTender.get_qty_tenders_drilldown_by_year y.year
-
+      @result['summ_drilldown_data'][y.year]=ObjectTender.get_summ_drilldown_by_year y.year
     end
+
+
+
     @tenders = Array.new
 
     ObjectTender.where('ObjectId IS NOT NULL').includes(:obj).includes(:organization).each do |t|
       tender = Hash.new
       tender['status']=t.status
       tender['id']=t.id
+      tender['obj_id']=t.object_id
       tender['year_finish']=t.date_finish.year
       tender['month_finish']=t.date_finish.month
       tender['type']=t.type
@@ -455,6 +461,7 @@ class ApiController < ApplicationController
       end
       object = Hash.new
       object['id']=obj.id
+      object['obj_id']=obj.id
       object['year_enter']=obj.year_correct
       object['appointment']=obj.appointment
       object['power']=obj.power
