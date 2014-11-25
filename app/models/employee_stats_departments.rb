@@ -44,7 +44,7 @@ class EmployeeStatsDepartments < ActiveRecord::Base
     res = Hash.new
     EmployeeStatsDepartments.select(:month).distinct.each do |m|
       res[standalone_month_names[m.month.month]] = Array.new
-      EmployeeStatsDepartments.where(month: m.month).each do |s|
+      EmployeeStatsDepartments.where(month: m.month).where('employee_count>0').each do |s|
         res[@standalone_month_names[m.month.month]].push(s.employee_count)
       end
     end
@@ -57,6 +57,7 @@ class EmployeeStatsDepartments < ActiveRecord::Base
     @standalone_month_names = ["", "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"]
     result = Hash.new
     EmployeeStatsDepartments.select(:month).distinct.each do |m|
+
       result[@standalone_month_names[m.month.month]] = Hash.new
       result[@standalone_month_names[m.month.month]][cat] = Array.new
       result[@standalone_month_names[m.month.month]][data] = Array.new
@@ -64,7 +65,8 @@ class EmployeeStatsDepartments < ActiveRecord::Base
       tax = {'name'=>'Налоги', 'data' => Array.new, 'tooltip'=>  {"valueSuffix"=>" руб"}}
       bonus = {'name'=>'Премии', 'data' => Array.new, 'tooltip'=>  {"valueSuffix"=>" руб"}}
       avg = {'name'=>'Средняя зарплата', 'data' => Array.new, 'tooltip'=>  {"valueSuffix"=>" "}, "type"=>'spline',"yAxis" => 1}
-      EmployeeStatsDepartments.where(month: m.month).each do |s|
+      EmployeeStatsDepartments.where(month: m.month).where('employee_count>0').each do |s|
+        puts s.attributes
         result[@standalone_month_names[m.month.month]][cat].push(Department.find(s.department_id).name)
         avg['data'].push((s.salary/s.employee_count).round 0)
         bonus['data'].push(s.bonus.round 0)

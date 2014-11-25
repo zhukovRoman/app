@@ -87,7 +87,7 @@ class EmployeeController < ApplicationController
     end
 
 
-    EmployeeStatsDepartments.where(month: interval).each do |s|
+    EmployeeStatsDepartments.where(month: interval).where('employee_count>0').each do |s|
       dep = Department.find(s.department_id)
       @plotXAxisDep.push(dep.name)
 
