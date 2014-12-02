@@ -87,11 +87,11 @@ class ApartmentController < ApplicationController
       render plain: 'error (get_token)'
     else
       data = ApartmentController.get_apartments_json(token)
-      #puts data.to_json
+      #puts data.to_json fo.write body_text3.force_encoding('ASCII-8BIT').encode('UTF-8')
       File.open('test.json', 'w') { |file| file.write(data.to_json) }
-      data['GetBuildingGroupsResult']['buildinggroups'].each do |pro|
-        Buildinggroup.create_or_update_from_json pro
-      end
+      #data['GetBuildingGroupsResult']['buildinggroups'].each do |pro|
+      #  Buildinggroup.create_or_update_from_json pro
+      #end
       render plain: "ok"
     end
   end
@@ -115,13 +115,28 @@ class ApartmentController < ApplicationController
     require 'json'
 
     url_path = 'http://172.20.10.10:91/BuildingGroupService.svc/GetBuildingGroups?oauth_consumer_key=test&hash_key='+token.to_s
-    uri = URI(url_path)
-    resp = Net::HTTP.get(uri) # => String
-    result = JSON.parse(resp)
+    #link = URI.parse(url_path)
+    #request = Net::HTTP::Get.new(link.path)
+    #begin
+    #  response = Net::HTTP.start(link.host, link.port) {|http|
+    #    http.read_timeout = 100 #Default is 60 seconds
+    #    http.request(request)
+    #  }
+    #rescue Net::ReadTimeout => e
+    #  puts e.message
+    #end
 
-    if result == nil
+    url = URI.parse(url_path)
+    req = Net::HTTP::Get.new(url.to_s)
+    res = Net::HTTP.start(url.host, url.port) {|http|
+      http.read_timeout = 1000 #Default is 60 seconds
+      http.request(req)
+    }
+
+
+    if res.body == nil
       return nil
     end
-    return result
+    return JSON.parse(res.body.force_encoding("UTF-8"))
   end
 end
