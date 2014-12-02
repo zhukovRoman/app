@@ -200,18 +200,41 @@ class ObjectController < ApplicationController
 
 
       #Документы
-      tmp['tnz'] = 'Нет данных'
-      tmp['tz'] = 'Нет данных'
-      tmp['stuff_list'] = 'Нет данных'
-      tmp['build_access'] = o.object_document.razrezh_build_fact||'Не получено'
-      tmp['project_task'] = 'Нет данных'
-      tmp['BSP'] = o.object_document.BSP_fact||'Не получено'
-      tmp['razresh_enter'] = o.object_document.razreshenie_enter_fact||'Не получено'
-      tmp['ZOS'] = 'Нет данных'
-      tmp['step_p'] = 'Нет данных'
-      tmp['step_RD'] = 'Нет данных'
-      tmp['tech_conditionals'] = 'Нет данных'
-      tmp['tech_join'] = 'Нет данных'
+      tmp['GPZU'] = [(o.object_document.GPZU_plan||'-'),(o.object_document.GPZU_fact||'Не получено')]
+      tmp['BSP'] = [(o.object_document.BSP_plan||'-'),(o.object_document.BSP_fact||'Не получено')]
+      tmp['tz_tnz'] = [(o.object_document.BSP_plan||'-'),(o.object_document.BSP_fact||'Не получено')]
+      tmp['tech_join'] = ['Нет данных','']
+
+      tmp['project_contract'] = [(o.object_document.project_dogovor_plan||'-'),(o.object_document.project_dogovor_fact||'Не получено')]
+      tmp['POS']= [(o.object_document.POS_plan||'-'),(o.object_document.POS_fact||'Не получено')]
+      tmp['ARG']= [(o.object_document.AGR_plan||'-'),(o.object_document.AGR_fact||'Не получено')]
+      tmp['MGE']= [(o.object_document.MGE_plan||'-'),(o.object_document.MGE_fact||'Не получено')]
+      tmp['PSD']= [(o.object_document.PSD_plan||'-'),(o.object_document.PSD_fact||'Не получено')]
+
+      tmp['genbuilder_contract']= [(o.object_document.dogovor_genbuilder_plan||'-'),(o.object_document.dogovor_genbuilder_fact||'Не получено')]
+      tmp['build_access']= [(o.object_document.razrezh_build_plan||'-'),(o.object_document.razrezh_build_fact||'Не получено')]
+      tmp['net_plan']= [(o.object_document.network_plan_plan||'-'),(o.object_document.network_plan_fact||'Не получено')]
+      tmp['build_end']= [(o.object_document.izvesg_end_build_plan||'-'),(o.object_document.izvesh_end_build_fact||'Не получено')]
+
+      tmp['BTI_sparvka']= [(o.object_document.spravka_BTI_plan||'-'),(o.object_document.spravka_BTI_fact||'Не получено')]
+      tmp['ZOS']= ['Нет данных','Нет данных']
+      tmp['razresh_enter']= [(o.object_document.razreshenie_enter_plan||'-'),(o.object_document.razreshenie_enter_fact||'Не получено')]
+      tmp['BI_act']= [(o.object_document.act_BI_plan||'-'),(o.object_document.act_BI_fact||'Не получено')]
+
+      tmp['gen_builder_start']=(o.object_document.builder_enter_fact||'Не вышел')
+
+      #tmp['tnz'] = 'Нет данных'
+      #tmp['tz'] = 'Нет данных'
+      #tmp['stuff_list'] = 'Нет данных'
+      #tmp['build_access'] = o.object_document.razrezh_build_fact||'Не получено'
+      #tmp['project_task'] = 'Нет данных'
+      ##tmp['BSP'] = o.object_document.BSP_fact||'Не получено'
+      #tmp['razresh_enter'] = o.object_document.razreshenie_enter_fact||'Не получено'
+      #tmp['ZOS'] = 'Нет данных'
+      #tmp['step_p'] = 'Нет данных'
+      #tmp['step_RD'] = 'Нет данных'
+      #tmp['tech_conditionals'] = 'Нет данных'
+      #tmp['tech_join'] = 'Нет данных'
 
       #снос и отселение
       tmp['evacuation_status'] = o.evacuation_status||'-'

@@ -19,8 +19,8 @@ class ObjectDocument < ActiveRecord::Base
   alias_attribute "TZ_comm_plan","DataPlanKomissiya"
 
   #Проектирование
-  alias_attribute "BI_fact","DataDogovorProjector"
-  alias_attribute "BI_plan","DataPlanDogovorProjector"
+  alias_attribute "project_dogovor_fact","DataDogovorProjector"
+  alias_attribute "project_dogovor_plan","DataPlanDogovorProjector"
   alias_attribute "titul_RIP","Titul_PIR"
   alias_attribute "POS_fact","DataPOS"
   alias_attribute "POS_plan","DataPlanPOS"
