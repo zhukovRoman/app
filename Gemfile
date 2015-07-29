@@ -39,7 +39,7 @@ gem 'spring',        group: :development
 # gem 'debugger', group: [:development, :test]
 
 # Use Capistrano
-gem 'capistrano', '~> 3.1.0'
+gem 'capistrano', '~> 3.2.1'
 
 #group :development do
 #  gem 'capistrano-rails', '~> 1.1'
@@ -57,13 +57,25 @@ gem 'nokogiri'
 
 gem 'devise'
 
-gem 'tiny_tds'
+gem 'tiny_tds', github: 'rails-sqlserver/tiny_tds'
 gem 'activerecord-sqlserver-adapter', '~> 4.1.0'
 #gem 'activerecord-sqlserver-adapter', '~> 4.0.0',
 #    :git => "git://github.com/rails-sqlserver/activerecord-sqlserver-adapter.git"
 
 #gem 'russian', '~> 0.6.0'
 
-gem 'slim-rails', '~> 2.1.5'
+gem 'slim-rails'
 
 gem 'cancan'
+
+gem 'faker', '~> 1.4.3'
+
+gem 'savon', '~> 2.10.0'
+
+gem "mini_magick"
+
+# Serialization
+gem 'active_model_serializers', '~> 0.8.0'
+
+#API
+gem 'rails-api'
