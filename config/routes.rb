@@ -4,13 +4,16 @@ Rails.application.routes.draw do
   get 'tenders/index'
 
 
-  get 'api/getchart'
+
   get 'api/employee'
   get 'api/apartments'
   get 'api/objects'
   get 'api/tenders'
   get 'api/organizations'
+  get 'api/claims'
   get 'api/gethash'
+  get 'api/get_object_image'
+  get 'api/photos_by_object'
 
 
   get 'object/getJSONData'
@@ -35,6 +38,7 @@ Rails.application.routes.draw do
   get 'employee/personalInit'
   get 'employee/vacancies'
   get 'employee/index'
+  get 'employee/getEmployeeStats'
 
   get 'employee/editmanagment'
   post 'employee/editmanagment'
@@ -107,4 +111,12 @@ Rails.application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
+
+
+  namespace :api do
+    namespace :v1 do
+
+      resources :staffs, only: [:index] do  end
+    end
+  end
 end
