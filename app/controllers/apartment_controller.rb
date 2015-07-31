@@ -69,10 +69,52 @@ class ApartmentController < ApplicationController
         end
       end
     end
+
+    data['GetBuildingGroupsResult']['buildinggroups'].each do |obj|
+     # puts obj['name']+":"+obj['id']
+      obj['buildings'].each do |build|
+        build['sections'].each do |sec|
+          sec['apartments'].each do |apart|
+            puts apart['id']+";"+apart['floor'].to_s+";"+(apart['orderSum']||apart['sum']).to_s+";"+obj['id']
+            if apart['status']=='Другое'
+              next
+            end
+            a = Hash.new
+            a['id']=apart['id']
+            a['object']=obj['name']
+            a['floor']=apart['floor']
+            a['max_floor']=sec['floors']
+            a['rooms']=apart['rooms']
+            a['square']=apart['spaceDesign']
+            #a['price_m2_start']=apart['cost']
+            #a['price_m2_end']=apart['dpCost']
+            a['price_m2_start']=(apart['sum']||0)/(apart['spaceDesign']||1)
+            a['price_m2_contract']=(apart['orderSum']||(apart['sum']||0))/(apart['spaceDesign']||1)
+            a['price_m2_end']=(apart['dpSum']||0)/(apart['spaceDesign']||1)
+            a['free_date']=apart['apIsFreeDate']
+            a['has_qty_date']=apart['apHasDemandDate']
+            a['in_sing_date']=apart['apInSignDate']
+            a['auction_date']=apart['auctionDateTime']
+            a['sale_plan_date']=apart['salesOrderPlanDate']
+            a['dkp_date']=apart['salesOrderDate']
+            a['ps_date']=apart['ownCertificateDateOfIssue']
+            a['sum']=apart['sum']
+            a['order_sum']=apart['orderSum']||apart['sum']
+            a['end_sum']=apart['dpSum']
+            a['hypotec']=apart['isHypothec']
+            a['bankName'] = apart['hypothecBankid']||'Личные средства'
+            a['finishing']=apart['finishingLevel']
+            a['fee']=apart['brokersFeeWithNDS']
+            a['status']=apart['status']
+            @apartmetns.push(a)
+          end
+        end
+      end
+    end
     @objects.sort
 
-    puts @objects.to_json.html_safe
-    puts @apartmetns.to_json.html_safe
+    # puts @objects.to_json.html_safe
+    # puts @apartmetns.to_json.html_safe
 
 
     #puts finish
@@ -107,13 +149,14 @@ class ApartmentController < ApplicationController
     if result == nil
       return nil
     end
+    puts result['AuthenticateResult']
     return result['AuthenticateResult']
   end
 
   def self.get_apartments_json (token)
     require 'net/http'
     require 'json'
-
+    # vvAHSmidd4uB6Zu46tU1v57s6GU=
     url_path = 'http://172.20.10.10:91/BuildingGroupService.svc/GetBuildingGroups?oauth_consumer_key=test&hash_key='+token.to_s
     #link = URI.parse(url_path)
     #request = Net::HTTP::Get.new(link.path)
@@ -125,7 +168,7 @@ class ApartmentController < ApplicationController
     #rescue Net::ReadTimeout => e
     #  puts e.message
     #end
-
+    puts 'start apart'
     url = URI.parse(url_path)
     req = Net::HTTP::Get.new(url.to_s)
     res = Net::HTTP.start(url.host, url.port) {|http|

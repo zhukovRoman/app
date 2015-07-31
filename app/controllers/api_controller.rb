@@ -1,7 +1,8 @@
 class ApiController < ApplicationController
-  before_action 'checkID'
-  protect_from_forgery :except => [:employee, :tenders, :apartments, :objects, :organizations, :gethash]
+
+  protect_from_forgery :except => [:employee, :tenders, :apartments, :objects, :organizations, :gethash, :claims, :photos_by_object]
   #xhr :get, :employee, format: :js
+  #send_data(content, :type => "some/mime-type", :disposition => "inline")
 
   @@fileNames = {
       'employee' => 'employees.json',
@@ -9,16 +10,9 @@ class ApiController < ApplicationController
       'apartments' => 'apartments.json',
       'organizations' => 'organizations.json',
       'objects' => 'objects.json',
-
+      'claims' => 'claims.json',
+      'photos' => 'photos.json'
   }
-
-  def checkID
-    key = params['key']
-  end
-  def getchart
-    string = render_to_string('/employee/charts/_employee_common_scripts.js')
-    render :json => string
-  end
 
   def gethash
     require 'digest/md5'
@@ -93,7 +87,7 @@ class ApiController < ApplicationController
     #end
 
 
-    interval = (Date.current-1.month).at_beginning_of_month..(Date.current-1.month).at_end_of_month;
+    interval = (Date.current).at_beginning_of_month..(Date.current).at_end_of_month;
     if (Date.current.day<8 || EmployeeStatsDepartments.where(month: interval).count==0)
       #interval = (Date.current-2.month).at_beginning_of_month..(Date.current-2.month).at_end_of_month;
       last_date = EmployeeStatsMonths.order(month: :desc).take(1)
@@ -103,8 +97,8 @@ class ApiController < ApplicationController
 
 
     EmployeeStatsDepartments.where(month: interval).each do |s|
-      dep = Department.find(s.department_id)
-      @plotXAxisDep.push(dep.name)
+      # dep = Department.find(s.department_id)
+      @plotXAxisDep.push(s.dep_name)
 
       info2 = Hash.new
       info2['y']=s.employee_count
@@ -508,5 +502,75 @@ class ApiController < ApplicationController
     render :js => response
   end
 
+  def claims
+    res = Array.new
+    rand = Random.new
+    for i in 0..10
+        claim = Hash.new
+        claim['id'] = i
+        claim['date_init'] = Faker::Date.between(Date.current.beginning_of_year, Date.current.end_of_year).to_s
+        claim['date_compensation_get'] = Faker::Date.between(Date.current.beginning_of_year, Date.current.end_of_year).to_s
+        claim['date_go_to_court'] = Faker::Date.between(Date.current.beginning_of_year, Date.current.end_of_year).to_s
+        claim['date_court_decision'] = Faker::Date.between(Date.current.beginning_of_year, Date.current.end_of_year).to_s
+        claim['is_voluntarily'] = rand.rand(0..10) > 5 ? true :false
+        claim['summ'] = Faker::Number.number(7)
+        claim['summ_get'] = Faker::Number.number(7)
+        claim['court_decision']=rand.rand(0..10) > 5 ? 'полож' : 'отриц'
+        claim['contragent']=Faker::Company.name
+        claim['object']=Faker::Commerce.product_name
+        res.push(claim)
+    end
+    File.open(@@fileNames['claims'], 'w') { |file| file.write(res.to_json) }
+
+    response=params['callback']+'({'
+    response+= res.to_s
+    response += '})'
+
+    render :js => response
+  end
+
+  def photos_by_object
+    if (!params['obj_id'])
+      render plain: 'need obj id'
+      return;
+    end
+
+    res = []
+
+    ObjectPhoto.where(object_id: params['obj_id'].to_i).each do |p|
+      photo = Hash.new
+      photo['src']=p.small_photo_url
+      photo['title'] = p.date
+      photo['src_big']=p.big_photo_url
+      res.push photo
+    end
+
+    res = 'images:'+ res.to_json.html_safe
+
+    File.open(@@fileNames['objects'], 'w') { |file| file.write(res.to_json) }
+
+    response=(params['callback']||'')+'({'
+    response+= res
+    response += '})'
+
+    render :js => response
+
+  end
+
+  def get_object_image
+    puts params['id']
+    if (!params['id'] || !params['size'])
+      render plain: 'error! no params'
+      return
+    end
+
+    image = ObjectPhoto.where(id: params['id'].to_i).first
+    if(params['size']=='big')
+      send_data(image.get_big_photo, :type => "image/jpeg", :disposition => "inline")
+    else
+      send_data(image.get_small_photo, :type => "image/jpeg", :disposition => "inline")
+    end
+
+  end
 
 end

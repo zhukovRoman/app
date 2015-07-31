@@ -78,7 +78,7 @@ class EmployeeController < ApplicationController
     #end
 
 
-    interval = (Date.current-1.month).at_beginning_of_month..(Date.current-1.month).at_end_of_month;
+    interval = (Date.current).at_beginning_of_month..(Date.current).at_end_of_month;
     if (Date.current.day<8 || EmployeeStatsDepartments.where(month: interval).count==0)
       #interval = (Date.current-2.month).at_beginning_of_month..(Date.current-2.month).at_end_of_month;
       last_date = EmployeeStatsMonths.order(month: :desc).take(1)
@@ -88,8 +88,8 @@ class EmployeeController < ApplicationController
 
 
     EmployeeStatsDepartments.where(month: interval).where('employee_count>0').each do |s|
-      dep = Department.find(s.department_id)
-      @plotXAxisDep.push(dep.name)
+      # dep = Department.find(s.department_id)
+      @plotXAxisDep.push(s.dep_name)
 
       info2 = Hash.new
       info2['y']=s.employee_count
@@ -105,34 +105,6 @@ class EmployeeController < ApplicationController
     @departmentsEmployeesMonthsCounts = EmployeeStatsDepartments.getMonthsEmployeesCounts
 
     @standalone_month_names = ["", "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"]
-    puts "var xaxis = "+@plotXAxis.to_json.html_safe
-    puts "var salary = "+@plotDataSalary.to_json.html_safe
-    puts "var bonus = "+@plotDataBonus.to_json.html_safe
-    puts "var tax = "+@plotDataTax.to_json.html_safe
-    puts "var avg_salary = "+@plotDataAvgSalary.to_json.html_safe
-
-    puts "var empl_counts = "+@plotDataEmployeeCount.to_json.html_safe
-    puts "var empl_dismiss = "+@plotDataEmployeeDismiss.to_json.html_safe
-    puts "var empl_add = "+@plotDataEmployeeAdd.to_json.html_safe
-    puts "var vacancy_counts = "+@plotDataVacancyCount.to_json.html_safe
-
-    puts "var k_tek = "+@plotDatakTek.to_json.html_safe
-    puts "var k_neuk = "+@plotDatakNeuk.to_json.html_safe
-
-    puts "var mamnger_counts = "+@plotDataManageCount.to_json.html_safe
-    puts "var prod_counts = "+@plotDataProdCount.to_json.html_safe
-
-    puts "var manager_salary = "+@plotDataManageSalary.to_json.html_safe
-    puts "var manager_tax = "+@plotDataManageTax.to_json.html_safe
-    puts "var manager_bonus = "+@plotDataManageBonus.to_json.html_safe
-    puts "var manager_avg_salary = "+@plotDataManageAvg.to_json.html_safe
-    puts "var aup_counts = "+@plotDataAUPCount.to_json.html_safe
-
-    puts "var departments = "+@plotXAxisDep.to_json.html_safe
-    puts "var deps_infos = "+@plotDataDepEmployeeStats.to_json.html_safe
-
-    puts "var drilldown_data = "+@drilldownData.to_json.html_safe
-    puts "var months_empl_count = "+@departmentsEmployeesMonthsCounts.to_json.html_safe
 
 
   end
@@ -140,19 +112,16 @@ class EmployeeController < ApplicationController
   def editmanagment
     if request.post? && params['dep'] != nil
 
-      Department.where(parent_id: nil).update_all(:department_type => 0)
+      EmployeeStatsDepartments.update_all(:dep_type => 'u')
 
       params['dep'].each do |k,v|
         puts "dep #{k} val #{v}"
-        dep = Department.find(k)
-        dep.department_type = 1
-        dep.save!
+        EmployeeStatsDepartments.where(dep_name: k).update_all(:dep_type => 'p')
       end
-
+      EmployeeStatsMonths.recalculateManagersCount
     end
 
-    @departments = Department.where(parent_id: nil)
-
+    @departments = EmployeeStatsDepartments.select(:dep_name, :dep_type).group(:dep_name, :dep_type)
   end
 
   def vacancies
@@ -166,33 +135,40 @@ class EmployeeController < ApplicationController
       if (@year== nil)
         @year = Date.current.year
       end
+      date = Date.parse(@year.to_s+"-"+@month.to_s+"-15")
       @standalone_month_names = ["", "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"]
       if request.post? && params['vacancies'] != nil
+        allCount = 0;
         params['vacancies'].each do |k,v|
           puts "vacancies #{k} count #{v}"
-          vac = Vacancies.find(k)
-          vac.count = v
-          if !vac.valid?
+          stat = EmployeeStatsDepartments.find(k)
+          stat.vacancy_count = v
+          allCount += v.to_i;
+          if !stat.valid?
             @error = ""
-            vac.errors.full_messages.each do |msg|
+            stat.errors.full_messages.each do |msg|
               @error += msg
             end
             break
           else
-            vac.save!
+            stat.save!
+            statM = EmployeeStatsMonths.where(month: date.at_beginning_of_month..date.at_end_of_month).first
+            statM.vacancy_count = allCount
+            statM.k_complect = statM.vacancy_count.to_f/statM.employee_count
+            statM.save
           end
+
+
         end
       end
-      #@departments = Department.where(parent_id:  nil)
-      date = Date.parse(@year.to_s+"-"+@month.to_s+"-15")
-      Vacancies.fill_empty_vac date
-      @vacancies = Vacancies.where(for_date: date.at_beginning_of_month..date.at_end_of_month)
+      @departments = EmployeeStatsDepartments.where(month: date.at_beginning_of_month..date.at_end_of_month)
       # выборка данных для графика
       @plotXAxis = Array.new
       @plotData = Array.new
-      Vacancies.where(for_date: Date.current-1.year..Date.current).group("for_date").sum("count").each do |k, v|
-        @plotXAxis.push(@standalone_month_names[k.month])
-        @plotData.push(v)
+      EmployeeStatsMonths.where(month: Date.current-1.year..Date.current).each do |s|
+        puts s.inspect
+        @plotXAxis.push(@standalone_month_names[s.month.month])
+        @plotData.push(s.vacancy_count)
       end
   end
 
@@ -208,6 +184,23 @@ class EmployeeController < ApplicationController
 
   end
 
+
+  def getEmployeeStats
+    require 'savon'
+    if (params['year']==nil || params['month']==nil)
+      render plain: 'wrong arguments'
+      return
+    end
+    message = {year: params['year'], month: params['month']}
+    client = Savon.client(wsdl: 'http://172.20.10.89/zarplata/ws/vigruzkazp.1cws?wsdl', basic_auth: ["web1c", "123"])
+
+    response = client.call(:get_month_stat, message: message)
+
+    EmployeeStatsMonths.saveStatsFromSOAP response.body[:get_month_stat_response][:return]
+    EmployeeStatsDepartments.saveStatsFromSOAP response.body[:get_month_stat_response][:return][:departments][:department] ,
+                                               response.body[:get_month_stat_response][:return][:year]+'-'+response.body[:get_month_stat_response][:return][:month]+'-15'
+    render plain: 'ok'
+  end
 
   #################
   #   Разбор XML  #
@@ -263,7 +256,7 @@ class EmployeeController < ApplicationController
     end
     m =  params[:month]
     logger = Logger.new("#{Rails.root}/log/salary_#{Date.current.year}_#{Date.current.month}.log")
-    path = Employee.getReportsPath + "salary_#{m}_2014.xml"
+    path = Employee.getReportsPath + "salary_#{m}_2015.xml"
     if !File.file?(path)
       render plain: "file not found!"
       return
@@ -313,7 +306,7 @@ class EmployeeController < ApplicationController
       return
     end
     m = params[:month]
-    path = Employee.getReportsPath + "personalflow_#{m}_2014.xml"
+    path = Employee.getReportsPath + "personalflow_#{m}_2015.xml"
     puts path
     if !File.file?(path)
       render plain: "file not found!"

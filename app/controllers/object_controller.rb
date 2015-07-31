@@ -308,13 +308,7 @@ class ObjectController < ApplicationController
         tmp['visit_info'][vi.get_parametr_name] = vi.percent
       end
 
-      tmp['photos'] = [
-          {src: 'https://placekitten.com/g/800/500', title:"title", src_big: 'https://placekitten.com/g/1600/1000'},
-          {src: 'https://placekitten.com/g/500/800', title:"title", src_big: 'https://placekitten.com/g/1600/1000'},
-          {src: 'https://placekitten.com/g/500/500', title:"title", src_big: 'https://placekitten.com/g/1600/1000'},
-          {src: 'https://placekitten.com/g/800/500', title:"title", src_big: 'https://placekitten.com/g/1600/1000'}
-      ]
-      
+
       objs[o.id] = tmp;
     end
 

@@ -54,4 +54,41 @@ class EmployeeStatsMonths < ActiveRecord::Base
     stat.save
     return stat
   end
+
+  def self.saveStatsFromSOAP responseStat
+    month = Date.parse responseStat[:year]+'-'+responseStat[:month]+'-15'
+
+    empl = EmployeeStatsMonths.where(month: month).first || EmployeeStatsMonths.new
+    empl.month = month
+    empl.salary = responseStat[:salary].to_i
+    empl.bonus = responseStat[:bonus].to_i
+    empl.avg_salary = responseStat[:salary].to_i/responseStat[:empl_count].to_i
+    empl.tax = responseStat[:tax].to_i
+    empl.salary_manage = responseStat[:aup_salary].to_i
+    empl.bonus_manage = responseStat[:aup_bonus].to_i
+    empl.tax_manage = responseStat[:aup_tax].to_i
+    empl.avg_salary_manage = responseStat[:aup_salary].to_i/responseStat[:aup_empl_count].to_i
+    empl.employee_count = responseStat[:empl_count].to_i
+    empl.employee_adds = responseStat[:empl_add].to_i
+    empl.employee_dismiss = responseStat[:empl_dismiss].to_i
+    empl.vacancy_count = empl.vacancy_count||0
+    empl.employee_manage_count = empl.employee_manage_count||0
+    empl.employee_production_count = empl.employee_manage_count||0
+    empl.k_dismiss = responseStat[:empl_dismiss].to_f/responseStat[:empl_count].to_i
+    empl.k_complect = empl.employee_manage_count||0
+    empl.manager_avg_salary = responseStat[:aup_salary].to_i/responseStat[:aup_empl_count].to_i
+    empl.AUP_count = responseStat[:aup_empl_count].to_i
+
+    empl.save
+
+  end
+
+  def self.recalculateManagersCount
+    EmployeeStatsMonths.where(month: Date.today-1.year..Date.today.at_end_of_month).each do |monthStat|
+      productEmplCount = EmployeeStatsDepartments.where(month: monthStat.month, dep_type: 'p').sum(:employee_count)
+      monthStat.employee_manage_count=monthStat.employee_count-productEmplCount
+      monthStat.employee_production_count=productEmplCount
+      monthStat.save
+    end
+  end
 end

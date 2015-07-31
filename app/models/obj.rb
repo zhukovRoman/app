@@ -11,6 +11,7 @@ class Obj < ActiveRecord::Base
   has_many :object_finance_by_work_types, foreign_key: 'ObjectID'
   has_many :object_tenders, foreign_key: 'ObjectID'
   has_many :visit_infos, foreign_key: 'ObjectId'
+  has_many :object_photos, foreign_key: 'ObjId'
 
   alias_attribute 'id','ObjectId' #
   #АДрес
@@ -175,6 +176,7 @@ class Obj < ActiveRecord::Base
 
   end
 
+
   def self.overdueObjects
     return Obj.where('ObjectArchve = 0').includes(:object_document)#.where("DataPlanGPZU < ?", Date.current )
   end
@@ -182,6 +184,8 @@ class Obj < ActiveRecord::Base
   def self.getAllAppointmentType
     return Obj.select('appointment').distinct
   end
+
+
 
 
 

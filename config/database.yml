@@ -21,7 +21,7 @@ mssqlObjects:
   database: DB_DB
   username: mobile
   password: UVDogC@nis
-  timeout: 5000
+  timeout: 10000
 
 #  Testm.establish_connection(
     #    :adapter => "sqlserver",

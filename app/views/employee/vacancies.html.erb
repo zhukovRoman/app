@@ -19,12 +19,12 @@
     <%= hidden_field_tag "year", @year%>
     <%= hidden_field_tag  "month", @month %>
     <%= submit_tag("Cохранить", class: "btn btn-success btn-sm", style:"margin-bottom: 5px") %>
-    <% @vacancies.each do |vac| -%>
+    <% @departments.each do |dep| -%>
         <div class="form-group">
           <div class="col-md-2">
-            <%= text_field_tag(vac.id, vac.count, name: "vacancies[#{vac.id}]", id:"vacnacy_#{vac.id}", class: "form-control" )  %>
+            <%= text_field_tag(dep.id, dep.vacancy_count, name: "vacancies[#{dep.id}]", id:"vacnacy_#{dep.id}", class: "form-control" )  %>
           </div>
-          <label class="col-md-10 control-label" style="text-align: left; padding-top: 4px;"><%= vac.department.name %></label>
+          <label class="col-md-10 control-label" style="text-align: left; padding-top: 4px;"><%= dep.dep_name %></label>
 
         </div>
     <% end -%>

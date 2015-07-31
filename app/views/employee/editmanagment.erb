@@ -7,8 +7,8 @@
           <div class="col-sm-offset-1 col-sm-10">
             <div class="checkbox" style="padding-top: 0px;">
               <label>
-                <%= check_box_tag(dep.id, 1, checked=(dep.department_type==1) ,name: "dep[#{dep.id}]", id:"dep_#{dep.id}" )  %>
-                <%= dep.name %>
+                <%= check_box_tag(dep.dep_name, 1, checked=(dep.dep_type=='p') ,name: "dep[#{dep.dep_name}]", id:"dep_#{dep.dep_name}" )  %>
+                <%= dep.dep_name %>
               </label>
             </div>
           </div>

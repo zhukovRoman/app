@@ -1,6 +1,9 @@
 class EmployeeStatsDepartments < ActiveRecord::Base
   belongs_to :department, inverse_of: :stats
 
+
+  validates :vacancy_count, numericality: { only_integer: true, :message =>  " должно быть целым числом!" }
+
   def self.calculate_stat (for_date)
 
     Department.get_top_department.each do |dep|
@@ -67,7 +70,7 @@ class EmployeeStatsDepartments < ActiveRecord::Base
       avg = {'name'=>'Средняя зарплата', 'data' => Array.new, 'tooltip'=>  {"valueSuffix"=>" "}, "type"=>'spline',"yAxis" => 1}
       EmployeeStatsDepartments.where(month: m.month).where('employee_count>0').each do |s|
         puts s.attributes
-        result[@standalone_month_names[m.month.month]][cat].push(Department.find(s.department_id).name)
+        result[@standalone_month_names[m.month.month]][cat].push(s.dep_name)
         avg['data'].push((s.salary/s.employee_count).round 0)
         bonus['data'].push(s.bonus.round 0)
         tax['data'].push(s.tax.round 0)
@@ -87,5 +90,28 @@ class EmployeeStatsDepartments < ActiveRecord::Base
                                       department_id:dep.id,
                                       salary: 0)
     end
+  end
+
+  def self.saveStatsFromSOAP responseStat, month
+    month = Date.parse month
+    responseStat.each do |v|
+      if v[:empl_count].to_i == 0
+        next
+      end
+      stat = EmployeeStatsDepartments.where(month: month.to_s, dep_name:v[:name]).first || EmployeeStatsDepartments.new
+      stat.department_id = nil
+      stat.month = month
+      stat.salary = v[:salary].to_i
+      stat.bonus = v[:bonus].to_i
+      stat.tax = v[:tax].to_i
+      stat.avg_salary = v[:salary].to_i/v[:empl_count].to_i
+      stat.employee_count = v[:empl_count].to_i
+      stat.vacancy_count = stat.vacancy_count||0
+      stat.manager = v[:manager]||'-'
+      stat.dep_name = v[:name]
+      stat.save
+    end
+
+
   end
 end

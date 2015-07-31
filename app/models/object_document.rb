@@ -71,9 +71,6 @@ class ObjectDocument < ActiveRecord::Base
     if (plan!=nil && Date.parse(plan) < Date.current && fact==nil)
       return "Просрочено"
     end
-    #puts self.id
-    #puts fact
-    #puts plan
   end
 
   def getMGEStatus

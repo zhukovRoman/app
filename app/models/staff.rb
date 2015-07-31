@@ -17,6 +17,8 @@ class Staff
   @employeeCount
   @vacancyCount
   @departmentHead
+  @manageEmployeeCount
+  @productionEmployeeCount
 
 
   def initialize
@@ -37,67 +39,74 @@ class Staff
     self.bossSalary
     self.bossAverageSalary
     self.bossCount
+    self.manageEmployeeCount
+    self.productionEmployeeCount
+  end
+
+  def self.set_valid_date date
+    (date - date.at_beginning_of_month.day).to_time.to_i
   end
 
   def departments
-    @departments = EmployeeStatsDepartments.select(:dep_name).distinct.each_with_index do |d, i|
+    @departments = EmployeeStatsDepartments.select('dep_name as name' ).distinct.each_with_index do |d, i|
       d.id = i+1
     end
+    @departments
   end
 
   def taxes
     @taxes = Array.new
     EmployeeStatsDepartments.where(month: Date.current-1.year..Date.current).each do |d|
-      dep_id = @departments.find_index {|item| item.dep_name == d.dep_name}
-      @taxes.push ({date: d.month.to_time.to_i, count: d.tax, department_id: dep_id+1})
+      dep_id = @departments.find_index {|item| item.name == d.dep_name}
+      @taxes.push ({date: Staff.set_valid_date(d.month), count: d.tax, department_id: dep_id+1})
     end
   end
 
   def bonuses
     @bonuses = Array.new
     EmployeeStatsDepartments.where(month: Date.current-1.year..Date.current).each do |d|
-      dep_id = @departments.find_index {|item| item.dep_name == d.dep_name}
-      @bonuses.push ({date: d.month.to_time.to_i, count: d.bonus, department_id: dep_id+1})
+      dep_id = @departments.find_index {|item| item.name == d.dep_name}
+      @bonuses.push ({date: Staff.set_valid_date(d.month), count: d.bonus, department_id: dep_id+1})
     end
   end
 
   def salary
     @salary = Array.new
     EmployeeStatsDepartments.where(month: Date.current-1.year..Date.current).each do |d|
-      dep_id = @departments.find_index {|item| item.dep_name == d.dep_name}
-      @salary.push ({date: d.month.to_time.to_i, count: d.salary, department_id: dep_id+1})
+      dep_id = @departments.find_index {|item| item.name == d.dep_name}
+      @salary.push ({date: Staff.set_valid_date(d.month), count: d.salary, department_id: dep_id+1})
     end
   end
 
   def averageSalary
     @averageSalary = Array.new
     EmployeeStatsDepartments.where(month: Date.current-1.year..Date.current).each do |d|
-      dep_id = @departments.find_index {|item| item.dep_name == d.dep_name}
-      @averageSalary.push ({date: d.month.to_time.to_i, count: d.avg_salary, department_id: dep_id+1})
+      dep_id = @departments.find_index {|item| item.name == d.dep_name}
+      @averageSalary.push ({date: Staff.set_valid_date(d.month), count: d.avg_salary, department_id: dep_id+1})
     end
   end
 
   def employeeCount
     @employeeCount = Array.new
     EmployeeStatsDepartments.where(month: Date.current-1.year..Date.current).each do |d|
-      dep_id = @departments.find_index {|item| item.dep_name == d.dep_name}
-      @employeeCount.push ({date: d.month.to_time.to_i, count: d.employee_count, department_id: dep_id+1})
+      dep_id = @departments.find_index {|item| item.name == d.dep_name}
+      @employeeCount.push ({date: Staff.set_valid_date(d.month), count: d.employee_count, department_id: dep_id+1})
     end
   end
 
   def vacancyCount
     @vacancyCount = Array.new
     EmployeeStatsDepartments.where(month: Date.current-1.year..Date.current).each do |d|
-      dep_id = @departments.find_index {|item| item.dep_name == d.dep_name}
-      @vacancyCount.push ({date: d.month.to_time.to_i, count: d.vacancy_count, department_id: dep_id+1})
+      dep_id = @departments.find_index {|item| item.name == d.dep_name}
+      @vacancyCount.push ({date: Staff.set_valid_date(d.month), count: d.vacancy_count, department_id: dep_id+1})
     end
   end
 
   def departmentHead
     @departmentHead = Array.new
     EmployeeStatsDepartments.where(month: Date.current-1.month..Date.current).each do |d|
-      dep_id = @departments.find_index {|item| item.dep_name == d.dep_name}
-      @departmentHead.push ({date: d.month.to_time.to_i, name: d.manager, department_id: dep_id+1})
+      dep_id = @departments.find_index {|item| item.name == d.dep_name}
+      @departmentHead.push ({date: Staff.set_valid_date(d.month), name: d.manager, department_id: dep_id+1})
     end
   end
 
@@ -171,5 +180,21 @@ class Staff
       @bossCount.push ({date: s.month.to_time.to_i, count:s.AUP_count})
     end
     @bossCount
+  end
+
+  def manageEmployeeCount
+    @manageEmployeeCount = Array.new
+    EmployeeStatsMonths.where(month: Date.current-1.year..Date.current).each do |s|
+      @manageEmployeeCount.push ({date: s.month.to_time.to_i, count:s.employee_manage_count})
+    end
+    @manageEmployeeCount
+  end
+
+  def productionEmployeeCount
+    @productionEmployeeCount = Array.new
+    EmployeeStatsMonths.where(month: Date.current-1.year..Date.current).each do |s|
+      @productionEmployeeCount.push ({date: s.month.to_time.to_i, count:s.employee_production_count})
+    end
+    @productionEmployeeCount
   end
 end
