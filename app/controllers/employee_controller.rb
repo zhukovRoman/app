@@ -2,6 +2,7 @@ class EmployeeController < ApplicationController
 
   #before_filter :authenticate_user!, :except => [:personalflowXmlParse, :salaryXmlParse, :personalInit, :calculate]
   before_action :change_partName
+  skip_before_filter :verify_authenticity_token, :only => [:editmanagment]
 
   def change_partName
     @@partName = "КП УГС - Кадры"
