@@ -4,7 +4,7 @@ module Api
       # GET /api/v1/staff
       #
       def index
-        @response_object = Staff.new
+        @response_object = {staff: Staff.new}
         render render_options
       end
     end
