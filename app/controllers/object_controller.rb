@@ -154,7 +154,7 @@ class ObjectController < ApplicationController
 
   def self.getJSONData
     objs = Hash.new
-    Obj.notArchive.each do |o|
+    Obj.notArchive.includes(:visit_infos).includes(:object_prepare).includes(:object_tenders).each do |o|
       tmp = Hash.new
       tmp['id'] = o.id
       tmp['address'] = o.adress
