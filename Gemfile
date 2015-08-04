@@ -75,7 +75,13 @@ gem 'savon', '~> 2.10.0'
 gem "mini_magick"
 
 # Serialization
-gem 'active_model_serializers', '~> 0.8.0'
+#gem 'active_model_serializers', '~> 0.8.0'
 
 #API
 gem 'rails-api'
+
+gem 'unicorn'
+
+#mina
+gem 'mina'
+gem 'mina-unicorn', require: false
