@@ -19,10 +19,12 @@
 
 # Learn more: http://github.com/javan/whenever
 
+job_type :current_path_rake, 'cd :path/../current && :environment_variable=:environment bundle exec rake :task --silent :output'
+
 every 1.day, :at => '4:30 am'  do
-  rake 'employee:update_employees_stats'
+  current_path_rake 'employee:update_employees_stats'
 end
 
 every 1.day, :at => '4:35 am'  do
-  rake 'apartments:update'
+  current_path_rake 'apartments:update'
 end
