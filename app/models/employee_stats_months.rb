@@ -75,7 +75,7 @@ class EmployeeStatsMonths < ActiveRecord::Base
     empl.employee_manage_count = empl.employee_manage_count||0
     empl.employee_production_count = empl.employee_manage_count||0
     empl.k_dismiss = responseStat[:empl_dismiss].to_f/responseStat[:empl_count].to_i
-    empl.k_complect = empl.employee_manage_count||0
+    empl.k_complect = empl.k_complect||0
     empl.manager_avg_salary = responseStat[:aup_salary].to_i/responseStat[:aup_empl_count].to_i
     empl.AUP_count = responseStat[:aup_empl_count].to_i
 
