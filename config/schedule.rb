@@ -22,9 +22,9 @@
 job_type :current_path_rake, 'cd :path/../current && :environment_variable=:environment bundle exec rake :task --silent :output'
 
 every 1.day, :at => '4:30 am'  do
-  current_path_rake 'employee:update_employees_stats'
+  rake 'employee:update_employees_stats'
 end
 
 every 1.day, :at => '4:35 am'  do
-  current_path_rake 'apartments:update'
+  rake 'apartments:update'
 end
