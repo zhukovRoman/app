@@ -114,7 +114,7 @@ class Obj < ActiveRecord::Base
   def getBankGarantStatus
     status = 'Погашена'
     self.object_finance_by_work_types.each do |wtype|
-      if wtype.bankGarantyStatus != status
+      if wtype.bank_garanty_status != status
         return 'Просрочено'
       end
     end
