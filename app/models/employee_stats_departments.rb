@@ -109,6 +109,8 @@ class EmployeeStatsDepartments < ActiveRecord::Base
       stat.vacancy_count = stat.vacancy_count||0
       stat.manager = v[:manager]||'-'
       stat.dep_name = v[:name]
+      dep_type = EmployeeStatsDepartments.where(dep_name:v[:name]).last
+      stat.dep_type = ( dep_type != nil) ? dep_type.dep_type : 'p'
       stat.save
     end
 
