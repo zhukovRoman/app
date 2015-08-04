@@ -156,7 +156,7 @@ class ApiController < ApplicationController
 
   def apartments
     data = ''
-    file = File.new("test.json", "r")
+    file = File.new("from_crm.json", "r")
     while (line = file.gets)
       data += line
     end

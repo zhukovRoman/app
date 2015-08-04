@@ -139,19 +139,7 @@ class ApartmentController < ApplicationController
   end
 
   private
-  def self.get_token
-    require 'net/http'
-    require 'json'
 
-    uri = URI('http://172.20.10.10:91/BuildingGroupService.svc/Authenticate?oauth_consumer_key=test')
-    resp = Net::HTTP.get(uri) # => String
-    result = JSON.parse(resp)
-    if result == nil
-      return nil
-    end
-    puts result['AuthenticateResult']
-    return result['AuthenticateResult']
-  end
 
   def self.get_apartments_json (token)
     require 'net/http'

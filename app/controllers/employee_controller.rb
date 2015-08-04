@@ -187,19 +187,7 @@ class EmployeeController < ApplicationController
 
 
   def getEmployeeStats
-    require 'savon'
-    if (params['year']==nil || params['month']==nil)
-      render plain: 'wrong arguments'
-      return
-    end
-    message = {year: params['year'], month: params['month']}
-    client = Savon.client(wsdl: 'http://172.20.10.89/zarplata/ws/vigruzkazp.1cws?wsdl', basic_auth: ["web1c", "123"])
 
-    response = client.call(:get_month_stat, message: message)
-
-    EmployeeStatsMonths.saveStatsFromSOAP response.body[:get_month_stat_response][:return]
-    EmployeeStatsDepartments.saveStatsFromSOAP response.body[:get_month_stat_response][:return][:departments][:department] ,
-                                               response.body[:get_month_stat_response][:return][:year]+'-'+response.body[:get_month_stat_response][:return][:month]+'-15'
     render plain: 'ok'
   end
 

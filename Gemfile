@@ -85,3 +85,5 @@ gem 'unicorn'
 #mina
 gem 'mina'
 gem 'mina-unicorn', require: false
+
+gem 'whenever', :require => false
