@@ -6,6 +6,7 @@ class ObjectDocument < ActiveRecord::Base
 
   has_one :obj, foreign_key: "ObjectId"
 
+  alias_attribute "object_id","ObjectId"
   #Предпроект
   alias_attribute "GPZU_plan","DataPlanGPZU"
   alias_attribute "GPZU_fact","DataGPZU"

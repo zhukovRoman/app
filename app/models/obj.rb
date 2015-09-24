@@ -74,6 +74,18 @@ class Obj < ActiveRecord::Base
   alias_attribute 'SMR_internal', 'SMR_InternalSystems'
   alias_attribute 'SMR_internal_delay', 'SMR_LooserIntern'
 
+
+  @@objects_types_hierarchy
+  @@objects_regions
+
+  def address
+    adress
+  end
+
+  def in_aip?
+    (self.year_correct||'').start_with?('20') ? 0 : 1
+  end
+
   def self.get_years_enters_plan
     return Obj.group('ObjectEnterYearPlan').order(:year_plan).count(:id)
   end
@@ -93,6 +105,10 @@ class Obj < ActiveRecord::Base
     end
     return Date.parse(parts[0]).year
 
+  end
+
+  def complete_date
+    self.year_correct.nil? ? nil : Date.parse("#{self.year_correct}-01-01").to_time.to_i
   end
 
   def getVisitsInfo
@@ -164,7 +180,7 @@ class Obj < ActiveRecord::Base
   end
 
   def self.notArchive
-    return Obj.where(is_archive: 0).includes(:object_finance).includes(:object_document)
+    return Obj.where(is_archive: 0).includes(:object_finance).includes(:object_document).includes(:object_finance_by_work_types)
   end
 
   def get_object_finance_by_type (type)
@@ -176,6 +192,12 @@ class Obj < ActiveRecord::Base
 
   end
 
+  def appointment_adaptive
+    if (appointment=='Гаражи' || appointment=='Прочие объекты')
+      return 'Прочие'
+    end
+    appointment
+  end
 
   def self.overdueObjects
     return Obj.where('ObjectArchve = 0').includes(:object_document)#.where("DataPlanGPZU < ?", Date.current )
@@ -185,6 +207,123 @@ class Obj < ActiveRecord::Base
     return Obj.select('appointment').distinct
   end
 
+  def self.objects_types_hierarchy
+    @@objects_types_hierarchy = [
+      {id:1, parent_id: 0, name:'Жилище'},
+      {id:2, parent_id: 1, name:'Жилье'},
+      {id:3, parent_id: 1, name:'Инженерия'},
+      {id:4, parent_id: 0, name:'Социальные объекты'},
+      {id:5, parent_id: 4, name:'БНК'},
+      {id:6, parent_id: 4, name:'ДОУ'},
+      {id:7, parent_id: 4, name:'Спорт - ФОК'},
+      {id:8, parent_id: 4, name:'ФОК'},
+      {id:9, parent_id: 4, name:'Школа'},
+      {id:10, parent_id: 4, name:'Поликлиника'},
+      {id:11, parent_id: 0, name:'Прочее'},
+      {id:12, parent_id: 11, name:'Дороги'},
+      {id:13, parent_id: 11, name:'Переход'},
+      {id:14, parent_id: 11, name:'Прочие'},
+    ]
+  end
+
+  def self.objects_regions
+    @@objects_regions = []
+    Obj.select(:region).distinct.each_with_index do |r, i|
+      @@objects_regions.push ({:name => r.region, :id => i+1})
+    end
+    @@objects_regions
+  end
+
+  def self.land_passports
+    gpzus = []
+    ObjectDocument.all.each do |doc|
+      gpzus.push ({id: doc.object_id, object_id: doc.object_id,
+                   expected_receive_date:doc.GPZU_plan.nil? ? nil : doc.GPZU_plan.to_time.to_i,
+                   real_receive_date: doc.GPZU_fact.nil? ? nil : doc.GPZU_fact.to_time.to_i
+                 })
+    end
+    gpzus
+  end
+
+  def self.expertises
+    expertises = []
+    ObjectDocument.all.each do |doc|
+      expertises.push ({id: doc.object_id, object_id: doc.object_id,
+                   expected_receive_date:doc.MGE_plan.nil? ? nil : doc.MGE_plan.to_time.to_i,
+                   real_receive_date: doc.MGE_fact.nil? ? nil : doc.MGE_fact.to_time.to_i
+                 })
+    end
+    expertises
+  end
+
+  def self.permits
+    permits = []
+    ObjectDocument.all.each do |doc|
+      permits.push ({id: doc.object_id, object_id: doc.object_id,
+                   expected_receive_date:doc.razrezh_build_plan.nil? ? nil : doc.razrezh_build_plan.to_time.to_i,
+                   real_receive_date: doc.razrezh_build_fact.nil? ? nil : doc.razrezh_build_fact.to_time.to_i
+                 })
+    end
+    permits
+  end
+
+  def self.demolitions
+    demolitions = []
+    Obj.all.each do |o|
+      demolitions.push ({id: o.id, object_id: o.id,
+                     expected_receive_date:o.demolition_date_plan.nil? ? nil : o.demolition_date_plan.to_time.to_i,
+                     real_receive_date: o.demolition_date.nil? ? nil : o.demolition_date.to_time.to_i,
+                     status: o.demolition_status
+                   })
+    end
+    demolitions
+  end
+
+  def self.all_objects_json
+    objs = []
+    Obj.all.each do |o|
+      puts o.appointment
+      objs.push({
+          :id => o.id,
+          :region_id => @@objects_regions.find_index {|item| item[:name] == o.region} + 1,
+          :type_id => @@objects_types_hierarchy.find_index {|item|
+                    item[:name].mb_chars.downcase == o.appointment_adaptive.mb_chars.downcase} + 1,
+          :address => o.address,
+          :is_archive => o.is_archive ? 1 : 0,
+          :date => o.complete_date,
+          :latitude => o.lat,
+          :longitude => o.lng,
+          :power => o.power,
+          :power_unit_name => o.power_measure,
+          :without_date => o.in_aip?
+      })
+    end
+    objs
+  end
+
+
+  def self.api_response
+    {
+        :objectType => Obj.objects_types_hierarchy,
+        :objectRegion => Obj.objects_regions,
+        :objects => Obj.all_objects_json,
+        :landPassport => Obj.land_passports,
+        :expertise => Obj.expertises,
+        :buildingPermit => Obj.permits,
+      # - Банковская гарантия ()
+      # Поля: id (int), object_id (int), expected_receive_date (timestamp), real_receive_date (timestamp)
+        :bankGuarantee => nil,
+        :buildingDemolition => Obj.demolitions,
+      # - Работы по объекту ()
+      #  Поля:
+      #  - id (int)
+      #  - object_id (int)
+      #  - price (int)
+      #  - type (int) (1 = обычных платеж, 2 = в счет авансов)
+      #  - payed (int) сколько выплачено
+        :works => nil
+    }
+  end
 
 
 

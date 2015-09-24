@@ -564,7 +564,7 @@ class ApiController < ApplicationController
       return
     end
 
-    image = ObjectPhoto.where(id: params['id'].to_i).first
+    image = ObjectPhoto.find_by(id: params['id'].to_i)
     if(params['size']=='big')
       send_data(image.get_big_photo, :type => "image/jpeg", :disposition => "inline")
     else
