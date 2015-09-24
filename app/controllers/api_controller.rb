@@ -537,7 +537,7 @@ class ApiController < ApplicationController
 
     res = []
 
-    ObjectPhoto.where(object_id: params['obj_id'].to_i).each do |p|
+    ObjectPhoto.where(object_id: params['obj_id'].to_i).order(:photo_date).reverse_order.each do |p|
       photo = Hash.new
       photo['src']=p.small_photo_url
       photo['title'] = p.date
@@ -546,8 +546,6 @@ class ApiController < ApplicationController
     end
 
     res = 'images:'+ res.to_json.html_safe
-
-    File.open(@@fileNames['objects'], 'w') { |file| file.write(res.to_json) }
 
     response=(params['callback']||'')+'({'
     response+= res

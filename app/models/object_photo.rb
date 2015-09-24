@@ -22,6 +22,11 @@ class ObjectPhoto < ActiveRecord::Base
   end
 
   def save_photos
+    if (File.exist?("/var/www/pictures/#{object_id}/#{id}_b.jpg") &&
+        File.exist?("/var/www/pictures/#{object_id}/#{id}_s.jpg"))
+      puts "file already exists. Skipping…"
+      return
+    end
     require "open-uri"
     require 'fileutils'
     need_sizes = [1024,768]
@@ -34,8 +39,6 @@ class ObjectPhoto < ActiveRecord::Base
       scale = need_sizes[1]*1.0/size[1]
     end
     image.resize "#{size[0]*scale}x#{size[1]*scale}"
-    puts Time.current , "resize image compl"
-
     unless File.directory?("/var/www/pictures/#{object_id}")
       FileUtils.mkdir_p("/var/www/pictures/#{object_id}")
     end
@@ -51,22 +54,11 @@ class ObjectPhoto < ActiveRecord::Base
     end
     image.resize "#{size[0]*scale}x#{size[1]*scale}"
     image.write "/var/www/pictures/#{object_id}/#{id}_s.jpg"
+    puts "create files for object #{object_id} done…"
   end
 
   def get_small_photo
     return MiniMagick::Image.open("/var/www/pictures/#{object_id}/#{id}_s.jpg").to_blob
-    # require "open-uri"
-    # need_sizes = [300,200]
-    # image = MiniMagick::Image.open(self.url)
-    # size = image.dimensions
-    # scale = 2
-    # if (size[0]>size[1])
-    #   scale = need_sizes[0]*1.0/size[0]
-    # else
-    #   scale = need_sizes[1]*1.0/size[1]
-    # end
-    # image.resize "#{size[0]*scale}x#{size[1]*scale}"
-    # return image.to_blob
   end
 
   def small_photo_url
