@@ -62,9 +62,9 @@ class ObjectPhoto < ActiveRecord::Base
   end
 
   def small_photo_url
-    return "http://213.85.34.118:50080" + "/api/get_object_image?id=#{self.id}&size=small"
+    return "http://213.85.34.118:50080" + "/pictures/#{self.object_id}/#{self.id}_s.jpg"
   end
   def big_photo_url
-    return "http://213.85.34.118:50080" + "/api/get_object_image?id=#{self.id}&size=big"
+    return "http://213.85.34.118:50080" + "/pictures/#{self.object_id}/#{self.id}_b.jpg"
   end
 end
