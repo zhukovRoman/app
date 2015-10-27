@@ -117,6 +117,8 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :staffs, only: [:index] do  end
       resources :objects, only: [:index] do  end
+      resources :contractors, only: [:index] do  end
+      resources :object_photos, only: [:index] do  end
     end
   end
 end

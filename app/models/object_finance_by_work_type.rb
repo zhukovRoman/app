@@ -4,8 +4,9 @@ class ObjectFinanceByWorkType < ActiveRecord::Base
   self.table_name = 'vw_ObjectForMobileInfoFinanceVidRabot'
   self.primary_key = 'ID_ObjectDDS'
 
-  belongs_to :obj, foreign_key: 'ObjectId'
+  belongs_to :obj, foreign_key: 'ID_ObjectDDS', primary_key: 'ObjectId'
 
+  alias_attribute 'id', 'ID_ObjectDDS'
   alias_attribute 'work_type','NameVidRabot'
   alias_attribute 'organization_name','Organization'
   alias_attribute 'document_number','NumDogovor'
@@ -17,7 +18,7 @@ class ObjectFinanceByWorkType < ActiveRecord::Base
   alias_attribute 'work_comlete','VipolnenoRabot'
   alias_attribute 'bank_summa','BankSumma'
   alias_attribute 'bank_deadline','SrokBankSumma'
-  alias_attribute 'object_id', 'ObjectId'
+  alias_attribute 'object_id', 'ObjectID'
 
   def residue_summ
     ws = self.work_summ||0
@@ -56,4 +57,9 @@ class ObjectFinanceByWorkType < ActiveRecord::Base
   def pay_left
     return self.residue_summ
   end
+
+  def bank_garanty_info
+    {id: id, object_id: object_id , expected_receive_date: (Date.current - 1.year).to_time.to_i, real_receive_date:Date.current.to_time.to_i}
+  end
+
 end

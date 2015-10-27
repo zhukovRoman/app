@@ -28,6 +28,50 @@ class ObjectTender < ActiveRecord::Base
   #  return Obj.where(object_id = self.object_id)
   #end
 
+  def self.tender_types
+    [
+        {id: 1, name: 'Перепроектирование' },
+        {id: 2, name: 'Генподрядчик' },
+        {id: 3, name: 'ТЗ СМР' },
+        {id: 4, name: 'Генпроектировщик' },
+        {id: 5, name: 'ТЗ ПИР и СМР' },
+        {id: 6, name: 'Страхование СМР' },
+        {id: 7, name: 'Управляющая компания' },
+        {id: 0, name: 'Другое' },
+
+    ]
+  end
+
+  def type_new
+    case type
+      when 'Перепроектирование'
+        1
+      when 'Генподрядчик'
+        2
+      when 'ТЗ СМР'
+        3
+      when 'Генпроектировщик'
+        4
+      when 'ТЗ ПИР и СМР'
+        5
+      when 'Страхование СМР'
+        6
+      when 'Управляющая компания'
+        7
+      else
+        0
+      end
+  end
+
+  def status
+    if(date_finish)
+      2
+    else
+      1
+    end
+  end
+
+
   def isUkOnly
     if (self.type=='управляющая компания' && ObjectTender.where(object_id: self.object_id).count==1)
       #  по объекту существует всего 1 конкурс и тот на УК

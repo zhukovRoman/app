@@ -80,4 +80,109 @@ class Organization < ActiveRecord::Base
     end
     return tendersByYears
   end
+
+  def self.list
+    orgs = [];
+    Organization.all.each do |o|
+      orgs << {
+          id: o.id,
+          name: o.name,
+          object_count: o.objs.count,
+          contest_win_count: o.object_tenders.count,
+          ceo: 'ФИО Генерального Директора',
+          address: 'Юр Адрес'
+      }
+    end
+    orgs
+  end
+
+  def self.contacts
+    contacts = [];
+    Organization.all.each do |o|
+      contacts << {
+          contractor_id: o.id,
+          type: 1,
+          value: '8-888-888-88-88'
+      }
+      contacts << {
+          contractor_id: o.id,
+          type: 2,
+          value: 'mail@mail.com'
+      }
+    end
+    contacts
+  end
+
+  def self.organizations_budjets
+    orgs = [];
+    Organization.all.each do |o|
+      orgs << {
+          contractor_id: o.id,
+          payed: o.work_complete_summ_for_all_objects,
+          left: o.work_left_summ_for_all_objects
+      }
+    end
+    orgs
+  end
+
+  def self.organizations_parts_in_sum
+    orgs = [];
+    Organization.all.each do |o|
+      o.object_tenders.where(status: 'проведен').
+          group("YEAR(DataFinish)").sum('TenderPriceEnd').each do |year, summT|
+        orgs << {
+            contractor_id: o.id,
+            date: Date.parse("#{year}-01-01"),
+            sum: summT
+        }
+      end
+    end
+    orgs
+  end
+
+  def self.organizations_parts_in_amount
+    orgs = [];
+    Organization.all.each do |o|
+      o.object_tenders.where(status: 'проведен').
+          group("YEAR(DataFinish)").distinct('ObjectID').count.each do |year, count|
+        orgs << {
+            contractor_id: o.id,
+            date: Date.parse("#{year}-01-01"),
+            count: count
+        }
+      end
+    end
+    orgs
+  end
+
+  def self.organizations_payment
+    orgs = [];
+    Organization.all.each do |o|
+      orgs << {
+          contractor_id: o.id,
+          prepay_payed: o.avans_pagasheno_for_all_objects,
+          prepay_not_payed: o.avans_not_pagasheno_for_all_objects,
+          normal_payed: o.payed_for_work_for_all_objects,
+          left_to_pay: o.residue_summ_for_all_objects
+      }
+    end
+    orgs
+  end
+
+  def self.organizations_contracts
+    contracts = []
+    Obj.includes(:organization).all.each do |obj|
+      contracts << {
+          contractor_id: obj.organization.try(:id),
+          object_id: obj.id,
+          status: obj.status_name,
+          network: "#{obj.SMR_external_network||'-'}/#{obj.SMR_external_network_delay||0}",
+          erection: "#{obj.SMR_constructive||'-'}/#{obj.SMR_constructive_delay||0}",
+          finishing: "#{obj.SMR_internal||'-'}/#{obj.SMR_internal_delay||0}"
+      }
+    end
+    contracts
+  end
+
+
 end

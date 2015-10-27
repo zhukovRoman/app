@@ -67,4 +67,22 @@ class ObjectPhoto < ActiveRecord::Base
   def big_photo_url
     return "http://213.85.34.118:50080" + "/pictures/#{self.object_id}/#{self.id}_b.jpg"
   end
+
+  def self.objects_photos
+    values = []
+    last_dates = []
+    ObjectPhoto.select('MAX(PhotoDate) as max_date').group('ObjID').each do |d|
+      last_dates << d.max_date
+    end
+
+    ObjectPhoto.where(photo_date: last_dates).all.each do |p|
+      values << {
+          object_id: p.object_id,
+          preview_url: p.small_photo_url,
+          full_image_url: p.big_photo_url,
+          date: p.date.to_time.to_i
+      }
+    end
+    values
+  end
 end

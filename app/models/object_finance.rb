@@ -50,5 +50,25 @@ class ObjectFinance < ActiveRecord::Base
     return (sum_titul_current_year||0)-(pay_current_year||0)
   end
 
+  def object_payment_json
+    {
+        id: id,
+        object_id: object_id,
+        prepay_payed: avans_pogasheno,
+        prepay_not_payed: avans_ne_pogasheno,
+        normal_payed: payed_without_avans,
+        left_to_pay: payed_left
+    }
+  end
+
+  def object_budjets
+    {
+        id: id,
+        object_id: object_id,
+        budjet: sum_titul_current_year||0,
+        budjet_spent: pay_current_year||0
+    }
+  end
+
 
 end

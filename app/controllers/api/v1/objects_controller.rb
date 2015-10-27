@@ -4,7 +4,7 @@ module Api
       # GET /api/v1/objects
       #
       def index
-        @response_object = Obj.api_response
+        @response_object = {objects: Obj.api_response}
         render render_options
       end
     end

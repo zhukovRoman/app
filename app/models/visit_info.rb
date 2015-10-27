@@ -4,7 +4,7 @@ class VisitInfo < ActiveRecord::Base
   self.table_name = "vw_ObjectForMobileInfoVisit"
   self.primary_key = "Sort2"
 
-  has_one :obj, foreign_key: "ObjectId"
+  has_one :obj, foreign_key: "ObjectId", primary_key: "ObjectId"
 
   alias_attribute "object_id", "ObjectId"
   alias_attribute "parametr_name","Parametr"
