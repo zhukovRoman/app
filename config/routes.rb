@@ -119,6 +119,7 @@ Rails.application.routes.draw do
       resources :objects, only: [:index] do  end
       resources :contractors, only: [:index] do  end
       resources :object_photos, only: [:index] do  end
+      resources :flats, only: [:index] do  end
     end
   end
 end
