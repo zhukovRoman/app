@@ -40,9 +40,9 @@ class Flat
                 apartment_count: apart['rooms'],
                 floor: apart['floor'],
                 footage: apart['spaceDesign']||1,
-                price_start:  apart['sum']||0,
-                price_order: (apart['orderSum']||(apart['sum']||0)),
-                price_final: (apart['dpSum']||0),
+                start_price:  apart['sum']||0,
+                order_price: (apart['orderSum']||(apart['sum']||0)),
+                final_price: (apart['dpSum']||0),
                 mortgage: !apart['hypothecBankid'].nil?,
                 mortgage_bank: apart['hypothecBankid']
             }
