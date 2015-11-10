@@ -301,7 +301,7 @@ class Obj < ActiveRecord::Base
                     item[:name].mb_chars.downcase == o.appointment_adaptive.mb_chars.downcase} + 1,
           :address => o.address,
           :plan_id => (o.seria=='ИНД') ? 1 : 2,
-          :is_archive => o.is_archive ? 1 : 0,
+          :is_archive => o.is_archive ? 1 : "0",
           :date => o.complete_date,
           :latitude => o.lat,
           :longitude => o.lng,

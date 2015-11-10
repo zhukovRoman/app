@@ -87,8 +87,8 @@ class Organization < ActiveRecord::Base
       orgs << {
           id: o.id,
           name: o.name,
-          object_count: o.objs.count,
-          contest_win_count: o.object_tenders.count,
+          object_count: o.objs.count+"",
+          contest_win_count: o.object_tenders.count+"",
           ceo: 'ФИО Генерального Директора',
           address: 'Юр Адрес'
       }
