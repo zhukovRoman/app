@@ -28,3 +28,7 @@ end
 every 1.day, :at => '4:35 am'  do
   current_path_rake 'apartments:update'
 end
+
+every 1.day, :at => '11:35 pm'  do
+  current_path_rake 'photo:save'
+end
