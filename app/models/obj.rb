@@ -372,7 +372,7 @@ class Obj < ActiveRecord::Base
   def self.documents_statuses
     documents = []
     Obj.includes(:object_document).all.each do |o|
-      documents << o.object_document.documents_status
+      documents.concat(o.object_document.documents_status)
     end
     documents
   end

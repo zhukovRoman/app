@@ -46,7 +46,7 @@ class Flat
                 mortgage: !apart['hypothecBankid'].nil?,
                 mortgage_bank: apart['hypothecBankid']
             }
-            @flat_statuses << Flat.get_statuses(apart, flat_status_id)
+            @flat_statuses.concat(Flat.get_statuses(apart, flat_status_id))
             flat_status_id+=5
 
             @flat_dkp_expected << {id:flat_status_id, flat_id: Flat.find_flat_id(apart['id']), date:Flat.dete_to_timestamp(apart['salesOrderPlanDate'])}
