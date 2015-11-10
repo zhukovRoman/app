@@ -75,7 +75,7 @@ class ObjectPhoto < ActiveRecord::Base
       last_dates << d.max_date
     end
 
-    ObjectPhoto.where(photo_date: last_dates).find_each do |p|
+    ObjectPhoto.where(photo_date: last_dates).find_each(batch_size: 50) do |p|
       values << {
           object_id: p.object_id,
           preview_url: p.small_photo_url,
