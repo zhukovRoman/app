@@ -174,7 +174,7 @@ class ObjectDocument < ActiveRecord::Base
   end
   
   def self.get_date_in_timestamps date
-    date.nil? ? nil : date.to_time.to_i
+    date.nil? ? "0" : date.to_time.to_i
   end
 
   def documents_status
@@ -183,7 +183,7 @@ class ObjectDocument < ActiveRecord::Base
         { id: "#{2}_#{object_id}",object_id: object_id, type_id: 2, expected_receive_date: ObjectDocument.get_date_in_timestamps(self.MGE_plan), real_receive_date: ObjectDocument.get_date_in_timestamps(self.MGE_fact)},
         { id: "#{11}_#{object_id}",object_id: object_id, type_id: 11, expected_receive_date: ObjectDocument.get_date_in_timestamps(self.BSP_plan), real_receive_date: ObjectDocument.get_date_in_timestamps(self.BSP_fact)},
         { id: "#{4}_#{object_id}",object_id: object_id, type_id: 4, expected_receive_date: ObjectDocument.get_date_in_timestamps(self.TZ_comm_plan), real_receive_date: ObjectDocument.get_date_in_timestamps(self.TZ_comm_fact)},
-        { id: "#{5}_#{object_id}",object_id: object_id, type_id: 5, expected_receive_date: nil, real_receive_date: nil},
+        { id: "#{5}_#{object_id}",object_id: object_id, type_id: 5, expected_receive_date: "0", real_receive_date: "0"},
         { id: "#{6}_#{object_id}",object_id: object_id, type_id: 6, expected_receive_date: ObjectDocument.get_date_in_timestamps(project_dogovor_plan), real_receive_date: ObjectDocument.get_date_in_timestamps(project_dogovor_fact)},
         { id: "#{7}_#{object_id}",object_id: object_id, type_id: 7, expected_receive_date: ObjectDocument.get_date_in_timestamps(self.POS_plan), real_receive_date: ObjectDocument.get_date_in_timestamps(self.POS_fact)},
         { id: "#{8}_#{object_id}",object_id: object_id, type_id: 8, expected_receive_date: ObjectDocument.get_date_in_timestamps(self.AGR_plan), real_receive_date: ObjectDocument.get_date_in_timestamps(self.AGR_fact)},
@@ -193,7 +193,7 @@ class ObjectDocument < ActiveRecord::Base
         { id: "#{12}_#{object_id}",object_id: object_id, type_id: 12, expected_receive_date: ObjectDocument.get_date_in_timestamps(network_plan_plan), real_receive_date: ObjectDocument.get_date_in_timestamps(network_plan_fact)},
         { id: "#{13}_#{object_id}",object_id: object_id, type_id: 13, expected_receive_date: ObjectDocument.get_date_in_timestamps(izvesg_end_build_plan), real_receive_date: ObjectDocument.get_date_in_timestamps(izvesh_end_build_fact)},
         { id: "#{14}_#{object_id}",object_id: object_id, type_id: 14, expected_receive_date: ObjectDocument.get_date_in_timestamps(spravka_BTI_plan), real_receive_date: ObjectDocument.get_date_in_timestamps(spravka_BTI_fact)},
-        { id: "#{15}_#{object_id}",object_id: object_id, type_id: 15, expected_receive_date: nil, real_receive_date: nil},
+        { id: "#{15}_#{object_id}",object_id: object_id, type_id: 15, expected_receive_date: "0", real_receive_date: "0"},
         { id: "#{16}_#{object_id}",object_id: object_id, type_id: 16, expected_receive_date: ObjectDocument.get_date_in_timestamps(razreshenie_enter_plan), real_receive_date: ObjectDocument.get_date_in_timestamps(razreshenie_enter_fact)},
         { id: "#{17}_#{object_id}",object_id: object_id, type_id: 17, expected_receive_date: ObjectDocument.get_date_in_timestamps(act_BI_plan), real_receive_date: ObjectDocument.get_date_in_timestamps(act_BI_fact)}
     ]

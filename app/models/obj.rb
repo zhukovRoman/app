@@ -387,7 +387,7 @@ class Obj < ActiveRecord::Base
   def self.key_dates_values
     dates = []
     Obj.includes(:object_document).all.each do |o|
-      dates << {id: "#{1}_#{o.id}", date_id: 1, object_id: o.id, date: ObjectDocument.get_date_in_timestamps(o.object_document.builder_enter_fact)}
+      dates << {id: "#{1}_#{o.id}",  object_id: o.id, date: ObjectDocument.get_date_in_timestamps(o.object_document.builder_enter_fact)}
       dates << {id: "#{2}_#{o.id}",  object_id: o.id, date: ObjectDocument.get_date_in_timestamps(o.SMR_external_network)}
       dates << {id: "#{3}_#{o.id}",  object_id: o.id, date: ObjectDocument.get_date_in_timestamps(o.SMR_constructive)}
       dates << {id: "#{4}_#{o.id}",  object_id: o.id, date: ObjectDocument.get_date_in_timestamps(o.SMR_internal)}
