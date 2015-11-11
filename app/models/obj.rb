@@ -597,7 +597,7 @@ class Obj < ActiveRecord::Base
         :buildingPermit => Obj.permits,
         :bankGuarantee => Obj.banking_garanty_statuses,
         :buildingDemolition => Obj.demolitions,
-        :objectPayment => Obj.objects_payment,
+        :objectWorkPayment => Obj.objects_payment,
         :objectBudget => Obj.objects_budjets,
         :optionName => Obj.teps_list,
         :optionValue => Obj.teps_values,
