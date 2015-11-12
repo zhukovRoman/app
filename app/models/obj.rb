@@ -321,6 +321,14 @@ class Obj < ActiveRecord::Base
     works
   end
 
+  def object_perfomance
+    perfomance = []
+    ObjectFinance.all.each do |of|
+      perfomance << of.object_perfomance
+    end
+    perfomance
+  end
+
   def self.objects_budjets
     payments = []
     ObjectFinance.all.each do |of|
@@ -598,6 +606,7 @@ class Obj < ActiveRecord::Base
         :bankGuarantee => Obj.banking_garanty_statuses,
         :buildingDemolition => Obj.demolitions,
         :objectWorkPayment => Obj.objects_payment,
+        :objectPerformance => Obj.object_perfomance,
         :objectBudget => Obj.objects_budjets,
         :optionName => Obj.teps_list,
         :optionValue => Obj.teps_values,

@@ -53,7 +53,7 @@ class ObjectFinance < ActiveRecord::Base
   def object_payment_json
     {
         id: id,
-        object_id: object_id,
+        object_id: obj.id,
         prepay_payed: avans_pogasheno,
         prepay_not_payed: avans_ne_pogasheno,
         normal_payed: payed_without_avans,
@@ -64,9 +64,17 @@ class ObjectFinance < ActiveRecord::Base
   def object_budjets
     {
         id: id,
-        object_id: object_id,
+        object_id: obj.id,
         budjet: sum_titul_current_year||0,
         budjet_spent: pay_current_year||0
+    }
+  end
+
+  def object_perfomance
+    {
+        id: obj.id,
+        payed: payed||0,
+        left: work_left||0
     }
   end
 
