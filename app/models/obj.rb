@@ -570,7 +570,7 @@ class Obj < ActiveRecord::Base
   def self.object_visit_perfomance_values
     values = []
     VisitInfo.order(:object_id, :sort1, :sort2).all.each do |vi|
-      values << {work_id: vi.sort2, object_id: vi.object_id, percent: vi.percent}
+      values << {work_id: vi.sort2||0, object_id: vi.object_id||0, percent: vi.percent||0}
     end
     values
   end
