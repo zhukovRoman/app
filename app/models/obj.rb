@@ -321,7 +321,7 @@ class Obj < ActiveRecord::Base
     works
   end
 
-  def object_perfomance
+  def  self.object_perfomance
     perfomance = []
     ObjectFinance.all.each do |of|
       perfomance << of.object_perfomance
