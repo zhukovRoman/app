@@ -581,7 +581,7 @@ class Obj < ActiveRecord::Base
       values << {
           object_id: t.object_id,
           contractor_id: t.organization_id,
-          type_id: t.type_new,
+          type_id: t.type_new||-1,
           status: t.status,
           date_start: t.date_start.nil? ? nil : t.date_start.to_time.to_i,
           date_finish: t.date_finish.nil? ? nil : t.date_finish.to_time.to_i,
@@ -592,6 +592,24 @@ class Obj < ActiveRecord::Base
       }
     end
     values
+  end
+
+  def self.smr_info
+    values = []
+    Obj.all.each do |o|
+      smr_work = o.get_object_finance_by_type(1)
+      values<< { id: smr_work.id,
+                  object_id: o.id,
+                  contract_name: (smr_work.organization_name||'') +
+                      ' по договору '+ (smr_work.document_number||''),
+                  prepay_payed: (smr_work.avans_pogasheno||0).round,
+                  prepay_not_payed:(smr_work.in_avance_work||0).round,
+                  normal_payed: (smr_work.payed_for_work||0).round,
+                  left_to_pay: (smr_work.pay_left||0).round,
+                  payed: smr_work.work_comlete||0,
+                  left: smr_work.work_left||0
+      }
+    end
   end
 
 
@@ -608,6 +626,7 @@ class Obj < ActiveRecord::Base
         :objectWorkPayment => Obj.objects_payment,
         :objectPerformance => Obj.object_perfomance,
         :objectBudget => Obj.objects_budjets,
+        :objectMontageWorks => Obj.smr_info,
         :optionName => Obj.teps_list,
         :optionValue => Obj.teps_values,
         :objectDocumentName => ObjectDocument.documents_name,

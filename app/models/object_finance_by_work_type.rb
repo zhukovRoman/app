@@ -55,7 +55,7 @@ class ObjectFinanceByWorkType < ActiveRecord::Base
   end
 
   def pay_left
-    return self.residue_summ
+    return (self.residue_summ||0).round
   end
 
   def bank_garanty_info
