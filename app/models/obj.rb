@@ -611,6 +611,7 @@ class Obj < ActiveRecord::Base
                   left: smr_work.work_left||0
       }
     end
+    values
   end
 
 
