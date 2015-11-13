@@ -597,7 +597,8 @@ class Obj < ActiveRecord::Base
   def self.smr_info
     values = []
     Obj.all.each do |o|
-      smr_work = o.get_object_finance_by_type(1)
+      smr_work = o.get_object_finance_by_type(1).take
+      next if smr_work.nil?
       values<< { id: smr_work.id,
                   object_id: o.id,
                   contract_name: (smr_work.organization_name||'') +
