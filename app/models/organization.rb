@@ -132,7 +132,7 @@ class Organization < ActiveRecord::Base
           group("YEAR(DataFinish)").sum('TenderPriceEnd').each do |year, summT|
         orgs << {
             contractor_id: o.id,
-            date: Date.parse("#{year}-01-01"),
+            date: Date.parse("#{year}-01-01").to_time.to_i,
             sum: summT
         }
       end
@@ -147,7 +147,7 @@ class Organization < ActiveRecord::Base
           group("YEAR(DataFinish)").distinct('ObjectID').count.each do |year, count|
         orgs << {
             contractor_id: o.id,
-            date: Date.parse("#{year}-01-01"),
+            date: Date.parse("#{year}-01-01").to_time.to_i,
             count: count
         }
       end
