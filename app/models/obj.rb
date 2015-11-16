@@ -7,7 +7,7 @@ class Obj < ActiveRecord::Base
   has_one :object_finance, foreign_key: 'ObjectId'
   has_one :object_document, foreign_key: 'ObjectId'
   has_one :object_prepare, foreign_key: 'ObjectId'
-  has_one :organization, foreign_key: 'OrganizationGenBuilder', primary_key: 'OrganizationName'
+  # has_one :organization, foreign_key: 'OrganizationGenBuilder', primary_key: 'OrganizationName'
   has_many :object_finance_by_work_types, foreign_key: 'ObjectID'
   has_many :object_tenders, foreign_key: 'ObjectID'
   has_many :visit_infos, foreign_key: 'ObjectId'
@@ -156,9 +156,9 @@ class Obj < ActiveRecord::Base
     return Obj.where(is_archive: 0).select('region').distinct
   end
 
-  # def organization
-  #   return Organization.find_by(name: self.general_builder)
-  # end
+  def organization
+    return Organization.find_by(name: self.general_builder)
+  end
 
   def tenders
     return ObjectTender.where(object_id: self.id)

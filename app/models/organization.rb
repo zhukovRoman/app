@@ -171,7 +171,7 @@ class Organization < ActiveRecord::Base
 
   def self.organizations_contracts
     contracts = []
-    Obj.includes(:organization).all.each do |obj|
+    Obj.all.each do |obj|
       next if obj.organization.nil?
       contracts << {
           contractor_id: obj.organization.try(:id),
