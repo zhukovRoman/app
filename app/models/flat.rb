@@ -50,7 +50,9 @@ class Flat
             flat_status_id+=5
 
             @flat_dkp_expected << {id:flat_status_id, flat_id: Flat.find_flat_id(apart['id']), date:Flat.dete_to_timestamp(apart['salesOrderPlanDate'])}
-            @realtor_fee << {date: Flat.dete_to_timestamp(apart['salesOrderDate']), commission:apart['brokersFeeWithNDS']}
+            if !apart['brokersFeeWithNDS'].nil?
+              @realtor_fee << {date: Flat.dete_to_timestamp(apart['salesOrderDate']), commission:apart['brokersFeeWithNDS']}
+            end
           end
         end
       end
@@ -69,7 +71,7 @@ class Flat
   end
 
   def self.dete_to_timestamp date
-    return nil if date.nil?
+    return 0 if date.nil?
     Date.parse(date).to_time.to_i
   end
 
