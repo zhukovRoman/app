@@ -4,7 +4,9 @@ module Api
       # GET /api/v1/objectPhotos
       #
       def index
-        @response_object = {:objectPhoto => ObjectPhoto.objects_photos}
+        @response_object = {
+            # :objectPhoto => ObjectPhoto.objects_photos
+        }
         render render_options
       end
     end
