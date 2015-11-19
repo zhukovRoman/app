@@ -5,7 +5,7 @@ module Api
       #
       def index
         @response_object = {
-            # objects: Obj.api_response
+            objects: Obj.api_response
         }
         render render_options
       end
