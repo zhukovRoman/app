@@ -5,14 +5,13 @@ module Api
       # GET /api/v1/contractors
       #
       def index
-        res = Flat.new
-        @response_object = {
-            flat: res.flats,
-            flatObject: res.objects,
-            flatStatus: res.statuses,
-            flatDkpExpectedDate: res.dkp_expected,
-            flatRealtorCommission: res.fee
-                            }
+        data = ''
+        file = File.new("api_cache/flats.json", "r")
+        while (line = file.gets)
+          data += line
+        end
+        file.close
+        @response_object = data
         render render_options
       end
     end

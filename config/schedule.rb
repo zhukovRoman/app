@@ -32,3 +32,7 @@ end
 every 1.day, :at => '11:35 pm'  do
   current_path_rake 'photo:save'
 end
+
+every 1.hour  do
+  current_path_rake 'api_cacher:update_all'
+end

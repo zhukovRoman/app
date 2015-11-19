@@ -5,15 +5,13 @@ module Api
       # GET /api/v1/contractors
       #
       def index
-        @response_object = {contractors: {
-            :contractor => Organization.list,
-            :contractorContacts => Organization.contacts,
-            :contractorBudget => Organization.organizations_budjets,
-            :contractorAuctionSum => Organization.organizations_parts_in_sum,
-            :contractorAuctionAmount => Organization.organizations_parts_in_amount,
-            :contractorPayment => Organization.organizations_payment,
-            :contract => Organization.organizations_contracts
-        }}
+        data = ''
+        file = File.new("api_cache/contractors.json", "r")
+        while (line = file.gets)
+          data += line
+        end
+        file.close
+        @response_object = data
         render render_options
       end
     end

@@ -4,9 +4,13 @@ module Api
       # GET /api/v1/objects
       #
       def index
-        @response_object = {
-            objects: Obj.api_response
-        }
+        data = ''
+        file = File.new("api_cache/objects.json", "r")
+        while (line = file.gets)
+          data += line
+        end
+        file.close
+        @response_object = data
         render render_options
       end
     end
