@@ -73,6 +73,7 @@ class ObjectFinance < ActiveRecord::Base
   def object_perfomance
     {
         id: obj.id,
+        object_id: obj.id,
         payed: payed||0,
         left: work_left||0
     }
