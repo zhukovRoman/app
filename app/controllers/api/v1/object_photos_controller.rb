@@ -4,9 +4,13 @@ module Api
       # GET /api/v1/objectPhotos
       #
       def index
-        @response_object = {
-            :objectPhoto => ObjectPhoto.objects_photos
-        }
+        data = ''
+        file = File.new("api_cache/objects_photos.json", "r")
+        while (line = file.gets)
+          data += line
+        end
+        file.close
+        @response_object = data
         render render_options
       end
     end

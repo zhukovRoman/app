@@ -6,6 +6,7 @@ namespace :api_cacher do
     Rake::Task['api_cacher:update_objects'].invoke
     Rake::Task['api_cacher:update_contractors'].invoke
     Rake::Task['api_cacher:update_flats'].invoke
+    Rake::Task['api_cacher:update_photos'].invoke
     puts "all done"
   end
 
@@ -19,6 +20,13 @@ namespace :api_cacher do
         objects: Obj.api_response
     }
     File.open("api_cache/objects.json", 'w') { |file| file.write(@response_object.to_json) }
+  end
+
+  task update_photos: :environment do
+    @response_object = {
+        :objectPhoto => ObjectPhoto.objects_photos
+    }
+    File.open("api_cache/objects_photos.json", 'w') { |file| file.write(@response_object.to_json) }
   end
 
   task update_contractors: :environment do

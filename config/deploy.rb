@@ -1,67 +1,69 @@
-# config valid only for Capistrano 3.1
-lock '3.2.1'
+require 'mina/bundler'
+require 'mina/rails'
+require 'mina/git'
+require 'mina/rbenv'
+require 'mina/unicorn'
+require 'mina/whenever'
 
-set :application, 'ugs'
-set :repo_url, 'git@github.com:zhukovRoman/app.git'
+set :domain, '213.85.34.118'
+set :deploy_to, '/var/www/app'
+set :repository, 'git@github.com:zhukovRoman/app.git'
 set :branch, 'master'
-set :ssh_options, {:port => 50022  }
-#set :use_sudo, false
-# Default branch is :master
-# ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
+set :user, 'user'
+set :forward_agent, true     # SSH forward_agent.
+set :ssh_options, '-A -p 50022'
+set :unicorn_pid, "#{deploy_to}/shared/pids/unicorn.pid"
 
-# Default deploy_to directory is /var/www/my_app
-set :deploy_to, '/var/webapp/'
+set :shared_paths, ['config/database.yml', 'log', 'config/secrets.yml', 'db/development.sqlite3', 'api_cache']
 
-#set ssh_options[:port] = 50022
+task :environment do
+  queue %{
+    echo "-----> Loading environment"
+    #{echo_cmd %[source ~/.bashrc]}
+        }
 
-# Default value for :scm is :git
-# set :scm, :git
-
-# Default value for :format is :pretty
-# set :format, :pretty
-
-# Default value for :log_level is :debug
-# set :log_level, :debug
-
-# Default value for :pty is false
-# set :pty, true
-
-# Default value for :linked_files is []
-# set :linked_files, %w{config/database.yml}
-
-# Default value for linked_dirs is []
-# set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
-
-# Default value for default_env is {}
-# set :default_env, { path: "/opt/ruby/bin:$PATH" }
-
-# Default value for keep_releases is 5
- set :keep_releases, 4
-
-namespace :deploy do
-
-
-
-  desc 'Restart application'
-  task :restart do
-    on roles(:app), in: :sequence, wait: 5 do
-      # Your restart mechanism here, for example:
-       #execute :mkdir, '-p', "#{ release_path }/tmp"
-      execute :touch, release_path.join('tmp/restart.txt')
-    end
-  end
-
-  after :publishing, :restart
-
-
-
-  after :restart, :clear_cache do
-    on roles(:web), in: :groups, limit: 3, wait: 10 do
-      # Here we can do anything such as:
-      # within release_path do
-      #   execute :rake, 'cache:clear'
-      # end
-    end
-  end
-
+  invoke :'rbenv:load'
 end
+
+task :setup => :environment do
+  queue! %[mkdir -p "#{deploy_to}/shared/log"]
+  queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/log"]
+
+  queue! %[mkdir -p "#{deploy_to}/shared/config"]
+  queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/config"]
+
+  queue! %[mkdir -p "#{deploy_to}/shared/sockets"]
+  queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/sockets"]
+
+  queue! %[touch "#{deploy_to}/shared/config/database.yml"]
+  queue  %[echo "-----> Be sure to edit '#{deploy_to}/shared/config/database.yml'."]
+
+  queue! %[touch "#{deploy_to}/shared/config/secrets.yml"]
+  queue %[echo "-----> Be sure to edit '#{deploy_to}/shared/config/secrets.yml'."]
+
+  queue! %[mkdir -p "#{deploy_to}/shared/pids/"]
+  queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/pids"]
+
+  queue! %[mkdir -p "#{deploy_to}/shared/api_cache/"]
+  queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/api_cache"]
+end
+
+desc "Deploys the current version to the server."
+task :deploy => :environment do
+  deploy do
+    invoke :'git:clone'
+    invoke :'deploy:link_shared_paths'
+    invoke :'bundle:install'
+    invoke :'rails:db_migrate'
+    invoke :'rails:assets_precompile'
+    invoke :'whenever:update'
+    invoke :'deploy:cleanup'
+
+    to :launch do
+      invoke :'unicorn:restart'
+    end
+  end
+end
+
+
+

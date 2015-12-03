@@ -71,18 +71,24 @@ class ObjectPhoto < ActiveRecord::Base
   def self.objects_photos
     values = []
     last_dates = []
-    ObjectPhoto.select('MAX(PhotoDate) as max_date').group('ObjID').each do |d|
-      last_dates << d.max_date
+    Obj.each do |object|
+      d = ObjectPhoto.select('MAX(CAST(PhotoDate AS DATE)) as max_date').group('ObjID').where("ObjID = ?", object.id).take
+      last_date = d.max_date if d.present?
+      values.concat ObjectPhoto.photos_by_object_and_date object.id, last_date if last_date.present?
     end
+    values
+  end
 
-    # ObjectPhoto.where(photo_date: last_dates).find_each(batch_size: 50) do |p|
-    #   values << {
-    #       object_id: p.object_id,
-    #       preview_url: p.small_photo_url,
-    #       full_image_url: p.big_photo_url,
-    #       date: p.date.to_time.to_i
-    #   }
-    # end
+  def self.photos_by_object_and_date obj_id, date
+    values = []
+    ObjectPhoto.where('PhotoDate >= ?', date).where(object_id: obj_id).each do |p|
+      values << {
+          object_id: p.object_id,
+          preview_url: p.small_photo_url,
+          full_image_url: p.big_photo_url,
+          date: p.date.to_time.to_i
+      }
+    end
     values
   end
 end
