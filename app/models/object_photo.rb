@@ -71,7 +71,7 @@ class ObjectPhoto < ActiveRecord::Base
   def self.objects_photos
     values = []
     last_dates = []
-    Obj.each do |object|
+    Obj.all.each do |object|
       d = ObjectPhoto.select('MAX(CAST(PhotoDate AS DATE)) as max_date').group('ObjID').where("ObjID = ?", object.id).take
       last_date = d.max_date if d.present?
       values.concat ObjectPhoto.photos_by_object_and_date object.id, last_date if last_date.present?
