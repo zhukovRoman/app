@@ -307,7 +307,7 @@ class Obj < ActiveRecord::Base
           :longitude => o.lng,
           :power => o.power,
           :power_unit_name => o.power_measure,
-          :without_date => o.in_aip? ? 1 : 0
+          :without_date => o.in_aip? ? 0 : 1
       })
     end
     objs
