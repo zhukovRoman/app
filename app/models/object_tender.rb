@@ -88,7 +88,8 @@ class ObjectTender < ActiveRecord::Base
     return false;
   end
 
-  def self.frendly_date (date)
+  def self.frendly_date (date=nil)
+    return "----" if date.nil?
     date =  Date.parse(date.to_s(:db))
     return date.year.to_s+"-"+date.month.to_s+"-"+date.day.to_s
   end
