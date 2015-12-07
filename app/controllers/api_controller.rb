@@ -382,6 +382,7 @@ class ApiController < ApplicationController
     @result['count']=Hash.new
 
     ObjectTender.all.each do |t|
+      next if t.date_start.nil?
       date = Date.parse(t.date_start.to_s)
       if (!years.include? date.year)
         years.push(date.year)
