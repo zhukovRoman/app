@@ -129,7 +129,7 @@ class Staff
   def underStaffing
     @underStaffing = Array.new
     EmployeeStatsMonths.where(month: Date.current-1.year..Date.current).each do |s|
-      @underStaffing.push ({date: s.month.to_time.to_i, count:s.k_complect})
+      @underStaffing.push ({date: s.month.to_time.to_i, count:s.k_complect*100})
     end
     @underStaffing
   end
@@ -137,7 +137,7 @@ class Staff
   def turnover
     @turnover = Array.new
     EmployeeStatsMonths.where(month: Date.current-1.year..Date.current).each do |s|
-      @turnover.push ({date: s.month.to_time.to_i, count:s.k_dismiss})
+      @turnover.push ({date: s.month.to_time.to_i, count:s.k_dismiss*100})
     end
     @turnover
   end
