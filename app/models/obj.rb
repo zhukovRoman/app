@@ -308,7 +308,7 @@ class Obj < ActiveRecord::Base
           :power => o.power,
           :power_unit_name => o.power_measure,
           :without_date => o.in_aip? ? 0 : 1,
-          :video_url => "213.85.34.118:50080/video.mp4"
+          :video_url => "http://213.85.34.118:50080/video.mp4"
       })
     end
     objs
