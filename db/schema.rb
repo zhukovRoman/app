@@ -11,9 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150628191656) do
+ActiveRecord::Schema.define(version: 20160131085341) do
 
-  create_table "apartments", force: true do |t|
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
+  create_table "apartments", force: :cascade do |t|
     t.string   "out_id",                limit: 500
     t.integer  "floor"
     t.integer  "rooms"
@@ -43,7 +46,7 @@ ActiveRecord::Schema.define(version: 20150628191656) do
     t.datetime "updated_at"
   end
 
-  create_table "buildinggroups", force: true do |t|
+  create_table "buildinggroups", force: :cascade do |t|
     t.string   "out_id",           limit: 500
     t.string   "name",             limit: 500
     t.string   "address",          limit: 1000
@@ -55,7 +58,7 @@ ActiveRecord::Schema.define(version: 20150628191656) do
     t.datetime "updated_at"
   end
 
-  create_table "buildings", force: true do |t|
+  create_table "buildings", force: :cascade do |t|
     t.string   "out_id",           limit: 500
     t.string   "name",             limit: 500
     t.string   "address",          limit: 1000
@@ -65,7 +68,35 @@ ActiveRecord::Schema.define(version: 20150628191656) do
     t.integer  "buildinggroup_id"
   end
 
-  create_table "departments", force: true do |t|
+  create_table "construction_objects", force: :cascade do |t|
+    t.integer  "out_id",                     limit: 8
+    t.string   "object_name"
+    t.string   "podotrasl"
+    t.string   "seria"
+    t.string   "prefektura"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.float    "total_space"
+    t.float    "living_space"
+    t.float    "total_places"
+    t.float    "car_places"
+    t.float    "road_length"
+    t.integer  "floor_count"
+    t.integer  "one_room_count"
+    t.integer  "two_room_count"
+    t.integer  "three_room_count"
+    t.integer  "four_room_count"
+    t.string   "is_there_a_wreckage"
+    t.date     "planning_comissioning_date"
+    t.float    "cost_limit"
+    t.float    "current_year_limit"
+    t.date     "techincal_state_date"
+    t.string   "technical_state"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "departments", force: :cascade do |t|
     t.string   "out_number"
     t.string   "name"
     t.integer  "vacancy_count"
@@ -76,7 +107,7 @@ ActiveRecord::Schema.define(version: 20150628191656) do
     t.integer  "department_type", default: 0
   end
 
-  create_table "employee_stats_departments", force: true do |t|
+  create_table "employee_stats_departments", force: :cascade do |t|
     t.date     "month"
     t.integer  "department_id"
     t.float    "salary"
@@ -92,7 +123,7 @@ ActiveRecord::Schema.define(version: 20150628191656) do
     t.string   "dep_type",       limit: 2,   default: "p"
   end
 
-  create_table "employee_stats_months", force: true do |t|
+  create_table "employee_stats_months", force: :cascade do |t|
     t.date     "month"
     t.float    "salary"
     t.float    "bonus"
@@ -116,7 +147,7 @@ ActiveRecord::Schema.define(version: 20150628191656) do
     t.integer  "AUP_count"
   end
 
-  create_table "employees", force: true do |t|
+  create_table "employees", force: :cascade do |t|
     t.string   "FIO",           limit: 500
     t.string   "tab_number",    limit: 20
     t.float    "stavka"
@@ -125,11 +156,10 @@ ActiveRecord::Schema.define(version: 20150628191656) do
     t.datetime "updated_at"
     t.integer  "department_id"
     t.integer  "is_delete",                 default: 0
-    t.date     "dismis_date"
     t.date     "dismiss_date"
   end
 
-  create_table "personal_flows", force: true do |t|
+  create_table "personal_flows", force: :cascade do |t|
     t.string   "operation_type"
     t.string   "new_post"
     t.string   "old_post"
@@ -141,7 +171,7 @@ ActiveRecord::Schema.define(version: 20150628191656) do
     t.integer  "new_department_id"
   end
 
-  create_table "salaries", force: true do |t|
+  create_table "salaries", force: :cascade do |t|
     t.float    "salary"
     t.float    "bonus"
     t.float    "tax"
@@ -155,7 +185,7 @@ ActiveRecord::Schema.define(version: 20150628191656) do
     t.float    "retention"
   end
 
-  create_table "sections", force: true do |t|
+  create_table "sections", force: :cascade do |t|
     t.string   "out_id",              limit: 500
     t.integer  "number"
     t.integer  "floors"
@@ -165,7 +195,7 @@ ActiveRecord::Schema.define(version: 20150628191656) do
     t.integer  "building_id"
   end
 
-  create_table "users", force: true do |t|
+  create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
     t.string   "reset_password_token"
@@ -180,10 +210,10 @@ ActiveRecord::Schema.define(version: 20150628191656) do
     t.datetime "updated_at"
   end
 
-  add_index "users", ["email"], name: "index_users_on_email", unique: true
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
-  create_table "vacancies", force: true do |t|
+  create_table "vacancies", force: :cascade do |t|
     t.integer  "count"
     t.integer  "department_id"
     t.date     "for_date"

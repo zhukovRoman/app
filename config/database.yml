@@ -5,13 +5,19 @@
 #   gem 'sqlite3'
 #
 default: &default
-  adapter: sqlite3
+  adapter: postgresql
+  encoding: unicode
+  database: mosobl
   pool: 5
-  timeout: 5000
+  host: localhost
+  port: 5432
+  username: postgres
+  password: pgpass123
+
 
 development:
   <<: *default
-  database: db/development.sqlite3
+  database: app
 
 mssqlObjects:
   adapter: sqlserver
@@ -37,8 +43,8 @@ mssqlObjects:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: db/test.sqlite3
+  database: app
 
 production:
   <<: *default
-  database: db/development.sqlite3
+  database: app

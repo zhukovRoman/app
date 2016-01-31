@@ -2,15 +2,15 @@ source 'https://rubygems.org'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.1.0'
+gem 'rails', '4.2.1'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 4.0.3'
+gem 'sass-rails', '~> 5.0.4'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .js.coffee assets and views
-gem 'coffee-rails', '~> 4.0.0'
+gem 'coffee-rails', '~> 4.1.1'
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer',  platforms: :ruby
 
@@ -48,6 +48,7 @@ gem 'capistrano', '~> 3.2.1'
 #end
 
 gem 'mysql2'
+gem 'pg'
 
 gem 'yaml_db'
 
@@ -58,7 +59,7 @@ gem 'nokogiri'
 gem 'devise'
 
 gem 'tiny_tds', github: 'rails-sqlserver/tiny_tds'
-gem 'activerecord-sqlserver-adapter', '~> 4.1.0'
+gem 'activerecord-sqlserver-adapter', '~> 4.2.1'
 #gem 'activerecord-sqlserver-adapter', '~> 4.0.0',
 #    :git => "git://github.com/rails-sqlserver/activerecord-sqlserver-adapter.git"
 

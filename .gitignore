@@ -25,3 +25,7 @@
 log/object_detail.js
 
 /pictures/*
+160112 Отчет для автоматической выгрузки в КП УГС (объект АИП) (4).xml
+*.pid
+db/development.sqlite3
+db/development.sqlite3
